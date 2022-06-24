@@ -4,18 +4,23 @@
 
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import 'package:permission_handler/permission_handler.dart';
+
 import 'package:the_baetles_chord_play/widgets/atoms/VideoThumbnail.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       title: 'Startup Name Generator',
       home: Scaffold(
@@ -23,10 +28,54 @@ class MyApp extends StatelessWidget {
           title: const Text("Chord Play"),
           backgroundColor: Color.fromARGB(255, 28, 28, 30),
         ),
-        body: Center(
-          child: VideoThumbnail()
+        body: Column(
+          children: [
+            VideoThumbnail(),
+            ChordDetectionTest(),
+          ]
         ),
       ),
     );
+  }
+}
+
+class ChordDetectionTest extends StatefulWidget {
+  const ChordDetectionTest({Key? key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _ChordDetectionTestState();
+}
+
+class _ChordDetectionTestState extends State<ChordDetectionTest> {
+  static const platform = MethodChannel('com.example.baetles/chord-detection');
+
+  String _lastPlayedChord = "Unknown chord.";
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+        children: [ElevatedButton(
+            onPressed: _startDetectingChord,
+            child: Text("음 판별 시작")
+        ),
+        Text(_lastPlayedChord),
+      ]
+    );
+  }
+
+  Future<void> _startDetectingChord() async {
+    String chord;
+
+    try {
+      final int result = await platform.invokeMethod('startDetectingChord');
+      chord = 'Played chord is $result';
+    } on PlatformException catch (e) {
+      chord = "Failed to get played chord: '${e.message}'.";
+    }
+
+    setState(() {
+      // 결과 저장
+      _lastPlayedChord = chord;
+    });
   }
 }
