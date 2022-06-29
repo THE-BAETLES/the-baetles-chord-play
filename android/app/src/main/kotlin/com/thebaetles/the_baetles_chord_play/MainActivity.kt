@@ -54,7 +54,7 @@ class MainActivity: FlutterFragmentActivity() {
                 }
 
                 // 음 판별 시작
-                val pitchTracker : PitchTracker = PitchTracker()
+                val pitchTracker : PitchTracker = PitchTracker(this)
                 pitchTracker.start()
 
                 result.success(1234)
