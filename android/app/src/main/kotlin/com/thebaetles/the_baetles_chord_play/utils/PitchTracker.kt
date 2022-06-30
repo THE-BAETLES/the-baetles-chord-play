@@ -1,12 +1,15 @@
 package com.thebaetles.the_baetles_chord_play
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.res.AssetManager
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
+import android.os.FileUtils
 import android.util.Log
+import java.io.File
 import java.nio.BufferOverflowException
 import java.nio.ShortBuffer
 import java.util.concurrent.locks.ReentrantLock
@@ -14,6 +17,7 @@ import kotlin.concurrent.thread
 import org.tensorflow.lite.Interpreter
 import java.io.FileInputStream
 import java.io.IOException
+import java.lang.System.load
 import java.nio.BufferUnderflowException
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
@@ -28,7 +32,7 @@ class PitchTracker(val context : Context) {
     private val encodingType : Int = AudioFormat.ENCODING_PCM_16BIT
 
     // Audio recognition setting
-    val ACTUAL_MODEL_FILENAME = "onsets_frames_wavinput.tflite"
+    private val ACTUAL_MODEL_FILENAME = "onsets_frames_wavinput.tflite"
     private val minimumTimeBetweenSamplesInMS : Long = 30
 
     private val logTag : String = "PitchTracker"
@@ -51,6 +55,7 @@ class PitchTracker(val context : Context) {
 
         tflInterpreter = try {
             Interpreter(loadModelFile(context.assets, ACTUAL_MODEL_FILENAME)!!)
+
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
@@ -212,6 +217,7 @@ class PitchTracker(val context : Context) {
                 if (recordingBuffer.hasRemaining()) {
                     continue
                 }
+
                 recordingBuffer.flip()
                 recordingBuffer.limit(inputBuffer.size)
                 recordingBuffer.get(inputBuffer)
