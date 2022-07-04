@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.thebaetles.the_baetles_chord_play">
+    package="site.baetles.chordplay">
    <application
         android:label="the_baetles_chord_play"
         android:name="${applicationName}"

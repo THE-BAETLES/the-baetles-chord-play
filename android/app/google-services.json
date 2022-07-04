@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "617007775764",
+    "project_id": "chordplay2022",
+    "storage_bucket": "chordplay2022.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:617007775764:android:8aac91ea9409b2b42ae701",
+        "android_client_info": {
+          "package_name": "site.baetles.chordplay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "617007775764-sdf39numd6cahb0292e4ie1i5qdtuqqv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "site.baetles.chordplay",
+            "certificate_hash": "23b86dbff9b8613f94583b8ba0d3e00601d2947a"
+          }
+        },
+        {
+          "client_id": "617007775764-577hkapkhncdq5hv5d39u7b5006ej8an.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmXNNT8w5a0Q3pBraqlzoPMKknp8wTkGw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "617007775764-577hkapkhncdq5hv5d39u7b5006ej8an.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
