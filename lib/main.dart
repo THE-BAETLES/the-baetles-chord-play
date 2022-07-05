@@ -6,21 +6,23 @@ import 'dart:developer';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:the_baetles_chord_play/providers/home_screen.dart';
-import 'package:the_baetles_chord_play/screens/sign_in_page.dart';
+
+import 'navigate.dart';
 
 
 Future<void> main() async {
+  // Firebase initialize
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(new MyApp());
+
+  runApp(MyApp());
 }
 
 
 class MyApp extends StatefulWidget {
   @override
   MyAppState createState() {
-    return new MyAppState();
+    return MyAppState();
   }
 }
 
@@ -32,10 +34,7 @@ class MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
-      routes: {
-        '/' : (context) => SignInPage(),
-        '/home-screen' : (context) => HomeScreen()
-      },
+      routes: Navigate.routes,
     );
   }
 }
