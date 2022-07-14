@@ -1,4 +1,0 @@
-enum Membership {
-  basic,
-  premium;
-}
