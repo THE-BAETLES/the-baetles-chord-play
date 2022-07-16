@@ -33,6 +33,7 @@ class SignInController {
       userId = (await authService.getUserId())!;
       accessToken = (await authService.getAccessToken())!;
     } catch (e) {
+      rethrow;
       if (kDebugMode) {
         log("SignInController: 로그인이 정상적으로 처리되지 않음");
       }

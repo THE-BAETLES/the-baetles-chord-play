@@ -14,9 +14,7 @@ class SignInPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Login Page"),
-      ),
+      appBar: null,
       body: Stack(
         children: [
           Positioned(

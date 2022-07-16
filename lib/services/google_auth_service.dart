@@ -33,9 +33,6 @@ class GoogleAuthService implements AuthService {
     // Once signed in, return the UserCredential
     UserCredential userCredential = await _auth.signInWithCredential(credential);
 
-    if (userCredential.additionalUserInfo!.isNewUser) {
-      //Navigator.pushNamedAndRemoveUntil(context, newRouteName, (route) => false);
-    }
 
     return userCredential;
   }
