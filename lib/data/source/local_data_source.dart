@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:the_baetles_chord_play/datas/models/user.dart';
+import 'package:the_baetles_chord_play/domain/model/user.dart';
 
 class LocalDataSource {
   static final LocalDataSource _instance = LocalDataSource._internal();

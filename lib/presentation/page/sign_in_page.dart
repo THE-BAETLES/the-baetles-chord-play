@@ -1,12 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:the_baetles_chord_play/widgets/atoms/flower_pod_image.dart';
-import 'package:the_baetles_chord_play/widgets/atoms/google_icon.dart';
-import 'package:the_baetles_chord_play/widgets/atoms/guitarist_image.dart';
-import 'package:the_baetles_chord_play/widgets/molecules/google_login_button.dart';
-import '../molecules/guitarist_pod_image.dart';
+import 'package:the_baetles_chord_play/widget/molecule/google_login_button.dart';
+
+import '../../widget/molecule/guitarist_pod_image.dart';
 
 class SignInPage extends StatelessWidget {
   const SignInPage({Key? key}) : super(key: key);

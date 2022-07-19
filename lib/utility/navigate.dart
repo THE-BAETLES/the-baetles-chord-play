@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:the_baetles_chord_play/widgets/pages/bridge_page.dart';
-import 'package:the_baetles_chord_play/widgets/pages/home_page.dart';
-import 'package:the_baetles_chord_play/widgets/pages/sign_in_page.dart';
 
-import '../widgets/pages/sign_up_page.dart';
+import '../presentation/page/bridge_page.dart';
+import '../presentation/page/home_page.dart';
+import '../presentation/page/sign_in_page.dart';
+import '../presentation/sign_up/sign_up_page.dart';
 
 class Navigate {
   static Map<String, Widget Function(BuildContext)> routes = {

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:the_baetles_chord_play/models/chord.dart';
-import 'package:the_baetles_chord_play/models/note.dart';
-import 'package:the_baetles_chord_play/models/triad_type.dart';
+import 'package:the_baetles_chord_play/domain/model/chord.dart';
+import 'package:the_baetles_chord_play/domain/model/note.dart';
+import 'package:the_baetles_chord_play/domain/model/triad_type.dart';
 
 void main() {
   group('Note Model Test', () {

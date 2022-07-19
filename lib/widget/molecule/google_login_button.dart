@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:the_baetles_chord_play/controllers/sign_in_controller.dart';
-import 'package:the_baetles_chord_play/datas/models/sign_in_platform.dart';
+import 'package:the_baetles_chord_play/controller/sign_in_controller.dart';
+import 'package:the_baetles_chord_play/domain/model/sign_in_platform.dart';
 
-import '../atoms/google_icon.dart';
+import '../atom/google_icon.dart';
 
 class GoogleLoginButton extends StatelessWidget {
   GoogleLoginButton({Key? key}) : super(key: key);

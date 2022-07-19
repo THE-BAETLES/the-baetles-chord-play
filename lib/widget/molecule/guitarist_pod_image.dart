@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../atoms/flower_pod_image.dart';
-import '../atoms/guitarist_image.dart';
+import '../atom/flower_pod_image.dart';
+import '../atom/guitarist_image.dart';
 
 class GuitaristPodImage extends StatelessWidget {
   const GuitaristPodImage({Key? key}) : super(key: key);

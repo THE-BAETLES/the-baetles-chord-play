@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:the_baetles_chord_play/widgets/atoms/app_font_families.dart';
+import 'package:the_baetles_chord_play/widget/atom/app_font_families.dart';
 
 import 'app_colors.dart';
 

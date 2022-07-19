@@ -1,8 +1,4 @@
-import 'package:the_baetles_chord_play/datas/models/language.dart';
-import 'package:the_baetles_chord_play/datas/models/membership.dart';
-import 'package:the_baetles_chord_play/datas/models/sign_in_platform.dart';
-import 'package:the_baetles_chord_play/datas/models/gender.dart';
-import 'package:the_baetles_chord_play/datas/models/user.dart';
+import 'package:the_baetles_chord_play/domain/model/user.dart';
 
 class RemoteDataSource {
   Future<User?> fetchUserInfo(String userId, String accessToken) async {

@@ -7,10 +7,13 @@ import 'dart:developer';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:the_baetles_chord_play/datas/repositories/auth_repository.dart';
+import 'package:provider/provider.dart';
+import 'package:the_baetles_chord_play/data/repository/auth_repository.dart';
+import 'package:the_baetles_chord_play/domain/use_case/check_nickname_overlap.dart';
+import 'package:the_baetles_chord_play/presentation/sign_up/sign_up_view_model.dart';
+import 'package:the_baetles_chord_play/widget/atom/app_colors.dart';
 
-import 'utilities/navigate.dart';
-
+import 'utility/navigate.dart';
 
 Future<void> main() async {
   // Represent splash page
@@ -27,7 +30,6 @@ Future<void> main() async {
   runApp(MyApp(hadSignedIn));
 }
 
-
 class MyApp extends StatelessWidget {
   late final String _initialRoute;
 
@@ -38,10 +40,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: _initialRoute,
-      routes: Navigate.routes,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+            create: (_) =>
+                SignUpViewModel(CheckNicknameOverlap(AuthRepository()))),
+      ],
+      builder: (context, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          initialRoute: _initialRoute,
+          routes: Navigate.routes,
+        );
+      },
     );
   }
 }

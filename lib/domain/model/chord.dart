@@ -1,4 +1,4 @@
-import 'package:the_baetles_chord_play/datas/models/triad_type.dart';
+import 'package:the_baetles_chord_play/domain/model/triad_type.dart';
 
 import 'note.dart';
 

@@ -1,6 +1,5 @@
-import 'package:the_baetles_chord_play/datas/sources/local_data_source.dart';
-import 'package:the_baetles_chord_play/datas/models/user.dart';
-import 'package:the_baetles_chord_play/datas/sources/remote_data_source.dart';
+import 'package:the_baetles_chord_play/data/source/local_data_source.dart';
+import 'package:the_baetles_chord_play/data/source/remote_data_source.dart';
 
 class AuthRepository {
   static final AuthRepository _instance = AuthRepository._internal();
@@ -29,7 +28,11 @@ class AuthRepository {
     _localDataSource.storeSharedPreference("accessToken", accessToken);
 
     bool isSuccessful = await _remoteDataSource.setUserCredential(userId, accessToken);
-
     return isSuccessful;
+  }
+
+  Future<bool> isNicknameRegistered(String nickname) async {
+    // TODO : 닉네임이 등록되어 있는지 조회
+    return Future(() => false); // dummy data
   }
 }
