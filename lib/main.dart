@@ -9,9 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:the_baetles_chord_play/data/repository/auth_repository.dart';
+import 'package:the_baetles_chord_play/data/repository/country_repository.dart';
+import 'package:the_baetles_chord_play/data/repository/video_repository.dart';
 import 'package:the_baetles_chord_play/domain/use_case/check_nickname_overlap.dart';
+import 'package:the_baetles_chord_play/domain/use_case/get_music_to_check_preference.dart';
+import 'package:the_baetles_chord_play/domain/use_case/get_user_country.dart';
 import 'package:the_baetles_chord_play/presentation/sign_up/sign_up_view_model.dart';
-import 'package:the_baetles_chord_play/widget/atom/app_colors.dart';
 
 import 'utility/navigate.dart';
 
@@ -44,7 +47,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
             create: (_) =>
-                SignUpViewModel(CheckNicknameOverlap(AuthRepository()))),
+                SignUpViewModel(CheckNicknameOverlap(AuthRepository()), GetMusicToCheckPreference(VideoRepository(), GetUserCountry(CountryRepository())))),
       ],
       builder: (context, child) {
         return MaterialApp(

@@ -6,7 +6,7 @@ import 'app_colors.dart';
 class SignUpTextStyle {
 
   static const TextStyle h1 = TextStyle(
-    color: AppColors.gray04,
+    color: AppColors.black04,
     fontFamily: AppFontFamilies.pretendard,
     fontWeight: FontWeight.bold,
     fontSize: 22,

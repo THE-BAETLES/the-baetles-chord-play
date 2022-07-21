@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:the_baetles_chord_play/service/auth_service.dart';
 
@@ -32,6 +35,17 @@ class GoogleAuthService implements AuthService {
 
     // Once signed in, return the UserCredential
     UserCredential userCredential = await _auth.signInWithCredential(credential);
+
+    // 백엔드 협업용 id 토큰 받아오는 코드
+    if (kDebugMode) {
+      print("${await userCredential.user?.getIdToken()}");
+      print("id token: ${await userCredential.user?.getIdTokenResult()}");
+      String idToken = (await userCredential.user?.getIdToken())!;
+
+      for (int i = 0; i <= idToken.length; i += 300) {
+        print(idToken.substring(i, min(i + 300, idToken.length)));
+      }
+    }
 
     return userCredential;
   }
