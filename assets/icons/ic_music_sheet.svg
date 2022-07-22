@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12">
+  <g id="ic_list_sheet" transform="translate(-91 -488)">
+    <rect id="사각형_166" data-name="사각형 166" width="12" height="12" transform="translate(91 488)" fill="rgba(255,255,255,0)"/>
+    <rect id="사각형_167" data-name="사각형 167" width="10" height="11" rx="1" transform="translate(92 489)" fill="#80829a"/>
+    <g id="music-player" transform="translate(91.917 490.739)">
+      <g id="그룹_70" data-name="그룹 70" transform="translate(2.083 0)">
+        <path id="패스_35" data-name="패스 35" d="M7,.056A.227.227,0,0,0,6.824,0L3.646.457a.227.227,0,0,0-.195.225V3.343a.911.911,0,1,0,.454.788V1.786L6.629,1.4V2.889a.911.911,0,1,0,.454.788V.227A.227.227,0,0,0,7,.056Z" transform="translate(-2.083 0)" fill="#fff"/>
+      </g>
+    </g>
+    <path id="패스_323" data-name="패스 323" d="M94.5,497.531h4" transform="translate(0.5 -0.271)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="1"/>
+  </g>
+</svg>
