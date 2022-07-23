@@ -47,4 +47,9 @@ class LocalDataSource {
   void storeSharedPreference(String key, String value) {
     _sharedPref.setString(key, value);
   }
+
+  Object? fetchSharedPreference(String key) {
+    Object? result = _sharedPref.get(key);
+    return result;
+  }
 }

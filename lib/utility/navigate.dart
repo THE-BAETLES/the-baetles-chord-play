@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../presentation/page/bridge_page.dart';
+import '../presentation/bridge/bridge_page.dart';
 import '../presentation/home/home_page.dart';
-import '../presentation/page/sign_in_page.dart';
+import '../presentation/sign_in/sign_in_page.dart';
 import '../presentation/sign_up/sign_up_page.dart';
 
 class Navigate {

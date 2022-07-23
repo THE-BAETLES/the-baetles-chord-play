@@ -8,15 +8,41 @@ class HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double statusBarHeight =  MediaQuery.of(context).viewPadding.top;
+
     return Stack(
       children: [
         SizedBox(
-          height: 162,
+          height: 162 + statusBarHeight,
         ),
         Container(
           width: MediaQuery.of(context).size.width,
-          height: 134,
+          height: 134 + statusBarHeight,
           color: AppColors.blue4E,
+        ),
+        Positioned(
+          left: 18,
+          bottom: 70,
+          child: RichText(
+            text: TextSpan(children: <TextSpan>[
+              TextSpan(
+                text: 'Hello,\n',
+                style: TextStyle(
+                  fontFamily: "Montserrat",
+                  fontWeight: FontWeight.w400,
+                  fontSize: 24,
+                ),
+              ),
+              TextSpan(
+                text: 'Soyou Kim',
+                style: TextStyle(
+                  fontFamily: "Montserrat",
+                  fontWeight: FontWeight.w700,
+                  fontSize: 24
+                )
+              ),
+            ]),
+          ),
         ),
         Positioned(
           left: 0,

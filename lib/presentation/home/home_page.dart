@@ -1,63 +1,55 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:the_baetles_chord_play/presentation/home/recommendation_block.dart';
-import 'package:the_baetles_chord_play/presentation/home/recommendation_list.dart';
+import 'package:provider/provider.dart';
+import 'package:the_baetles_chord_play/presentation/home/video_grid_block.dart';
 
+import '../../domain/model/video.dart';
 import '../../widget/atom/app_colors.dart';
-import 'history_block.dart';
+import 'home_view_model.dart';
+import 'video_list_block.dart';
 import 'home_header.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    HomeViewModel viewModel = context.watch<HomeViewModel>();
+
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        systemOverlayStyle:
-            SystemUiOverlayStyle(statusBarColor: AppColors.blue4E),
-        shadowColor: Colors.transparent,
-        toolbarHeight: 0,
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // header
-              HomeHeader(),
+          systemOverlayStyle:
+              SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          toolbarHeight: 0),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // header
+            HomeHeader(),
 
-              Container(height: 30),
+            Container(height: 30),
 
-              HistoryBlock(),
+            VideoListBlock(
+              videos: viewModel.collectionVideos ?? UnmodifiableListView([]),
+              onVideoClicked: (Video video) {
+                viewModel.onVideoClicked(context, video);
+              },
+            ),
 
-              Container(height: 40),
+            Container(height: 40),
 
-              RecommendationBlock(),
-            ],
-          ),
+            VideoGridBlock(
+              videos: viewModel.recommendedVideos ?? UnmodifiableListView([]),
+              onVideoClicked: (Video video) {
+                viewModel.onVideoClicked(context, video);
+              },
+            ),
+          ],
         ),
       ),
-      // body: Container(
-      //   width: MediaQuery.of(context).size.width,
-      //   child: Column(
-      //     children: [
-      //       SearchBar(),
-      //       SizedBox(
-      //         width: MediaQuery.of(context).size.width / 2,
-      //         child: ElevatedButton(
-      //           onPressed: () {
-      //             Navigator.pushNamed(context, '/bridge-screen');
-      //           },
-      //           child: Image.network(
-      //             YoutubePlayerController.getThumbnail(
-      //               videoId: 'WxM0qO29RM8',
-      //               quality: ThumbnailQuality.high,
-      //             ),
-      //             fit: BoxFit.fitWidth,
-      //           ),
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
     );
   }
 }

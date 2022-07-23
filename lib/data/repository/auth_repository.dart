@@ -6,6 +6,10 @@ class AuthRepository {
   late final LocalDataSource _localDataSource;
   late final RemoteDataSource _remoteDataSource;
 
+  // shared preference key
+  static const userIdKey = "userId";
+  static const idTokenKey = "idToken";
+
   factory AuthRepository() {
     return _instance;
   }
@@ -20,15 +24,20 @@ class AuthRepository {
   }
 
   Future<bool> hadSignedIn() async {
-    return (await _localDataSource.fetchUser()) != null;
+    await _localDataSource.isInitialized; // local data source가 준비 완료될 때까지 대기
+    return (await _localDataSource.fetchSharedPreference(idTokenKey)) != null;
   }
 
-  Future<bool> storeUserCredential(String userId, String accessToken) async {
-    _localDataSource.storeSharedPreference("userId", userId);
-    _localDataSource.storeSharedPreference("accessToken", accessToken);
+  Future<bool> storeUserCredential(String userId, String idToken) async {
+    _localDataSource.storeSharedPreference(userIdKey, userId);
+    _localDataSource.storeSharedPreference(idTokenKey, idToken);
 
-    bool isSuccessful = await _remoteDataSource.setUserCredential(userId, accessToken);
+    bool isSuccessful = await _remoteDataSource.setUserCredential(userId, idToken);
     return isSuccessful;
+  }
+
+  Future<Object?> fetchIdToken() async {
+    return await _localDataSource.fetchSharedPreference(idTokenKey);
   }
 
   Future<bool> isNicknameRegistered(String nickname) async {

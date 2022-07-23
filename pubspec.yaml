@@ -109,6 +109,26 @@ flutter:
           weight: 800
         - asset: assets/fonts/Pretendard/Pretendard-Black.otf
           weight: 900
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat/Montserrat-Regular.otf
+        - asset: assets/fonts/Montserrat/Montserrat-Thin.otf
+          weight: 100
+        - asset: assets/fonts/Montserrat/Montserrat-ExtraLight.otf
+          weight: 200
+        - asset: assets/fonts/Montserrat/Montserrat-Light.otf
+          weight: 300
+        - asset: assets/fonts/Montserrat/Montserrat-Medium.otf
+          weight: 500
+        - asset: assets/fonts/Montserrat/Montserrat-SemiBold.otf
+          weight: 600
+        - asset: assets/fonts/Montserrat/Montserrat-Bold.otf
+          weight: 700
+        - asset: assets/fonts/Montserrat/Montserrat-ExtraBold.otf
+          weight: 800
+        - asset: assets/fonts/Montserrat/Montserrat-Black.otf
+          weight: 900
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 

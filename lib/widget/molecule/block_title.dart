@@ -19,7 +19,7 @@ class BlockTitle extends StatelessWidget {
           alignment: Alignment.centerLeft,
           margin: EdgeInsets.only(left: 15),
           child: Text(
-            "연습했던 곡",
+            title,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w700,
@@ -33,7 +33,7 @@ class BlockTitle extends StatelessWidget {
           alignment: Alignment.centerLeft,
           margin: EdgeInsets.only(left: 15),
           child: Text(
-            "소유님이 연습했던 악보영상들",
+            subTitle,
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w300,

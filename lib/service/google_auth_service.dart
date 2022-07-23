@@ -15,7 +15,7 @@ class GoogleAuthService implements AuthService {
   }
 
   @override
-  Future<String?>? getAccessToken() async {
+  Future<String?>? getIdToken() async {
     return await _auth.currentUser?.getIdToken();
   }
 

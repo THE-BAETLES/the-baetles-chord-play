@@ -29,7 +29,7 @@ class SignInController {
       await authService.signIn();
 
       userId = (authService.getUserId())!;
-      accessToken = (await authService.getAccessToken())!;
+      accessToken = (await authService.getIdToken())!;
     } catch (e) {
       rethrow;
       if (kDebugMode) {

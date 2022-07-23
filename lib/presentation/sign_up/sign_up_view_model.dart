@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:the_baetles_chord_play/domain/use_case/check_nickname_overlap.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_music_to_check_preference.dart';
+import 'package:the_baetles_chord_play/domain/use_case/sign_in_with_id_token.dart';
 
 import '../../domain/model/gender.dart';
 import '../../domain/model/performer_grade.dart';
@@ -14,6 +15,7 @@ class SignUpViewModel with ChangeNotifier {
   // use case
   final CheckNicknameOverlap checkNicknameOverlap;
   final GetMusicToCheckPreference getMusicToCheckPreference;
+  final SignInWithIdToken signInWithIdToken;
 
   static const _nicknamePageOffset = 0;
   static const _genderPageOffset = 1;
@@ -51,7 +53,11 @@ class SignUpViewModel with ChangeNotifier {
 
   bool get isPreferenceConfirmButtonVisible => _preferredSongs.length >= 3;
 
-  SignUpViewModel(this.checkNicknameOverlap, this.getMusicToCheckPreference);
+  SignUpViewModel(
+    this.checkNicknameOverlap,
+    this.getMusicToCheckPreference,
+    this.signInWithIdToken,
+  );
 
   void onChangeNickname(String nickname) {
     _inputNickname = nickname;
@@ -131,14 +137,13 @@ class SignUpViewModel with ChangeNotifier {
     // 전송이 실패했을 때
     // TODO : sign in 페이지로 돌아가기
 
-
     // TODO : sign up view model 데이터 리셋
 
     notifyListeners();
   }
 
   Future<bool> onCompleteButtonClicked() async {
-    // TODO : 로그인
+    signInWithIdToken();
 
     // 로그인 성공 시 true 반환
     return true;

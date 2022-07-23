@@ -1,14 +1,15 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:the_baetles_chord_play/widget/molecule/video_card.dart';
+import 'package:the_baetles_chord_play/widget/molecule/block_title.dart';
 
 import '../../domain/model/video.dart';
+import '../../widget/molecule/video_card.dart';
 
-class VideoList extends StatelessWidget {
+class VideoGrid extends StatelessWidget {
   late final List<Video> _videos;
   late final void Function(Video)? _onVideoClicked;
 
-  VideoList({
+  VideoGrid({
     Key? key,
     required List<Video> video,
     void Function(Video)? onVideoClicked,
@@ -21,34 +22,27 @@ class VideoList extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> videoCards = [];
 
-    // 맨 앞 공백
-    videoCards.add(Container(width: 10));
-
     for (int i = 0; i < _videos.length; ++i) {
       Video video = _videos[i];
 
-      videoCards.add(Container(
-        margin: EdgeInsets.symmetric(vertical: 12, horizontal: 5),
-        child: VideoCard(
-          video: video,
-          onVideoClicked: _onVideoClicked,
-        ),
+      videoCards.add(VideoCard(
+        video: video,
+        onVideoClicked: _onVideoClicked,
       ));
     }
 
-    // 맨 뒤 공백
-    videoCards.add(Container(width: 10));
-
     return Container(
-      height: 274,
-      child: ListView(
+      height: 554,
+      child: GridView.count(
+        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+        crossAxisCount: 2,
         scrollDirection: Axis.horizontal,
         children: videoCards,
+        shrinkWrap: true,
+        childAspectRatio: 1.344086021505376,
+        crossAxisSpacing: 30,
+        mainAxisSpacing: 10,
       ),
     );
-  }
-
-  void addVideos(final List<Video> newVideos) {
-    _videos.addAll(newVideos);
   }
 }
