@@ -1,21 +1,21 @@
 import 'chord_block.dart';
 
-
 class SheetMusic {
-  final int bpm;
-  final List<ChordBlock> chords;
+  final String id;
+  final String videoId;
+  final String userId;
+  final String title;
+  final DateTime createAt;
+  final DateTime updateAt;
+  final int likeCount;
 
-  SheetMusic(this.bpm, this.chords);
-
-  // VideoItemModel.fromJson(Map<String, dynamic> json) {
-  //   title = json['title'];
-  //   videoId = json['videoId'];
-  // }
-  //
-  // Map<String, dynamic> toJson() {
-  //   final Map<String, dynamic> data = new Map<String, dynamic>();
-  //   data['title'] = this.title;
-  //   data['videoId'] = this.videoId;
-  //   return data;
-  // }
+  SheetMusic({
+    required this.id,
+    required this.videoId,
+    required this.userId,
+    required this.title,
+    required this.createAt,
+    required this.updateAt,
+    required this.likeCount,
+  });
 }

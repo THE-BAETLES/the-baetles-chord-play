@@ -36,8 +36,12 @@ class AuthRepository {
     return isSuccessful;
   }
 
-  Future<Object?> fetchIdToken() async {
-    return await _localDataSource.fetchSharedPreference(idTokenKey);
+  Future<String?> fetchIdToken() async {
+    return await _localDataSource.fetchSharedPreference(idTokenKey) as String?;
+  }
+
+  Future<String?> fetchUserId() async {
+    return await _localDataSource.fetchSharedPreference(userIdKey) as String?;
   }
 
   Future<bool> isNicknameRegistered(String nickname) async {

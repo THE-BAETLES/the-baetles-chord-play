@@ -65,8 +65,8 @@ class _VideoRadioButtonState extends State<VideoRadioButton> {
           ),
         ),
         Container(
-    height: 0,
-    ),
+          height: 0,
+        ),
         SizedBox(
           height: 15,
           child: Text(

@@ -10,19 +10,25 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:the_baetles_chord_play/data/repository/auth_repository.dart';
 import 'package:the_baetles_chord_play/data/repository/country_repository.dart';
+import 'package:the_baetles_chord_play/data/repository/sheet_repository.dart';
 import 'package:the_baetles_chord_play/data/repository/video_repository.dart';
 import 'package:the_baetles_chord_play/domain/model/video.dart';
 import 'package:the_baetles_chord_play/domain/use_case/check_nickname_overlap.dart';
+import 'package:the_baetles_chord_play/domain/use_case/get_liked_sheets_of_video.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_music_to_check_preference.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_recommended_video.dart';
+import 'package:the_baetles_chord_play/domain/use_case/get_sheets_of_video.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_user_country.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_video_collection.dart';
 import 'package:the_baetles_chord_play/domain/use_case/sign_in_with_id_token.dart';
+import 'package:the_baetles_chord_play/presentation/bridge/bridge_view_model.dart';
 import 'package:the_baetles_chord_play/presentation/home/home_view_model.dart';
 import 'package:the_baetles_chord_play/presentation/sign_up/sign_up_view_model.dart';
 import 'package:the_baetles_chord_play/service/auth_service.dart';
 import 'package:the_baetles_chord_play/service/google_auth_service.dart';
 
+import 'domain/use_case/get_my_sheets_of_video.dart';
+import 'domain/use_case/get_user_id_token.dart';
 import 'utility/navigate.dart';
 
 Future<void> main() async {
@@ -56,15 +62,22 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
             create: (_) => SignUpViewModel(
-                  CheckNicknameOverlap(AuthRepository()),
-                  GetMusicToCheckPreference(
-                      VideoRepository(), GetUserCountry(CountryRepository())),
-                  SignInWithIdToken(AuthRepository(), GoogleAuthService())
-                )),
+                CheckNicknameOverlap(AuthRepository()),
+                GetMusicToCheckPreference(
+                    VideoRepository(), GetUserCountry(CountryRepository())),
+                SignInWithIdToken(AuthRepository(), GoogleAuthService()))),
         ChangeNotifierProvider(
             create: (_) => HomeViewModel(
                 GetVideoCollection(VideoRepository(), AuthRepository()),
                 GetRecommendedVideo(VideoRepository(), AuthRepository()))),
+        ChangeNotifierProvider(
+            create: (_) => BridgeViewModel(
+                GetUserIdToken(AuthRepository()),
+                GetSheetsOfVideo(SheetRepository()),
+                GetMySheetsOfVideo(
+                    GetSheetsOfVideo(SheetRepository()), AuthRepository()),
+                GetLikedSheetsOfVideo(
+                    GetSheetsOfVideo(SheetRepository()), SheetRepository()))),
       ],
       builder: (context, child) {
         return MaterialApp(
