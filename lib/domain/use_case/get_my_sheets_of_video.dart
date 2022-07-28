@@ -12,10 +12,10 @@ class GetMySheetsOfVideo {
   GetMySheetsOfVideo(this.getSheetsOfVideo, this.authRepository);
 
   Future<UnmodifiableListView<SheetMusic>> call(String videoId) async {
-    UnmodifiableListView<SheetMusic> sheetsOfVideo = await getSheetsOfVideo(videoId);
+    UnmodifiableListView<SheetMusic> sheets = await getSheetsOfVideo(videoId);
     String? idToken = await authRepository.fetchIdToken();
 
-    List<SheetMusic> mySheetsOfVideo = sheetsOfVideo.where((e) => e.userId == idToken).toList();
-    return UnmodifiableListView<SheetMusic>(mySheetsOfVideo);
+    List<SheetMusic> mySheets = sheets.where((sheet) => sheet.userId == idToken).toList();
+    return UnmodifiableListView<SheetMusic>(mySheets);
   }
 }

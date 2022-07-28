@@ -87,21 +87,11 @@ class SignUpPage extends StatelessWidget {
                   width: MediaQuery.of(context).size.width - 60,
                   child: RadioButtonList(
                     const ["남성입니다", "여성입니다"],
-                    onPressed: (int offset) {
-                      switch (offset) {
-                        case -1:
-                          viewModel.onChangeGender(null);
-                          break;
-                        case 0:
-                          viewModel.onChangeGender(Gender.male);
-                          break;
-                        case 1:
-                          viewModel.onChangeGender(Gender.female);
-                          break;
-                        default:
-                          if (kDebugMode) {
-                            print("SignUpPage: undefined offset");
-                          }
+                    onPressed: (int index) {
+                      if (index == -1) {
+                        viewModel.onChangeGender(null);
+                      } else {
+                        viewModel.onChangeGender(Gender.values[index]);
                       }
                     },
                   ),

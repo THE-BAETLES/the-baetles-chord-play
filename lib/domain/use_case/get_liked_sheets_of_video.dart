@@ -14,18 +14,17 @@ class GetLikedSheetsOfVideo {
     this.sheetRepository,
   );
 
-  Future<UnmodifiableListView<SheetMusic>> call(
-      String idToken, String videoId) async {
+  Future<UnmodifiableListView<SheetMusic>> call(String userIdToken, String videoId) async {
     // TODO : source 연결
 
     // dummy data
     UnmodifiableListView<String> likedSheetsIds =
         UnmodifiableListView(['f3WgS5dummyFnyAl', 'safgeayFnyAl']);
-    UnmodifiableListView<SheetMusic> sheetsOfVideo =
-        await getSheetsOfVideo(videoId);
+    UnmodifiableListView<SheetMusic> sheets = await getSheetsOfVideo(videoId);
 
+    // filtering
     List<SheetMusic> likedSheets =
-        sheetsOfVideo.where((e) => likedSheetsIds.contains(e.id)).toList();
+        sheets.where((sheet) => likedSheetsIds.contains(sheet.id)).toList();
 
     return UnmodifiableListView<SheetMusic>(likedSheets);
   }

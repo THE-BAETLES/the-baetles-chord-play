@@ -51,10 +51,6 @@ class _ToggleBoxState extends State<ToggleBox> {
           ),
           child: Stack(
             children: [
-              // Container(
-              //   height: MediaQuery.of(context).size.height,
-              //   width: MediaQuery.of(context).size.width,
-              // ),
               Positioned.fill(
                 child: Container(
                   alignment: Alignment.center,

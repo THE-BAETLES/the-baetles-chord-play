@@ -17,23 +17,23 @@ class SignUpViewModel with ChangeNotifier {
   final GetMusicToCheckPreference getMusicToCheckPreference;
   final SignInWithIdToken signInWithIdToken;
 
-  static const _nicknamePageOffset = 0;
-  static const _genderPageOffset = 1;
-  static const _gradePageOffset = 2;
-  static const _preferencePageOffset = 3;
+  static const _nicknamePage = 0;
+  static const _genderPage = 1;
+  static const _gradePage = 2;
+  static const _preferencePage = 3;
   static const _completePageOffset = 4;
 
   UnmodifiableListView<Video> musicToCheckPreference = UnmodifiableListView([]);
 
   final List<Video> _preferredSongs = [];
-  int _pageOffset = _nicknamePageOffset;
+  int _currentPage = _nicknamePage;
   bool _isNicknameValid = true;
   String _inputNickname = "";
   String? _confirmedNickname;
   Gender? _selectedGender;
   PerformerGrade? _selectedGrade;
 
-  int get pageOffset => _pageOffset;
+  int get pageOffset => _currentPage;
 
   bool get isNicknameValid => _isNicknameValid;
 
@@ -80,7 +80,7 @@ class SignUpViewModel with ChangeNotifier {
     }
 
     _confirmedNickname = inputNickname;
-    _pageOffset = _genderPageOffset;
+    _currentPage = _genderPage;
     notifyListeners();
     return null;
   }
@@ -93,7 +93,7 @@ class SignUpViewModel with ChangeNotifier {
   void onConfirmGender() {
     assert(_selectedGender != null);
 
-    _pageOffset = _gradePageOffset;
+    _currentPage = _gradePage;
     notifyListeners();
     return;
   }
@@ -111,7 +111,7 @@ class SignUpViewModel with ChangeNotifier {
       notifyListeners();
     });
 
-    _pageOffset = _preferencePageOffset;
+    _currentPage = _preferencePage;
     notifyListeners();
     return;
   }
@@ -132,7 +132,7 @@ class SignUpViewModel with ChangeNotifier {
     // TODO : 서버 전송 작업
 
     // 전송이 성공적일 때
-    _pageOffset = _completePageOffset;
+    _currentPage = _completePageOffset;
 
     // 전송이 실패했을 때
     // TODO : sign in 페이지로 돌아가기

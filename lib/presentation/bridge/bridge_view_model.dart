@@ -13,6 +13,7 @@ import '../../domain/use_case/get_user_id_token.dart';
 class BridgeViewModel with ChangeNotifier {
   Video? _video;
   Instrument? _selectedInstrument = Instrument.guitar;
+  int _tabBarOffset = 0;
 
   // use cases
   final GetUserIdToken getUserIdToken;
@@ -30,7 +31,22 @@ class BridgeViewModel with ChangeNotifier {
 
   UnmodifiableListView<SheetMusic>? get sharedSheets => _sharedSheets;
 
+  int get sheetCount {
+    switch (_tabBarOffset) {
+      case 0:
+        return _mySheets?.length ?? 0;
+      case 1:
+        return _likedSheets?.length ?? 0;
+      case 2:
+        return _sharedSheets?.length ?? 0;
+      default:
+        return -1;
+    }
+  }
+
   Instrument? get selectedInstrument => _selectedInstrument;
+
+  int get tabBarOffset => _tabBarOffset;
 
   BridgeViewModel(
     this.getUserIdToken,
@@ -40,8 +56,10 @@ class BridgeViewModel with ChangeNotifier {
   );
 
   Future<void> onPageInit(Video video) async {
-    this._video = video;
-    _loadSheets(video);
+    if (this._video != video) {
+      this._video = video;
+      _loadSheets(video);
+    }
   }
 
   void onSelectInstrument(Instrument instrument) {
@@ -54,6 +72,11 @@ class BridgeViewModel with ChangeNotifier {
     _likedSheets =
         await getLikedSheetIdsOfVideo((await getUserIdToken())!, video.id);
 
+    notifyListeners();
+  }
+
+  void onChangeTabIndex(int tabIndex) {
+    _tabBarOffset = tabIndex;
     notifyListeners();
   }
 }
