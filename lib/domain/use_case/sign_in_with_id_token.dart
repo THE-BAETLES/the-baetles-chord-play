@@ -9,9 +9,7 @@ class SignInWithIdToken {
   SignInWithIdToken(this._authRepository, this._authService);
 
   Future<void> call() async {
-    _authRepository.storeUserCredential(
-      _authService.getUserId()!,
-      (await _authService.getIdToken())!,
-    );
+    // TODO : sign in
+    return await Future<void>(() {});
   }
 }
