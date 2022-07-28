@@ -6,6 +6,8 @@ import '../atom/app_font_families.dart';
 import 'EllipseToggleButton.dart';
 
 class InstrumentSelector extends StatefulWidget {
+  static const int none = -1;
+
   final List<String> instruments;
   final void Function(int) onSelected;
 
@@ -64,7 +66,7 @@ class _InstrumentSelectorState extends State<InstrumentSelector> {
           onPressed: (bool isActivated) {
             if (!isActivated) {
               setState(() {
-                _selectedIndex = -1;
+                _selectedIndex = InstrumentSelector.none;
               });
               widget.onSelected(_selectedIndex);
             } else if (_selectedIndex != index) {

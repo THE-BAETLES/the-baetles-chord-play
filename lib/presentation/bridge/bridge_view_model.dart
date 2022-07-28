@@ -14,6 +14,7 @@ class BridgeViewModel with ChangeNotifier {
   Video? _video;
   Instrument? _selectedInstrument = Instrument.guitar;
   int _tabBarOffset = 0;
+  SheetMusic? _selectedSheet = null;
 
   // use cases
   final GetUserIdToken getUserIdToken;
@@ -30,6 +31,8 @@ class BridgeViewModel with ChangeNotifier {
   UnmodifiableListView<SheetMusic>? get likedSheets => _likedSheets;
 
   UnmodifiableListView<SheetMusic>? get sharedSheets => _sharedSheets;
+
+  SheetMusic? get selectedSheet => _selectedSheet;
 
   int get sheetCount {
     switch (_tabBarOffset) {
@@ -63,7 +66,7 @@ class BridgeViewModel with ChangeNotifier {
     }
   }
 
-  void onSelectInstrument(Instrument instrument) {
+  void onChangeInstrument(Instrument? instrument) {
     _selectedInstrument = instrument;
   }
 
@@ -79,5 +82,13 @@ class BridgeViewModel with ChangeNotifier {
   void onChangeTabIndex(int tabIndex) {
     _tabBarOffset = tabIndex;
     notifyListeners();
+  }
+
+  void onSelectSheet(SheetMusic sheet) {
+    if (_selectedSheet != sheet) {
+      _selectedSheet = sheet;
+
+      notifyListeners();
+    }
   }
 }

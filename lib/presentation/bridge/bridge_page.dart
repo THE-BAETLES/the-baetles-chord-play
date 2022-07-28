@@ -6,6 +6,7 @@ import 'package:the_baetles_chord_play/widget/atom/youtube_video_player.dart';
 import 'package:the_baetles_chord_play/widget/molecule/middle_hightlight_text.dart';
 import 'package:the_baetles_chord_play/widget/organism/transparent_appbar.dart';
 
+import '../../domain/model/instrument.dart';
 import '../../domain/model/video.dart';
 import '../../widget/atom/app_colors.dart';
 import '../../widget/molecule/add_sheet_button.dart';
@@ -40,6 +41,9 @@ class BridgePage extends StatelessWidget {
                     children: [
                       VideoInfoCard(
                         video: video,
+                        onChangeInstrument: (Instrument? instrument) {
+                          viewModel.onChangeInstrument(instrument);
+                        },
                       ),
                       const Divider(
                         color: AppColors.grayF8,

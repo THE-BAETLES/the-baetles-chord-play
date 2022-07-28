@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:the_baetles_chord_play/widget/molecule/instrument_selector.dart';
 import 'package:the_baetles_chord_play/widget/molecule/video_summary.dart';
 
+import '../../domain/model/instrument.dart';
 import '../../domain/model/video.dart';
 import '../../widget/atom/app_colors.dart';
 
 class VideoInfoCard extends StatelessWidget {
   final Video video;
+  final void Function(Instrument?)? onChangeInstrument;
 
-  const VideoInfoCard({Key? key, required this.video}) : super(key: key);
+  const VideoInfoCard({Key? key, required this.video, this.onChangeInstrument}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,11 @@ class VideoInfoCard extends StatelessWidget {
           InstrumentSelector(
             instruments: ['Guitar', 'Piano'],
             onSelected: (int index) {
-
+              if (index == InstrumentSelector.none) {
+                onChangeInstrument?.call(null);
+              } else {
+                onChangeInstrument?.call(Instrument.values[index]);
+              }
             },
           ),
         ],
