@@ -20,7 +20,7 @@ class AuthRepository {
 
   Future<String?>? fetchIdToken({bool forceRefresh = false}) async {
     return await FirebaseAuth.instance.currentUser?.getIdToken(forceRefresh);
-  }]
+  }
 
   String? fetchUserId() {
     return FirebaseAuth.instance.currentUser?.uid;
