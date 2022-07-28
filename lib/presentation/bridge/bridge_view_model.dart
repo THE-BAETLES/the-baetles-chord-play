@@ -57,6 +57,7 @@ class BridgeViewModel with ChangeNotifier {
 
   Future<void> onPageInit(Video video) async {
     if (this._video != video) {
+      _tabBarOffset = 0;
       this._video = video;
       _loadSheets(video);
     }
