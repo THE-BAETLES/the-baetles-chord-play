@@ -4,7 +4,7 @@ import 'package:the_baetles_chord_play/domain/model/note.dart';
 import 'package:the_baetles_chord_play/domain/model/triad_type.dart';
 
 void main() {
-  group('Note Model Test', () {
+  group('Note model test', () {
     test('Instance construction', () {
       Note note1 = Note(10);
       expect(note1.keyNumber, 10);

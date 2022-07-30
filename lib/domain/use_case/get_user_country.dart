@@ -5,7 +5,7 @@ class GetUserCountry {
 
   GetUserCountry(this.countryRepository);
 
-  Future<String> call() async {
-    return await countryRepository.getPlatformLocaleName();
+  Future<String?> call() async {
+    return await countryRepository.getCountryCode();
   }
 }

@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:the_baetles_chord_play/data/source/local_data_source.dart';
 import 'package:the_baetles_chord_play/data/source/remote_data_source.dart';
 
 class AuthRepository {
@@ -14,8 +13,8 @@ class AuthRepository {
     _remoteDataSource = RemoteDataSource();
   }
 
-  Future<bool> hadSignedUp(String idToken) async {
-    return (await _remoteDataSource.fetchUserInfo(idToken)) != null;
+  Future<bool> login(String idToken) async {
+    return (await _remoteDataSource.login(idToken));
   }
 
   Future<String?>? fetchIdToken({bool forceRefresh = false}) async {
@@ -26,8 +25,11 @@ class AuthRepository {
     return FirebaseAuth.instance.currentUser?.uid;
   }
 
-  Future<bool> isNicknameRegistered(String nickname) async {
-    // TODO : 닉네임이 등록되어 있는지 조회
-    return Future(() => false); // dummy data
+  Future<bool> isNicknameValid(String nickname) async {
+    return await _remoteDataSource.checkNicknameValid((await fetchIdToken())!, nickname); // dummy data
+  }
+
+  Future<String> getNicknameSuggestion() async {
+    return await _remoteDataSource.getNicknameSuggestion((await fetchIdToken())!);
   }
 }

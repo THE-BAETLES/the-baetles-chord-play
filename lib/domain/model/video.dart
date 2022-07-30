@@ -4,7 +4,7 @@ class Video {
   final String title;
   final String genre;
   final String singer;
-  final int difficulty;
+  final int difficultyAvg;
   final int playCount;
 
   Video({
@@ -13,9 +13,31 @@ class Video {
     required this.title,
     required this.genre,
     required this.singer,
-    required this.difficulty,
+    required this.difficultyAvg,
     required this.playCount,
   });
+
+  factory Video.fromJson(Map<String, dynamic> json) {
+    return Video(
+      id: json['id'],
+      thumbnailPath: json['thumnail_path'], // TODO : 오타 고치기
+      title: json['title'],
+      genre: json['genre'],
+      singer: json['singer'],
+      difficultyAvg: json['difficulty_avg'],
+      playCount: json['play_count'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'thumbnail_path': thumbnailPath,
+    'title': title,
+    'genre': genre,
+    'singer': singer,
+    'difficulty_avg': difficultyAvg,
+    'play_count': playCount,
+  };
 
   @override
   bool operator ==(Object other) =>
@@ -27,7 +49,7 @@ class Video {
           title == other.title &&
           genre == other.genre &&
           singer == other.singer &&
-          difficulty == other.difficulty &&
+          difficultyAvg == other.difficultyAvg &&
           playCount == other.playCount;
 
   @override
@@ -37,6 +59,6 @@ class Video {
       title.hashCode ^
       genre.hashCode ^
       singer.hashCode ^
-      difficulty.hashCode ^
+      difficultyAvg.hashCode ^
       playCount.hashCode;
 }

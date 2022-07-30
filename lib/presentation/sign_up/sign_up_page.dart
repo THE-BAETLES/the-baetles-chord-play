@@ -43,8 +43,10 @@ class SignUpPage extends StatelessWidget {
                   height: 30,
                   width: MediaQuery.of(context).size.width - 20,
                   child: SignUpInputField(
-                      viewModel.inputNickname, "닉네임을 입력해주세요.",
-                      maxLength: 15),
+                    viewModel.inputNickname,
+                    "닉네임을 입력해주세요.",
+                    maxLength: 15,
+                  ),
                 ),
                 Visibility(
                   visible: viewModel.isNicknameConfirmButtonVisible,

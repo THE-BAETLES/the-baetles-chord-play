@@ -4,6 +4,7 @@
 
 import 'dart:developer';
 
+import 'package:country_codes/country_codes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ import 'package:the_baetles_chord_play/data/repository/country_repository.dart';
 import 'package:the_baetles_chord_play/data/repository/sheet_repository.dart';
 import 'package:the_baetles_chord_play/data/repository/video_repository.dart';
 import 'package:the_baetles_chord_play/domain/model/video.dart';
-import 'package:the_baetles_chord_play/domain/use_case/check_nickname_overlap.dart';
+import 'package:the_baetles_chord_play/domain/use_case/check_nickname_valid.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_liked_sheets_of_video.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_music_to_check_preference.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_recommended_video.dart';
@@ -29,6 +30,7 @@ import 'package:the_baetles_chord_play/service/auth_service.dart';
 import 'package:the_baetles_chord_play/service/google_auth_service.dart';
 
 import 'domain/use_case/get_my_sheets_of_video.dart';
+import 'domain/use_case/get_nickname_suggestion.dart';
 import 'domain/use_case/get_user_id_token.dart';
 import 'utility/navigate.dart';
 
@@ -41,7 +43,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  bool hadSignedIn = FirebaseAuth.instance.currentUser != null;
+  bool hadSignedIn = FirebaseAuth.instance.currentUser != null &&
+      await AuthRepository().login((await AuthRepository().fetchIdToken())!);
+
+  await CountryCodes.init();
 
   FlutterNativeSplash.remove();
 
@@ -62,11 +67,13 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (_) => SignUpViewModel(
-                CheckNicknameOverlap(AuthRepository()),
-                GetMusicToCheckPreference(
-                    VideoRepository(), GetUserCountry(CountryRepository())),
-                SignInWithIdToken(AuthRepository(), GoogleAuthService()))),
+          create: (_) => SignUpViewModel(
+              CheckNicknameValid(AuthRepository()),
+              GetMusicToCheckPreference(
+                  VideoRepository(), GetUserCountry(CountryRepository()), GetUserIdToken(AuthRepository())),
+              SignInWithIdToken(AuthRepository(), GoogleAuthService()),
+              GetNicknameSuggestion(AuthRepository())),
+        ),
         ChangeNotifierProvider(
             create: (_) => HomeViewModel(
                 GetVideoCollection(VideoRepository(), AuthRepository()),

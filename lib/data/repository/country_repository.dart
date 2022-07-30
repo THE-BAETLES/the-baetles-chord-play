@@ -1,7 +1,4 @@
-import 'package:geolocator_platform_interface/src/models/position.dart';
-
-import '../../service/geolocator_service.dart';
-import 'dart:io' show Platform;
+import 'package:country_codes/country_codes.dart';
 
 class CountryRepository {
   static final CountryRepository _instance = CountryRepository.internal();
@@ -14,7 +11,11 @@ class CountryRepository {
     // TODO : source 연결
   }
 
-  Future<String> getPlatformLocaleName() async {
-    return Platform.localeName;
+  Future<String?> getCountryCode() async {
+    return CountryCodes.getDeviceLocale()?.countryCode;
+  }
+
+  Future<String?> getLanguageCode() async {
+    return CountryCodes.getDeviceLocale()?.languageCode;
   }
 }

@@ -6,6 +6,6 @@ class GetUserIdToken {
   GetUserIdToken(this.authRepository);
 
   Future<String?> call() async {
-    return await authRepository.fetchUserId();
+    return await authRepository.fetchIdToken();
   }
 }

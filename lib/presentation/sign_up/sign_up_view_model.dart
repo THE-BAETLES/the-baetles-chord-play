@@ -3,8 +3,9 @@ import 'dart:core';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:the_baetles_chord_play/domain/use_case/check_nickname_overlap.dart';
+import 'package:the_baetles_chord_play/domain/use_case/check_nickname_valid.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_music_to_check_preference.dart';
+import 'package:the_baetles_chord_play/domain/use_case/get_nickname_suggestion.dart';
 import 'package:the_baetles_chord_play/domain/use_case/sign_in_with_id_token.dart';
 
 import '../../domain/model/gender.dart';
@@ -13,9 +14,10 @@ import '../../domain/model/video.dart';
 
 class SignUpViewModel with ChangeNotifier {
   // use case
-  final CheckNicknameOverlap checkNicknameOverlap;
+  final CheckNicknameValid checkNicknameValid;
   final GetMusicToCheckPreference getMusicToCheckPreference;
   final SignInWithIdToken signInWithIdToken;
+  final GetNicknameSuggestion getNicknameSuggestion;
 
   static const _nicknamePage = 0;
   static const _genderPage = 1;
@@ -53,11 +55,16 @@ class SignUpViewModel with ChangeNotifier {
 
   bool get isPreferenceConfirmButtonVisible => _preferredSongs.length >= 3;
 
-  SignUpViewModel(
-    this.checkNicknameOverlap,
-    this.getMusicToCheckPreference,
-    this.signInWithIdToken,
-  );
+  SignUpViewModel(this.checkNicknameValid,
+      this.getMusicToCheckPreference,
+      this.signInWithIdToken,
+      this.getNicknameSuggestion,) {
+    // TODO : 가져온 닉네임 반영되도록 수정
+    // getNicknameSuggestion().then((nickname) {
+    //   _inputNickname = nickname;
+    //   notifyListeners();
+    // });
+  }
 
   void onChangeNickname(String nickname) {
     _inputNickname = nickname;
@@ -70,10 +77,10 @@ class SignUpViewModel with ChangeNotifier {
   }
 
   Future<String?> onConfirmNickname(String nickname) async {
-    // 닉네임 중복 체크
-    bool isOverlapped = await checkNicknameOverlap(nickname);
+    // 닉네임 중복 및 유효성 체크
+    bool isValid = await checkNicknameValid(nickname);
 
-    if (isOverlapped) {
+    if (!isValid) {
       _isNicknameValid = false;
       notifyListeners();
       return "이미 사용중인 닉네임입니다!";
@@ -107,7 +114,7 @@ class SignUpViewModel with ChangeNotifier {
     assert(_selectedGrade != null);
 
     Future.microtask(() async {
-      musicToCheckPreference = await getMusicToCheckPreference(_selectedGrade!);
+      musicToCheckPreference = (await getMusicToCheckPreference(_selectedGrade!, _selectedGender!))!;
       notifyListeners();
     });
 
