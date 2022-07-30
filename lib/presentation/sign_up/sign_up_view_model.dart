@@ -11,6 +11,7 @@ import 'package:the_baetles_chord_play/domain/use_case/sign_in_with_id_token.dar
 import '../../domain/model/gender.dart';
 import '../../domain/model/performer_grade.dart';
 import '../../domain/model/video.dart';
+import '../../domain/use_case/sign_up.dart';
 
 class SignUpViewModel with ChangeNotifier {
   // use case
@@ -18,6 +19,7 @@ class SignUpViewModel with ChangeNotifier {
   final GetMusicToCheckPreference getMusicToCheckPreference;
   final SignInWithIdToken signInWithIdToken;
   final GetNicknameSuggestion getNicknameSuggestion;
+  final SignUp signUp;
 
   static const _nicknamePage = 0;
   static const _genderPage = 1;
@@ -53,17 +55,32 @@ class SignUpViewModel with ChangeNotifier {
 
   bool get isGradeConfirmButtonVisible => _selectedGrade != null;
 
-  bool get isPreferenceConfirmButtonVisible => _preferredSongs.length >= 3;
+  bool get isPreferenceConfirmButtonVisible => _preferredSongs.length >= 1;
 
-  SignUpViewModel(this.checkNicknameValid,
-      this.getMusicToCheckPreference,
-      this.signInWithIdToken,
-      this.getNicknameSuggestion,) {
+  SignUpViewModel(
+    this.checkNicknameValid,
+    this.getMusicToCheckPreference,
+    this.signInWithIdToken,
+    this.getNicknameSuggestion,
+    this.signUp,
+  ) {
     // TODO : 가져온 닉네임 반영되도록 수정
     // getNicknameSuggestion().then((nickname) {
     //   _inputNickname = nickname;
     //   notifyListeners();
     // });
+  }
+
+  Future<void> resetViewModel() async {
+    _preferredSongs.clear();
+    _currentPage = _nicknamePage;
+    _isNicknameValid = false;
+    _inputNickname = await getNicknameSuggestion();
+    _confirmedNickname = null;
+    _selectedGender = null;
+    _selectedGrade = null;
+
+    notifyListeners();
   }
 
   void onChangeNickname(String nickname) {
@@ -114,7 +131,8 @@ class SignUpViewModel with ChangeNotifier {
     assert(_selectedGrade != null);
 
     Future.microtask(() async {
-      musicToCheckPreference = (await getMusicToCheckPreference(_selectedGrade!, _selectedGender!))!;
+      musicToCheckPreference =
+          (await getMusicToCheckPreference(_selectedGrade!, _selectedGender!))!;
       notifyListeners();
     });
 
@@ -135,18 +153,24 @@ class SignUpViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> onConfirmPreferredSong() async {
-    // TODO : 서버 전송 작업
+  Future<bool> onConfirmPreferredSong() async {
+    bool isSignUpSuccessful = await signUp(
+      performerGrade: _selectedGrade!,
+      earlyFavoriteSongs: _preferredSongs,
+      nickname: _confirmedNickname!,
+      gender: _selectedGender!,
+    );
 
-    // 전송이 성공적일 때
-    _currentPage = _completePageOffset;
-
-    // 전송이 실패했을 때
-    // TODO : sign in 페이지로 돌아가기
-
-    // TODO : sign up view model 데이터 리셋
+    if (isSignUpSuccessful) {
+      // 회원가입이 성공적일 때
+      _currentPage = _completePageOffset;
+    } else {
+      // 성공적이지 않으면 회원가입을 처음부터 다시 진행함.
+      await resetViewModel();
+    }
 
     notifyListeners();
+    return isSignUpSuccessful;
   }
 
   Future<bool> onCompleteButtonClicked() async {

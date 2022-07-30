@@ -32,6 +32,7 @@ import 'package:the_baetles_chord_play/service/google_auth_service.dart';
 import 'domain/use_case/get_my_sheets_of_video.dart';
 import 'domain/use_case/get_nickname_suggestion.dart';
 import 'domain/use_case/get_user_id_token.dart';
+import 'domain/use_case/sign_up.dart';
 import 'utility/navigate.dart';
 
 Future<void> main() async {
@@ -70,9 +71,13 @@ class MyApp extends StatelessWidget {
           create: (_) => SignUpViewModel(
               CheckNicknameValid(AuthRepository()),
               GetMusicToCheckPreference(
-                  VideoRepository(), GetUserCountry(CountryRepository()), GetUserIdToken(AuthRepository())),
+                  VideoRepository(),
+                  GetUserCountry(CountryRepository()),
+                  GetUserIdToken(AuthRepository())),
               SignInWithIdToken(AuthRepository(), GoogleAuthService()),
-              GetNicknameSuggestion(AuthRepository())),
+              GetNicknameSuggestion(AuthRepository()),
+              SignUp(AuthRepository(), GetUserIdToken(AuthRepository()),
+                  GetUserCountry(CountryRepository()))),
         ),
         ChangeNotifierProvider(
             create: (_) => HomeViewModel(

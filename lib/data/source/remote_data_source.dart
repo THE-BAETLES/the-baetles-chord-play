@@ -33,7 +33,7 @@ class RemoteDataSource {
   RemoteDataSource._internal();
 
   Future<bool> login(String idToken) async {
-    http.Response response = await http.get(
+    http.Response response = await http.post(
       Uri.parse('$httpUriHead/user/login'),
       headers: {
         idTokenKey: '${bearer} ${idToken}',
@@ -43,6 +43,33 @@ class RemoteDataSource {
     );
 
     print(response.body);
+
+    return response.statusCode == ok;
+  }
+
+  Future<bool> signUp({
+    required String idToken,
+    required String country,
+    required String performerGrade,
+    required List<Map<String, dynamic>> earlyFavoriteSongs,
+    required String nickname,
+    required String gender,
+  }) async {
+    http.Response response = await http.post(
+      Uri.parse('$httpUriHead/user/join'),
+      headers: {
+        idTokenKey: '${bearer} ${idToken}',
+        "content-type": "application/json",
+        "accept": "application/json",
+      },
+      body: jsonEncode({
+        "country": country,
+        "performer_grade": performerGrade,
+        "earlyFavoriteSongs": earlyFavoriteSongs,
+        "nickname": nickname,
+        "gender": gender
+      }),
+    );
 
     return response.statusCode == ok;
   }
@@ -92,8 +119,7 @@ class RemoteDataSource {
       return null;
     }
 
-    List<dynamic> jsonObjects =
-        jsonDecode(response.body)['favorites'];
+    List<dynamic> jsonObjects = jsonDecode(response.body)['favorites'];
 
     List<Video> videos =
         jsonObjects.map((jsonObject) => Video.fromJson(jsonObject)).toList();

@@ -31,7 +31,7 @@ class Video {
 
   Map<String, dynamic> toJson() => {
     'id': id,
-    'thumbnail_path': thumbnailPath,
+    'thumnail_path': thumbnailPath, // TODO : 오타 고치기
     'title': title,
     'genre': genre,
     'singer': singer,
