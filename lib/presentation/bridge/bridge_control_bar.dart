@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
+import 'package:the_baetles_chord_play/presentation/bridge/bridge_view_model.dart';
 import 'package:the_baetles_chord_play/widget/atom/app_font_families.dart';
 import 'package:the_baetles_chord_play/widget/molecule/EllipseToggleButton.dart';
 
@@ -11,6 +13,8 @@ class BridgeControlBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    BridgeViewModel viewModel = context.watch<BridgeViewModel>();
+
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.symmetric(horizontal: 15),
@@ -60,8 +64,10 @@ class BridgeControlBar extends StatelessWidget {
               height: 50,
               child: EllipseToggleButton(
                 text: 'Play',
-                initState: true,
-                onPressed: (bool isActivated) {},
+                initState: viewModel.isStartButtonActivated,
+                onPressed: (bool isActivated) {
+                  viewModel.onStartButtonClicked(context);
+                },
                 textStyleOnActivated: const TextStyle(
                   fontFamily: AppFontFamilies.notosanskr,
                   fontSize: 16,

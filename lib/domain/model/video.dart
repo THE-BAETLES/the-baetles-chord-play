@@ -20,23 +20,23 @@ class Video {
   factory Video.fromJson(Map<String, dynamic> json) {
     return Video(
       id: json['id'],
-      thumbnailPath: json['thumnail_path'], // TODO : 오타 고치기
+      thumbnailPath: json['thumbnailPath'],
       title: json['title'],
       genre: json['genre'],
       singer: json['singer'],
-      difficultyAvg: json['difficulty_avg'],
-      playCount: json['play_count'],
+      difficultyAvg: json['difficultyAvg'],
+      playCount: json['playCount'],
     );
   }
 
   Map<String, dynamic> toJson() => {
     'id': id,
-    'thumnail_path': thumbnailPath, // TODO : 오타 고치기
+    'thumbnailPath': thumbnailPath,
     'title': title,
     'genre': genre,
     'singer': singer,
-    'difficulty_avg': difficultyAvg,
-    'play_count': playCount,
+    'difficultyAvg': difficultyAvg,
+    'playCount': playCount,
   };
 
   @override

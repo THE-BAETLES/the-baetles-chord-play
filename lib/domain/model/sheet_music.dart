@@ -18,4 +18,27 @@ class SheetMusic {
     required this.updateAt,
     required this.likeCount,
   });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SheetMusic &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          videoId == other.videoId &&
+          userId == other.userId &&
+          title == other.title &&
+          createAt == other.createAt &&
+          updateAt == other.updateAt &&
+          likeCount == other.likeCount;
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      videoId.hashCode ^
+      userId.hashCode ^
+      title.hashCode ^
+      createAt.hashCode ^
+      updateAt.hashCode ^
+      likeCount.hashCode;
 }

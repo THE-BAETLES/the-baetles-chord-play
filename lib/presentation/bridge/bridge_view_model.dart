@@ -34,6 +34,8 @@ class BridgeViewModel with ChangeNotifier {
 
   SheetMusic? get selectedSheet => _selectedSheet;
 
+  bool get isStartButtonActivated => _selectedSheet != null;
+
   int get sheetCount {
     switch (_tabBarOffset) {
       case 0:
@@ -90,5 +92,17 @@ class BridgeViewModel with ChangeNotifier {
 
       notifyListeners();
     }
+  }
+
+  void onStartButtonClicked(BuildContext context) {
+    if (_selectedSheet == null) {
+      assert(false);
+      return;
+    }
+
+    Navigator.of(context).pushNamed(
+      '/performance-page',
+      arguments: _selectedSheet!,
+    );
   }
 }

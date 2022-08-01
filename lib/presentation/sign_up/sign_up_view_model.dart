@@ -27,6 +27,8 @@ class SignUpViewModel with ChangeNotifier {
   static const _preferencePage = 3;
   static const _completePageOffset = 4;
 
+  static const _minSelectionCount = 3;
+
   UnmodifiableListView<Video> musicToCheckPreference = UnmodifiableListView([]);
 
   final List<Video> _preferredSongs = [];
@@ -55,7 +57,7 @@ class SignUpViewModel with ChangeNotifier {
 
   bool get isGradeConfirmButtonVisible => _selectedGrade != null;
 
-  bool get isPreferenceConfirmButtonVisible => _preferredSongs.length >= 1;
+  bool get isPreferenceConfirmButtonVisible => _preferredSongs.length >= _minSelectionCount;
 
   SignUpViewModel(
     this.checkNicknameValid,
