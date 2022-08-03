@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
+  <g id="btn_gnb_zoom" transform="translate(-15 -41)">
+    <rect id="사각형_38" data-name="사각형 38" width="28" height="28" transform="translate(15 41)" fill="rgba(255,255,255,0)"/>
+    <g id="그룹_54" data-name="그룹 54" transform="translate(-28.631 40.065) rotate(-45)">
+      <path id="패스_25" data-name="패스 25" d="M880.131,316.472l-3.723,3.723,3.723,3.723" transform="translate(-859 -268.917)" fill="none" stroke="#040404" stroke-width="1.5"/>
+      <path id="패스_26" data-name="패스 26" d="M876.953,323.917H887.12" transform="translate(-859.272 -272.64)" fill="none" stroke="#040404" stroke-width="1.5"/>
+    </g>
+    <g id="그룹_141" data-name="그룹 141" transform="translate(40.598 48.618) rotate(135)">
+      <path id="패스_25-2" data-name="패스 25" d="M3.723,0,0,3.723,3.723,7.446" transform="translate(0 0)" fill="none" stroke="#040404" stroke-width="1.5"/>
+      <path id="패스_26-2" data-name="패스 26" d="M0,0H10.167" transform="translate(0.272 3.723)" fill="none" stroke="#040404" stroke-width="1.5"/>
+    </g>
+  </g>
+</svg>

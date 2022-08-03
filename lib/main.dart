@@ -25,6 +25,7 @@ import 'package:the_baetles_chord_play/domain/use_case/get_video_collection.dart
 import 'package:the_baetles_chord_play/domain/use_case/sign_in_with_id_token.dart';
 import 'package:the_baetles_chord_play/presentation/bridge/bridge_view_model.dart';
 import 'package:the_baetles_chord_play/presentation/home/home_view_model.dart';
+import 'package:the_baetles_chord_play/presentation/performance/performance_view_model.dart';
 import 'package:the_baetles_chord_play/presentation/sign_up/sign_up_view_model.dart';
 import 'package:the_baetles_chord_play/service/auth_service.dart';
 import 'package:the_baetles_chord_play/service/google_auth_service.dart';
@@ -80,17 +81,22 @@ class MyApp extends StatelessWidget {
                   GetUserCountry(CountryRepository()))),
         ),
         ChangeNotifierProvider(
-            create: (_) => HomeViewModel(
-                GetVideoCollection(VideoRepository(), AuthRepository()),
-                GetRecommendedVideo(VideoRepository(), AuthRepository()))),
+          create: (_) => HomeViewModel(
+              GetVideoCollection(VideoRepository(), AuthRepository()),
+              GetRecommendedVideo(VideoRepository(), AuthRepository())),
+        ),
         ChangeNotifierProvider(
-            create: (_) => BridgeViewModel(
-                GetUserIdToken(AuthRepository()),
-                GetSheetsOfVideo(SheetRepository()),
-                GetMySheetsOfVideo(
-                    GetSheetsOfVideo(SheetRepository()), AuthRepository()),
-                GetLikedSheetsOfVideo(
-                    GetSheetsOfVideo(SheetRepository()), SheetRepository()))),
+          create: (_) => BridgeViewModel(
+              GetUserIdToken(AuthRepository()),
+              GetSheetsOfVideo(SheetRepository()),
+              GetMySheetsOfVideo(
+                  GetSheetsOfVideo(SheetRepository()), AuthRepository()),
+              GetLikedSheetsOfVideo(
+                  GetSheetsOfVideo(SheetRepository()), SheetRepository())),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => PerformanceViewModel(),
+        ),
       ],
       builder: (context, child) {
         return MaterialApp(

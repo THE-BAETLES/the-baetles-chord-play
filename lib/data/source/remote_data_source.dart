@@ -12,6 +12,9 @@ class RemoteDataSource {
   static const apiServerHost = "52.78.232.241";
   static const portNumber = "8080";
   static const httpUriHead = "http://${apiServerHost}:${portNumber}";
+  static const contentType = "content-type";
+  static const acceptType = "accept";
+  static const jsonType = "application/json";
 
   static const idTokenKey = "Authorization";
 
@@ -37,8 +40,8 @@ class RemoteDataSource {
       Uri.parse('$httpUriHead/user/login'),
       headers: {
         idTokenKey: '${bearer} ${idToken}',
-        "content-type": "application/json",
-        "accept": "application/json",
+        contentType: jsonType,
+        acceptType: jsonType,
       },
     );
 
@@ -59,8 +62,8 @@ class RemoteDataSource {
       Uri.parse('$httpUriHead/user/join'),
       headers: {
         idTokenKey: '${bearer} ${idToken}',
-        "content-type": "application/json",
-        "accept": "application/json",
+        contentType: jsonType,
+        acceptType: jsonType,
       },
       body: jsonEncode({
         "country": country,
@@ -90,8 +93,8 @@ class RemoteDataSource {
       Uri.parse('$httpUriHead/user/check-duplication'),
       headers: {
         idTokenKey: '${bearer} ${idToken}',
-        "content-type": "application/json",
-        "accept": "application/json",
+        contentType: jsonType,
+        acceptType: jsonType,
       },
       body: jsonEncode({'nickname': '${nickname}'}),
     );
