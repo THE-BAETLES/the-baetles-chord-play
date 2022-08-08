@@ -15,24 +15,45 @@ import '../../domain/model/sheet_info.dart';
 import '../../domain/model/video.dart';
 import '../../widget/atom/app_colors.dart';
 
-class PerformancePage extends StatelessWidget {
+class PerformancePage extends StatefulWidget {
   const PerformancePage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  State<PerformancePage> createState() => _PerformancePageState();
+}
+
+class _PerformancePageState extends State<PerformancePage> {
+  late Video video;
+  late SheetInfo sheetInfo;
+  late SheetData sheetData;
+
+  @override
+  void initState() {
+    super.initState();
+
     // 가로 방향으로 고정함
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
 
-    List<dynamic> arguments = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
-    Video video = arguments[0] as Video;
-    SheetInfo sheetInfo = arguments[1] as SheetInfo;
-    SheetData sheetData = arguments[2] as SheetData;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      List<dynamic> arguments =
+          ModalRoute.of(context)!.settings.arguments as List<dynamic>;
+      video = arguments[0] as Video;
+      sheetInfo = arguments[1] as SheetInfo;
+      sheetData = arguments[2] as SheetData;
 
+      PerformanceViewModel viewModel = context.read<PerformanceViewModel>();
+      viewModel.initViewModel(
+          video: video, sheetInfo: sheetInfo, sheetData: sheetData);
+    });
+  }
+
+  @override
+  void didChangeDependencies() {}
+
+  @override
+  Widget build(BuildContext context) {
     PerformanceViewModel viewModel = context.watch<PerformanceViewModel>();
-    viewModel.initViewModel(video: video, sheetInfo: sheetInfo, sheetData: sheetData);
-
-    print("hi!");
 
     return Scaffold(
       appBar: AppBar(
@@ -51,11 +72,17 @@ class PerformancePage extends StatelessWidget {
             Positioned(
               top: 0,
               left: 0,
-              child: _sheetView(context, viewModel.playState, viewModel.sheetState),
+              child: _sheetView(
+                  context, viewModel.playState, viewModel.sheetState),
             ),
             Positioned(
               bottom: 0,
-              child: _controlBar(context, viewModel.play, viewModel.playState, viewModel.youtubePlayerController),
+              child: _controlBar(
+                  context,
+                  viewModel.play,
+                  viewModel.stop,
+                  context.read<PerformanceViewModel>().playState,
+                  viewModel.youtubePlayerController),
             )
           ],
         ),
@@ -63,11 +90,17 @@ class PerformancePage extends StatelessWidget {
     );
   }
 
-  Widget _sheetView(BuildContext context, PlayState playState, SheetState sheetState) {
+  Widget _sheetView(
+      BuildContext context, PlayState playState, SheetState? sheetState) {
     return BeatTile(chord: "A");
   }
 
-  Widget _controlBar(BuildContext context, void Function() play, PlayState playState, final YoutubePlayerController controller) {
+  Widget _controlBar(
+      BuildContext context,
+      void Function() play,
+      void Function() stop,
+      PlayState playState,
+      final YoutubePlayerController controller) {
     return Container(
       height: 62,
       width: MediaQuery.of(context).size.width,
@@ -80,8 +113,10 @@ class PerformancePage extends StatelessWidget {
             iconPath: 'assets/icons/ic_mute.svg',
             text: 'Mute',
           ),
-          _controlButtons(context, play, playState.isPlaying),
+          _controlButtons(context, play, stop, playState),
           Container(
+            width: 62,
+            height: 44,
             child: YoutubeVideoPlayer(controller: controller),
           )
         ],
@@ -89,7 +124,8 @@ class PerformancePage extends StatelessWidget {
     );
   }
 
-  Widget _controlButtons(BuildContext context, void Function() play, bool isPlaying) {
+  Widget _controlButtons(BuildContext context, void Function() play,
+      void Function() stop, PlayState playState) {
     return Container(
       width: 140,
       child: Row(
@@ -98,10 +134,17 @@ class PerformancePage extends StatelessWidget {
           SvgPicture.asset("assets/icons/ic_prev_2.svg", width: 26, height: 30),
           GestureDetector(
             onTap: () {
-              play();
+              if (playState.isPlaying) {
+                stop();
+              } else {
+                play();
+              }
             },
-            child: isPlaying ? SvgPicture.asset("assets/icons/ic_play2.svg", width: 22, height: 22)
-                      : SvgPicture.asset("assets/icons/ic_pause.svg", width: 22, height: 22),
+            child: playState.isPlaying
+                ? SvgPicture.asset("assets/icons/ic_pause.svg",
+                    width: 22, height: 22)
+                : SvgPicture.asset("assets/icons/ic_play2.svg",
+                    width: 22, height: 22),
           ),
           SvgPicture.asset("assets/icons/ic_next_2.svg", width: 26, height: 30),
         ],

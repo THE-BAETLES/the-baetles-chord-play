@@ -45,7 +45,7 @@ class ConductorService {
     );
 
     stopWatchTimer.setPresetSecondTime(
-      (_playState.currentPosition / _playState.tempo) as int,
+      (_playState.currentPosition / _playState.tempo).toInt(),
     );
 
     return true;

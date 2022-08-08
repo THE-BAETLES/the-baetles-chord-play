@@ -36,6 +36,9 @@ class BridgePage extends StatelessWidget {
               YoutubeVideoPlayer(
                 controller: YoutubePlayerController(
                   initialVideoId: video.id,
+                  flags: YoutubePlayerFlags(
+                    autoPlay: true,
+                  )
                 ),
               ),
               Expanded(

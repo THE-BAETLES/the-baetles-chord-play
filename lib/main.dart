@@ -56,8 +56,8 @@ Future<void> main() async {
 
   FlutterNativeSplash.remove();
 
-  runApp(MyApp(hadSignedIn));
-  // runApp(MyApp(true));
+  // runApp(MyApp(hadSignedIn));
+  runApp(MyApp(true));
 }
 
 class MyApp extends StatelessWidget {

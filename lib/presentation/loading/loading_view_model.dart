@@ -13,7 +13,7 @@ class LoadingViewModel extends ChangeNotifier {
 
   double get progress => _progress;
 
-  loadSheet(BuildContext context, Video video, SheetInfo sheetInfo) async {
+  void loadSheet(BuildContext context, Video video, SheetInfo sheetInfo) async {
     _progress = 0;
     await Future.delayed(Duration(seconds: 2));
     _progress = 10;

@@ -7,6 +7,6 @@ class SetPlayState {
   SetPlayState(this._conductorService);
 
   Future<void> call(final PlayState playState) async {
-    await _conductorService.setPlayState(playState);
+    _conductorService.setPlayState(playState);
   }
 }

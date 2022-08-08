@@ -16,19 +16,12 @@ class YoutubeVideoPerformer implements PerformerInterface {
   Future<bool> syncPlayStateAndReady(PlayState playState) async {
     _playState = playState;
 
-    _controller.cue(
+    _controller.load(
       _controller.initialVideoId,
       startAt: playState.currentPosition,
     );
 
-    _controller.updateValue(_controller.value.copyWith(
-      position: Duration(milliseconds: playState.currentPosition),
-      playbackRate: playState.tempo,
-    ));
-
-    while (!(_controller.value.playerState == PlayerState.cued)) {
-      Future.delayed(Duration(milliseconds: 100));
-    }
+    _controller.setPlaybackRate(playState.tempo);
 
     return true;
   }

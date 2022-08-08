@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:the_baetles_chord_play/domain/model/play_state.dart';
 import 'package:the_baetles_chord_play/presentation/performance/sheet_state.dart';
@@ -12,8 +14,16 @@ import '../../domain/use_case/set_play_state.dart';
 import '../../service/conductor/performers/youtube_video_performer.dart';
 
 class PerformanceViewModel with ChangeNotifier {
-  late PlayState _playState;
-  late SheetState _sheetState;
+  PlayState _playState = PlayState(
+    isPlaying: false,
+    currentPosition: 0,
+    tempo: 1,
+    defaultBpm: 80,
+    loop: Loop(0, -1),
+    capo: 0,
+  );
+
+  SheetState? _sheetState;
   late YoutubeVideoPerformer _youtubeVideoPerformer;
 
   final AddPerformer _addPerformer;
@@ -24,22 +34,19 @@ class PerformanceViewModel with ChangeNotifier {
   YoutubePlayerController get youtubePlayerController =>
       _youtubeVideoPerformer.controller;
 
-  SheetState get sheetState => _sheetState;
+  SheetState? get sheetState => _sheetState;
 
   PerformanceViewModel(this._setPlayState, this._addPerformer) {
-    _playState = PlayState(
-      isPlaying: false,
-      currentPosition: 0,
-      tempo: 1,
-      defaultBpm: 80,
-      loop: Loop(0, -1),
-      capo: 0,
-    );
     _setPlayState(_playState); // conductor 기본 play option 설정
 
-    _youtubeVideoPerformer = YoutubeVideoPerformer(YoutubePlayerController(
+    _youtubeVideoPerformer = YoutubeVideoPerformer(
+      YoutubePlayerController(
         initialVideoId: 'f6YDKF0LVWw',
-        flags: YoutubePlayerFlags(autoPlay: false)));
+        flags: const YoutubePlayerFlags(
+            autoPlay: false, enableCaption: false, hideControls: true),
+      ),
+    );
+
     Future.microtask(() => _addPerformer(_youtubeVideoPerformer));
   }
 
@@ -48,7 +55,6 @@ class PerformanceViewModel with ChangeNotifier {
     required final SheetInfo sheetInfo,
     required final SheetData sheetData,
   }) {
-    print("hi 1");
     _playState = PlayState(
       isPlaying: false,
       currentPosition: 0,
@@ -63,17 +69,24 @@ class PerformanceViewModel with ChangeNotifier {
       sheetData: sheetData,
     );
 
-    print("hi 2");
-    _playState = _playState.copy(currentPosition: 0, isPlaying: false);
     _setPlayState(_playState);
 
     _youtubeVideoPerformer.controller.cue(video.id);
-
-    print("hi 3");
   }
 
   void play({int? playAt}) {
-    _playState = _playState.copy(isPlaying: true, currentPosition: playAt);
+    this._playState = _playState.copy(isPlaying: true, currentPosition: playAt);
     _setPlayState(_playState);
+    notifyListeners();
+  }
+
+  void stop({int? stopAt}) {
+    _playState = _playState.copy(isPlaying: false, currentPosition: stopAt);
+    _setPlayState(_playState);
+    notifyListeners();
+  }
+
+  void reset() {
+    _playState = _playState.copy(currentPosition: 0, isPlaying: false);
   }
 }
