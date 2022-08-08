@@ -15,6 +15,7 @@ import 'package:the_baetles_chord_play/data/repository/country_repository.dart';
 import 'package:the_baetles_chord_play/data/repository/sheet_repository.dart';
 import 'package:the_baetles_chord_play/data/repository/video_repository.dart';
 import 'package:the_baetles_chord_play/domain/model/video.dart';
+import 'package:the_baetles_chord_play/domain/use_case/add_performer.dart';
 import 'package:the_baetles_chord_play/domain/use_case/check_nickname_valid.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_liked_sheets_of_video.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_music_to_check_preference.dart';
@@ -25,14 +26,17 @@ import 'package:the_baetles_chord_play/domain/use_case/get_video_collection.dart
 import 'package:the_baetles_chord_play/domain/use_case/sign_in_with_id_token.dart';
 import 'package:the_baetles_chord_play/presentation/bridge/bridge_view_model.dart';
 import 'package:the_baetles_chord_play/presentation/home/home_view_model.dart';
+import 'package:the_baetles_chord_play/presentation/loading/loading_view_model.dart';
 import 'package:the_baetles_chord_play/presentation/performance/performance_view_model.dart';
 import 'package:the_baetles_chord_play/presentation/sign_up/sign_up_view_model.dart';
 import 'package:the_baetles_chord_play/service/auth_service.dart';
+import 'package:the_baetles_chord_play/service/conductor/conductor_service.dart';
 import 'package:the_baetles_chord_play/service/google_auth_service.dart';
 
 import 'domain/use_case/get_my_sheets_of_video.dart';
 import 'domain/use_case/get_nickname_suggestion.dart';
 import 'domain/use_case/get_user_id_token.dart';
+import 'domain/use_case/set_play_state.dart';
 import 'domain/use_case/sign_up.dart';
 import 'utility/navigate.dart';
 
@@ -53,6 +57,7 @@ Future<void> main() async {
   FlutterNativeSplash.remove();
 
   runApp(MyApp(hadSignedIn));
+  // runApp(MyApp(true));
 }
 
 class MyApp extends StatelessWidget {
@@ -95,7 +100,13 @@ class MyApp extends StatelessWidget {
                   GetSheetsOfVideo(SheetRepository()), SheetRepository())),
         ),
         ChangeNotifierProvider(
-          create: (_) => PerformanceViewModel(),
+          create: (_) => LoadingViewModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) {
+            ConductorService conductor = ConductorService();
+            return PerformanceViewModel(SetPlayState(conductor), AddPerformer(conductor));
+          },
         ),
       ],
       builder: (context, child) {

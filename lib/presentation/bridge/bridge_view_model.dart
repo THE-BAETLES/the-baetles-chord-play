@@ -5,7 +5,7 @@ import 'package:the_baetles_chord_play/domain/use_case/get_my_sheets_of_video.da
 import 'package:the_baetles_chord_play/domain/use_case/get_sheets_of_video.dart';
 
 import '../../domain/model/instrument.dart';
-import '../../domain/model/sheet_music.dart';
+import '../../domain/model/sheet_info.dart';
 import '../../domain/model/video.dart';
 import '../../domain/use_case/get_liked_sheets_of_video.dart';
 import '../../domain/use_case/get_user_id_token.dart';
@@ -14,7 +14,7 @@ class BridgeViewModel with ChangeNotifier {
   Video? _video;
   Instrument? _selectedInstrument = Instrument.guitar;
   int _tabBarOffset = 0;
-  SheetMusic? _selectedSheet = null;
+  SheetInfo? _selectedSheet = null;
 
   // use cases
   final GetUserIdToken getUserIdToken;
@@ -22,17 +22,17 @@ class BridgeViewModel with ChangeNotifier {
   final GetMySheetsOfVideo getMySheetsOfVideo;
   final GetLikedSheetsOfVideo getLikedSheetIdsOfVideo;
 
-  UnmodifiableListView<SheetMusic>? _mySheets;
-  UnmodifiableListView<SheetMusic>? _likedSheets;
-  UnmodifiableListView<SheetMusic>? _sharedSheets;
+  UnmodifiableListView<SheetInfo>? _mySheets;
+  UnmodifiableListView<SheetInfo>? _likedSheets;
+  UnmodifiableListView<SheetInfo>? _sharedSheets;
 
-  UnmodifiableListView<SheetMusic>? get mySheets => _mySheets;
+  UnmodifiableListView<SheetInfo>? get mySheets => _mySheets;
 
-  UnmodifiableListView<SheetMusic>? get likedSheets => _likedSheets;
+  UnmodifiableListView<SheetInfo>? get likedSheets => _likedSheets;
 
-  UnmodifiableListView<SheetMusic>? get sharedSheets => _sharedSheets;
+  UnmodifiableListView<SheetInfo>? get sharedSheets => _sharedSheets;
 
-  SheetMusic? get selectedSheet => _selectedSheet;
+  SheetInfo? get selectedSheet => _selectedSheet;
 
   bool get isStartButtonActivated => _selectedSheet != null;
 
@@ -86,7 +86,7 @@ class BridgeViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void onSelectSheet(SheetMusic sheet) {
+  void onSelectSheet(SheetInfo sheet) {
     if (_selectedSheet != sheet) {
       _selectedSheet = sheet;
 
@@ -101,8 +101,11 @@ class BridgeViewModel with ChangeNotifier {
     }
 
     Navigator.of(context).pushNamed(
-      '/performance-page',
-      arguments: _selectedSheet!,
+      '/loading-page',
+      arguments: [
+        _video!,
+        _selectedSheet!,
+      ],
     );
   }
 }

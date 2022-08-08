@@ -1,6 +1,6 @@
 import 'chord_block.dart';
 
-class SheetMusic {
+class SheetInfo {
   final String id;
   final String videoId;
   final String userId;
@@ -9,7 +9,7 @@ class SheetMusic {
   final DateTime updateAt;
   final int likeCount;
 
-  SheetMusic({
+  SheetInfo({
     required this.id,
     required this.videoId,
     required this.userId,
@@ -22,7 +22,7 @@ class SheetMusic {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SheetMusic &&
+      other is SheetInfo &&
           runtimeType == other.runtimeType &&
           id == other.id &&
           videoId == other.videoId &&

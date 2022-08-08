@@ -4,6 +4,7 @@ class Video {
   final String title;
   final String genre;
   final String singer;
+  final double length;
   final int difficultyAvg;
   final int playCount;
 
@@ -13,30 +14,34 @@ class Video {
     required this.title,
     required this.genre,
     required this.singer,
+    required this.length,
     required this.difficultyAvg,
     required this.playCount,
+
   });
 
   factory Video.fromJson(Map<String, dynamic> json) {
     return Video(
       id: json['id'],
-      thumbnailPath: json['thumbnailPath'],
+      thumbnailPath: json['thumbnail_path'],
       title: json['title'],
       genre: json['genre'],
       singer: json['singer'],
-      difficultyAvg: json['difficultyAvg'],
-      playCount: json['playCount'],
+      length: json['duration'],
+      difficultyAvg: json['difficulty_avg'],
+      playCount: json['play_count'],
     );
   }
 
   Map<String, dynamic> toJson() => {
     'id': id,
-    'thumbnailPath': thumbnailPath,
+    'thumbnail_path': thumbnailPath,
     'title': title,
     'genre': genre,
     'singer': singer,
-    'difficultyAvg': difficultyAvg,
-    'playCount': playCount,
+    'duration': length,
+    'difficulty_avg': difficultyAvg,
+    'play_count': playCount,
   };
 
   @override
@@ -49,6 +54,7 @@ class Video {
           title == other.title &&
           genre == other.genre &&
           singer == other.singer &&
+          length == other.length &&
           difficultyAvg == other.difficultyAvg &&
           playCount == other.playCount;
 
@@ -59,6 +65,7 @@ class Video {
       title.hashCode ^
       genre.hashCode ^
       singer.hashCode ^
+      length.hashCode ^
       difficultyAvg.hashCode ^
       playCount.hashCode;
 }

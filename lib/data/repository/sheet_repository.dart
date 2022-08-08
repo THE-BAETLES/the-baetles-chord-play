@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import '../../domain/model/sheet_music.dart';
+import '../../domain/model/sheet_info.dart';
 
 class SheetRepository {
   static final SheetRepository _instance = SheetRepository._internal();
@@ -13,13 +13,13 @@ class SheetRepository {
     // TODO : source 연결
   }
 
-  Future<UnmodifiableListView<SheetMusic>> fetchSheetsByVideoId(
+  Future<UnmodifiableListView<SheetInfo>> fetchSheetsByVideoId(
       String videoId) async {
     // TODO : source 연결
 
     // dummy data
     return UnmodifiableListView([
-      SheetMusic(
+      SheetInfo(
         id: 'f3WgS5dummyFnyAl',
         videoId: 'sagsefa',
         userId: 'agaewraf',
@@ -28,7 +28,7 @@ class SheetRepository {
         updateAt: DateTime.now(),
         likeCount: 1509,
       ),
-      SheetMusic(
+      SheetInfo(
         id: 'safgeayFnyAl',
         videoId: 'sagsefa',
         userId: 'agaewraf',
@@ -37,7 +37,7 @@ class SheetRepository {
         updateAt: DateTime.now(),
         likeCount: 1509,
       ),
-      SheetMusic(
+      SheetInfo(
         id: 'safgeayFsgeanyAl',
         videoId: 'sagsefa',
         userId: '2524',
