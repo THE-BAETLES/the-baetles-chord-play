@@ -1,16 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'recommendation.dart';
-
-// **************************************************************************
-// JsonSerializableGenerator
-// **************************************************************************
-
-Recommendation _$RecommendationFromJson(Map<String, dynamic> json) =>
-    Recommendation();
-
-Map<String, dynamic> _$RecommendationToJson(Recommendation instance) =>
-    <String, dynamic>{};
+part of 'recommendation_client.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -28,18 +18,21 @@ class _RecommendationClient implements RecommendationClient {
   String? baseUrl;
 
   @override
-  Future<List<String>> getTasks() async {
+  Future<RecommendationResponse> getRecommendationList(offset, limit) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'offset': offset,
+      r'limit': limit
+    };
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<List<String>>(
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<RecommendationResponse>(
             Options(method: 'GET', headers: _headers, extra: _extra)
                 .compose(_dio.options, '/tasks',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = _result.data!.cast<String>();
+    final value = RecommendationResponse.fromJson(_result.data!);
     return value;
   }
 

@@ -4,6 +4,8 @@ class Video {
   final String title;
   final String genre;
   final String singer;
+  final List<String> tags;
+  final int length;
   final int difficulty;
   final int playCount;
 
@@ -13,6 +15,8 @@ class Video {
     required this.title,
     required this.genre,
     required this.singer,
+    required this.tags,
+    required this.length,
     required this.difficulty,
     required this.playCount,
   });

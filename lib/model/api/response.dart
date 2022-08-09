@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-@JsonSerializable()
+@JsonSerializable(genericArgumentFactories: true)
 class Response<T> {
   String code;
   String message;
