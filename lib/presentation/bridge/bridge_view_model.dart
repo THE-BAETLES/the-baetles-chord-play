@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_my_sheets_of_video.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_sheets_of_video.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../domain/model/instrument.dart';
 import '../../domain/model/sheet_info.dart';
@@ -15,6 +16,7 @@ class BridgeViewModel with ChangeNotifier {
   Instrument? _selectedInstrument = Instrument.guitar;
   int _tabBarOffset = 0;
   SheetInfo? _selectedSheet = null;
+  YoutubePlayerController? youtubePlayerController;
 
   // use cases
   final GetUserIdToken getUserIdToken;
@@ -65,6 +67,14 @@ class BridgeViewModel with ChangeNotifier {
       _tabBarOffset = 0;
       this._video = video;
       _loadSheets(video);
+
+      youtubePlayerController = YoutubePlayerController(
+        initialVideoId: video.id,
+        flags: YoutubePlayerFlags(
+          autoPlay: true,
+          enableCaption: false,
+        ),
+      );
     }
   }
 
@@ -100,12 +110,14 @@ class BridgeViewModel with ChangeNotifier {
       return;
     }
 
+    youtubePlayerController?.pause();
+
     Navigator.of(context).pushNamed(
       '/loading-page',
-      arguments: [
-        _video!,
-        _selectedSheet!,
-      ],
+      arguments: {
+        "video": _video!,
+        "sheetInfo": _selectedSheet!,
+      },
     );
   }
 }

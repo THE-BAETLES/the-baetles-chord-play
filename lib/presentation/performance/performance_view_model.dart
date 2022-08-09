@@ -1,7 +1,6 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:the_baetles_chord_play/domain/model/play_state.dart';
+import 'package:the_baetles_chord_play/domain/use_case/add_play_state_listener.dart';
 import 'package:the_baetles_chord_play/presentation/performance/sheet_state.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -10,7 +9,7 @@ import '../../domain/model/sheet_data.dart';
 import '../../domain/model/sheet_info.dart';
 import '../../domain/model/video.dart';
 import '../../domain/use_case/add_performer.dart';
-import '../../domain/use_case/set_play_state.dart';
+import '../../domain/use_case/update_play_state.dart';
 import '../../service/conductor/performers/youtube_video_performer.dart';
 
 class PerformanceViewModel with ChangeNotifier {
@@ -27,27 +26,26 @@ class PerformanceViewModel with ChangeNotifier {
   late YoutubeVideoPerformer _youtubeVideoPerformer;
 
   final AddPerformer _addPerformer;
-  final SetPlayState _setPlayState;
+  final UpdatePlayState _updatePlayState;
+  final AddPlayStateListener _addPlayStateListener;
 
   PlayState get playState => _playState;
 
-  YoutubePlayerController get youtubePlayerController =>
+  YoutubePlayerController? get youtubePlayerController =>
       _youtubeVideoPerformer.controller;
 
   SheetState? get sheetState => _sheetState;
 
-  PerformanceViewModel(this._setPlayState, this._addPerformer) {
-    _setPlayState(_playState); // conductor 기본 play option 설정
+  PerformanceViewModel(
+      this._updatePlayState, this._addPerformer, this._addPlayStateListener) {
+    _youtubeVideoPerformer = YoutubeVideoPerformer(null);
 
-    _youtubeVideoPerformer = YoutubeVideoPerformer(
-      YoutubePlayerController(
-        initialVideoId: 'f6YDKF0LVWw',
-        flags: const YoutubePlayerFlags(
-            autoPlay: false, enableCaption: false, hideControls: true),
-      ),
-    );
+    _addPerformer(_youtubeVideoPerformer);
 
-    Future.microtask(() => _addPerformer(_youtubeVideoPerformer));
+    _addPlayStateListener((final PlayState playState) {
+      this._playState = playState;
+      notifyListeners();
+    });
   }
 
   void initViewModel({
@@ -64,26 +62,40 @@ class PerformanceViewModel with ChangeNotifier {
       capo: 0,
     );
 
+    _updatePlayState(
+      isPlaying: false,
+      currentPosition: 0,
+      tempo: 1.0,
+      defaultBpm: sheetData.bpm,
+      loop: Loop(0, -1),
+      capo: 0,
+    );
+
     _sheetState = SheetState(
       sheetInfo: sheetInfo,
       sheetData: sheetData,
     );
 
-    _setPlayState(_playState);
+    _youtubeVideoPerformer.setController(
+      YoutubePlayerController(
+        initialVideoId: video.id,
+        flags: YoutubePlayerFlags(
+          autoPlay: false,
+          enableCaption: false,
+        ),
+      ),
+    );
 
-    _youtubeVideoPerformer.controller.cue(video.id);
+    print("controller changed!!!");
+    notifyListeners();
   }
 
   void play({int? playAt}) {
-    this._playState = _playState.copy(isPlaying: true, currentPosition: playAt);
-    _setPlayState(_playState);
-    notifyListeners();
+    _updatePlayState(isPlaying: true, currentPosition: playAt);
   }
 
   void stop({int? stopAt}) {
-    _playState = _playState.copy(isPlaying: false, currentPosition: stopAt);
-    _setPlayState(_playState);
-    notifyListeners();
+    _updatePlayState(isPlaying: false, currentPosition: stopAt);
   }
 
   void reset() {

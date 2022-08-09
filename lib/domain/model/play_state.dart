@@ -20,7 +20,7 @@ class PlayState {
 
   PlayState copy({
     bool? isPlaying,
-    int? currentPosition,
+    int? currentPosition, // millisecond
     double? tempo,
     double? defaultBpm,
     Loop? loop,

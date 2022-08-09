@@ -36,20 +36,17 @@ class _PerformancePageState extends State<PerformancePage> {
         [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      List<dynamic> arguments =
-          ModalRoute.of(context)!.settings.arguments as List<dynamic>;
-      video = arguments[0] as Video;
-      sheetInfo = arguments[1] as SheetInfo;
-      sheetData = arguments[2] as SheetData;
+      Map<String, dynamic> arguments =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      video = arguments['video'] as Video;
+      sheetInfo = arguments["sheetInfo"] as SheetInfo;
+      sheetData = arguments['sheetData'] as SheetData;
 
       PerformanceViewModel viewModel = context.read<PerformanceViewModel>();
       viewModel.initViewModel(
           video: video, sheetInfo: sheetInfo, sheetData: sheetData);
     });
   }
-
-  @override
-  void didChangeDependencies() {}
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +97,7 @@ class _PerformancePageState extends State<PerformancePage> {
       void Function() play,
       void Function() stop,
       PlayState playState,
-      final YoutubePlayerController controller) {
+      final YoutubePlayerController? controller) {
     return Container(
       height: 62,
       width: MediaQuery.of(context).size.width,
@@ -117,7 +114,8 @@ class _PerformancePageState extends State<PerformancePage> {
           Container(
             width: 62,
             height: 44,
-            child: YoutubeVideoPlayer(controller: controller),
+            color: Colors.black,
+            child: controller == null ? null : YoutubeVideoPlayer(controller: controller),
           )
         ],
       ),
