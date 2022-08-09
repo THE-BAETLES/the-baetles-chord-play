@@ -30,10 +30,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  dio:
-  retrofit:
-  logger:
-  json_annotation:
+  retrofit: '>=3.0.0 <4.0.0'
+  logger: any
 
   firebase_core: ^1.19.1
   firebase_auth: ^3.4.1
@@ -56,12 +54,12 @@ dev_dependencies:
   test: ^1.21.1
   change_app_package_name: ^1.1.0
 
-  retrofit_generator:
-  build_runner:
-  json_serializable:
-
   flutter_test:
     sdk: flutter
+
+  retrofit_generator: any
+  build_runner: ^2.0.4
+  json_serializable: '>4.4.0'
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
