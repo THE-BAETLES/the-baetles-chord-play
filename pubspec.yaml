@@ -30,6 +30,11 @@ dependencies:
   flutter:
     sdk: flutter
 
+  dio:
+  retrofit:
+  logger:
+  json_annotation:
+
   firebase_core: ^1.19.1
   firebase_auth: ^3.4.1
   google_sign_in: ^5.3.3
@@ -50,6 +55,10 @@ dependencies:
 dev_dependencies:
   test: ^1.21.1
   change_app_package_name: ^1.1.0
+
+  retrofit_generator:
+  build_runner:
+  json_serializable:
 
   flutter_test:
     sdk: flutter
