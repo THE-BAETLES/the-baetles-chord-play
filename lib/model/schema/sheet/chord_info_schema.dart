@@ -4,7 +4,7 @@ import 'package:the_baetles_chord_play/model/schema/schema.dart';
 part 'chord_info_schema.g.dart';
 
 @JsonSerializable()
-class ChordInfoSchema extends Schema{
+class ChordInfoSchema{
   String chord;
   int start;
   int end;

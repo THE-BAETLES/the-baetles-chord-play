@@ -5,7 +5,7 @@ import 'package:the_baetles_chord_play/model/schema/schema.dart';
 part 'video_schema.g.dart';
 
 @JsonSerializable()
-class VideoSchema implements Schema<Video> {
+class VideoSchema {
   @JsonKey(name: '_id')
   String id;
 
@@ -47,5 +47,6 @@ class VideoSchema implements Schema<Video> {
   factory VideoSchema.fromJson(Map<String, dynamic> json) =>
       _$VideoSchemaFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$VideoSchemaToJson(this);
 }

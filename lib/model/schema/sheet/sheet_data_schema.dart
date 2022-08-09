@@ -5,7 +5,7 @@ import 'package:the_baetles_chord_play/model/schema/sheet/chord_info_schema.dart
 part 'sheet_data_schema.g.dart';
 
 @JsonSerializable()
-class SheetDataSchema implements Schema {
+class SheetDataSchema{
   @JsonKey(name: '_id')
   String id;
   int bpm;

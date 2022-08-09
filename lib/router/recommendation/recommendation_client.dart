@@ -13,17 +13,3 @@ abstract class RecommendationClient {
   @GET("/tasks")
   Future<RecommendationResponse> getRecommendationList(@Query('offset') int offset, @Query('limit') int limit);
 }
-// @JsonSerializable(genericArgumentFactories: true)
-// class Response<T> {
-//   String code;
-//   String message;
-//   T? data;
-//   Response({required this.code, required this.message, this.data});
-// }
-//
-// @JsonSerializable()
-// class RecommendationResponse extends Response<List<String>>{
-//   RecommendationResponse(String code, String message, List<String> data) : super(code: code, message: message, data: data);
-//   factory RecommendationResponse.fromJson(Map<String, dynamic> json) => _$RecommendationResponseFromJson(json);
-//   Map<String, dynamic> toJson() => _$RecommendationResponseToJson(this);
-// }

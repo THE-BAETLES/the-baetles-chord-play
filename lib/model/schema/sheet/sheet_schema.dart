@@ -4,7 +4,7 @@ import 'package:the_baetles_chord_play/model/schema/schema.dart';
 part 'sheet_schema.g.dart';
 
 @JsonSerializable()
-class SheetSchema implements Schema {
+class SheetSchema{
   @JsonKey(name: '_id')
   String id;
 
