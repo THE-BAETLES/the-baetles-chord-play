@@ -36,6 +36,6 @@ abstract class SheetClient {
   Future<DeleteSheetResponse> deleteSheetData(@Path('sheetId') sheetId);
 
   @PATCH('/{sheetId}')
-  Future<PatchSheetRequest> patchSheet(@Body() PatchSheetRequest patchSheetRequest);
+  Future<PatchSheetRequest> patchSheet(@Path('sheetId') sheetId, @Body() PatchSheetRequest patchSheetRequest);
 
 }
