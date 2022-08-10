@@ -32,9 +32,13 @@ class _PerformancePageState extends State<PerformancePage> {
   void initState() {
     super.initState();
 
+    print("init!");
+
     // 가로 방향으로 고정함
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Map<String, dynamic> arguments =
@@ -153,5 +157,20 @@ class _PerformancePageState extends State<PerformancePage> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // Set portrait orientation
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+
+    PerformanceViewModel viewModel = context.read<PerformanceViewModel>();
+    viewModel.dispose();
+
+    super.dispose();
   }
 }

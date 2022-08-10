@@ -43,7 +43,6 @@ class PerformanceViewModel with ChangeNotifier {
     _addPerformer(_youtubeVideoPerformer);
 
     _addPlayStateListener((final PlayState playState) {
-      print("listener call!!!!!");
       this._playState = playState;
       notifyListeners();
     });
@@ -91,10 +90,12 @@ class PerformanceViewModel with ChangeNotifier {
   }
 
   void play({int? playAt}) {
+    print("test1: play - ${_playState.currentPosition}");
     _updatePlayState(isPlaying: true, currentPosition: playAt);
   }
 
   void stop({int? stopAt}) {
+    print("test1: stop - ${_playState.currentPosition}");
     _updatePlayState(isPlaying: false, currentPosition: stopAt);
   }
 }

@@ -16,7 +16,6 @@ class BeatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("build - $chord");
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 2),
       child: ClipRRect(

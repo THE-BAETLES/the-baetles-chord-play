@@ -19,4 +19,8 @@ class LoadingViewModel extends ChangeNotifier {
     _progress = 100;
     notifyListeners();
   }
+
+  void onDispose() {
+    _progress = 0;
+  }
 }

@@ -8,6 +8,7 @@ import '../../domain/model/loop.dart';
 import '../../domain/model/play_state.dart';
 
 class ConductorService {
+  // TODO : 전체적인 리팩토링 및 코드 정리 필요
   static final PlayState defaultPlayState = PlayState(
     isPlaying: false,
     currentPosition: 0,
@@ -21,28 +22,34 @@ class ConductorService {
   PlayState _playState = defaultPlayState;
   final List<Function(PlayState)> _playStateListeners = [];
 
+  int startTime = 0;
   late final StopWatchTimer stopWatchTimer;
 
   final Mutex lock = Mutex();
 
+  int get currentTime => (startTime + stopWatchTimer.rawTime.value);
+
   PlayState get playState => _playState = _playState.copy(
       currentPosition:
-          (stopWatchTimer.rawTime.value * _playState.tempo).toInt());
+          (currentTime * _playState.tempo).toInt());
 
   int get currentPosition =>
-      (stopWatchTimer.rawTime.value * _playState.tempo).toInt();
+      (currentTime * _playState.tempo).toInt();
 
   ConductorService() {
     stopWatchTimer = StopWatchTimer(
-        mode: StopWatchMode.countUp,
-        presetMillisecond: 0,
-        onChange: (int mSec) {
-          print("change!!!");
-          _playState.setCurrentPosition((mSec * _playState.tempo).toInt());
-          for (Function(PlayState) listener in _playStateListeners) {
-            listener(_playState);
-          }
-        },
+      mode: StopWatchMode.countUp,
+      presetMillisecond: 0,
+      onChange: (int mSec) {
+        _playState.setCurrentPosition(((startTime + mSec) * _playState.tempo).toInt());
+        // print("test1: listen - ${_playState.currentPosition} ${mSec}");
+        for (Function(PlayState) listener in _playStateListeners) {
+          listener(_playState);
+        }
+      },
+      onChangeRawSecond: (int second) {
+        // print("second : ${second}");
+      },
     );
   }
 
@@ -57,16 +64,18 @@ class ConductorService {
     await lock.acquire();
 
     try {
-      PlayState priorPlayState =   _playState;
+      PlayState priorPlayState = _playState;
 
       _playState = _playState.copy(
         isPlaying: isPlaying,
-        currentPosition: currentPosition,
+        currentPosition: currentPosition ?? this.currentPosition,
         tempo: tempo,
         defaultBpm: defaultBpm,
         loop: loop,
         capo: capo,
       );
+
+      stopWatchTimer.onExecute.add(StopWatchExecute.stop);
 
       List<Future<bool>> tasks = [];
 
@@ -74,10 +83,6 @@ class ConductorService {
         // performer에게 playState 전파
         tasks.add(performer.syncPlayStateAndReady(playState));
       }
-
-      stopWatchTimer.onExecute.add(
-        StopWatchExecute.stop,
-      );
 
       for (Future<bool> task in tasks) {
         bool isReadySuccessful = await task;
@@ -92,15 +97,18 @@ class ConductorService {
         performer.execute();
       }
 
-      // stop watch 동기화
-      stopWatchTimer.setPresetTime(
-        mSec : _playState.currentPosition ~/ _playState.tempo,
-        add: false,
-      );
 
-      stopWatchTimer.onExecute.add(
-        playState.isPlaying ? StopWatchExecute.start : StopWatchExecute.stop,
-      );
+      print("test1: preset to ${_playState.currentPosition ~/ _playState.tempo}");
+      print("test1: real value : ${stopWatchTimer.rawTime.value}");
+
+      // stop watch 동기화
+      // TODO : currentPosition 반영하도록 변경
+     if (playState.isPlaying) {
+        stopWatchTimer.onExecute.add(StopWatchExecute.start);
+      } else {
+        startTime = currentTime;
+        stopWatchTimer.onExecute.add(StopWatchExecute.reset);
+      }
 
       for (void Function(PlayState) listener in _playStateListeners) {
         listener(_playState);
