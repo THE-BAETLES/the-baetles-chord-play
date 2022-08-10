@@ -18,7 +18,7 @@ abstract class SheetClient {
   factory SheetClient (Dio dio, {String baseUrl}) = _SheetClient;
   // This class must include fromJson and toJson Methods;
   @GET('')
-  Future<GetConditionSheetResponse> getSheetsByVideoId(@Query('videoId') videoId);
+  Future<GetConditionSheetResponse> getSheetsByVideoId(@Query('videoId') String videoId);
 
   @GET('')
   Future<GetConditionSheetResponse> getSheetsByUserId();
@@ -33,9 +33,9 @@ abstract class SheetClient {
   Future<PostSheetResponse> createSheetData(@Body() PostSheetRequest postSheetRequest);
 
   @DELETE('/{sheetId}')
-  Future<DeleteSheetResponse> deleteSheetData(@Path('sheetId') sheetId);
+  Future<DeleteSheetResponse> deleteSheetData(@Path('sheetId') String sheetId);
 
   @PATCH('/{sheetId}')
-  Future<PatchSheetRequest> patchSheet(@Path('sheetId') sheetId, @Body() PatchSheetRequest patchSheetRequest);
+  Future<PatchSheetRequest> patchSheet(@Path('sheetId') String sheetId, @Body() PatchSheetRequest patchSheetRequest);
 
 }

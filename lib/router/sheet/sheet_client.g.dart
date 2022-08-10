@@ -20,7 +20,7 @@ class _SheetClient implements SheetClient {
   @override
   Future<GetConditionSheetResponse> getSheetsByVideoId(videoId) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'videoId': videoId.toJson()};
+    final queryParameters = <String, dynamic>{r'videoId': videoId};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<Map<String, dynamic>>(
