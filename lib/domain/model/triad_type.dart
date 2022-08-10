@@ -1,9 +1,10 @@
 enum TriadType {
-  major('maj'),
-  minor('min'),
-  augmented('aug'),
-  diminished('dim');
+  major('maj', 'M'),
+  minor('min', 'm'),
+  augmented('aug', 'a'),
+  diminished('dim', 'd');
 
-  const TriadType(this.notation);
+  const TriadType(this.notation, this.shortNotation);
   final String notation;
+  final String shortNotation;
 }

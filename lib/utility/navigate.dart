@@ -13,7 +13,7 @@ class Navigate {
     '/sign-up-page' : (context) => SignUpPage(),
     'home-page' : (context) => HomePage(),
     '/bridge-page' : (context) => BridgePage(),
-    '/performance-page' : (context) => PerformancePage(),
-    '/loading-page' : (context) => LoadingPage(),
+    '/performance-page' : (context) => PerformancePage(key: UniqueKey()),
+    '/loading-page' : (context) => LoadingPage(key: UniqueKey()),
   };
 }
