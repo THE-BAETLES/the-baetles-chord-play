@@ -30,18 +30,17 @@ class ConductorService {
   int get currentTime => (startTime + stopWatchTimer.rawTime.value);
 
   PlayState get playState => _playState = _playState.copy(
-      currentPosition:
-          (currentTime * _playState.tempo).toInt());
+      currentPosition: (currentTime * _playState.tempo).toInt());
 
-  int get currentPosition =>
-      (currentTime * _playState.tempo).toInt();
+  int get currentPosition => (currentTime * _playState.tempo).toInt();
 
   ConductorService() {
     stopWatchTimer = StopWatchTimer(
       mode: StopWatchMode.countUp,
       presetMillisecond: 0,
       onChange: (int mSec) {
-        _playState.setCurrentPosition(((startTime + mSec) * _playState.tempo).toInt());
+        _playState.setCurrentPosition(
+            ((startTime + mSec) * _playState.tempo).toInt());
         // print("test1: listen - ${_playState.currentPosition} ${mSec}");
         for (Function(PlayState) listener in _playStateListeners) {
           listener(_playState);
@@ -81,7 +80,7 @@ class ConductorService {
 
       for (PerformerInterface performer in _performers) {
         // performer에게 playState 전파
-        tasks.add(performer.syncPlayStateAndReady(playState));
+        tasks.add(performer.syncPlayStateAndReady(_playState));
       }
 
       for (Future<bool> task in tasks) {
@@ -97,17 +96,17 @@ class ConductorService {
         performer.execute();
       }
 
-
-      print("test1: preset to ${_playState.currentPosition ~/ _playState.tempo}");
+      print(
+          "test1: preset to ${_playState.currentPosition ~/ _playState.tempo}");
       print("test1: real value : ${stopWatchTimer.rawTime.value}");
 
       // stop watch 동기화
       // TODO : currentPosition 반영하도록 변경
-     if (playState.isPlaying) {
+      startTime = currentPosition ?? currentTime;
+      stopWatchTimer.onExecute.add(StopWatchExecute.reset);
+
+      if (playState.isPlaying) {
         stopWatchTimer.onExecute.add(StopWatchExecute.start);
-      } else {
-        startTime = currentTime;
-        stopWatchTimer.onExecute.add(StopWatchExecute.reset);
       }
 
       for (void Function(PlayState) listener in _playStateListeners) {

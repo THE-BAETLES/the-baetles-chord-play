@@ -37,7 +37,10 @@ class PerformanceViewModel with ChangeNotifier {
   SheetState? get sheetState => _sheetState;
 
   PerformanceViewModel(
-      this._updatePlayState, this._addPerformer, this._addPlayStateListener) {
+    this._updatePlayState,
+    this._addPerformer,
+    this._addPlayStateListener,
+  ) {
     _youtubeVideoPerformer = YoutubeVideoPerformer(null);
 
     _addPerformer(_youtubeVideoPerformer);
@@ -90,12 +93,20 @@ class PerformanceViewModel with ChangeNotifier {
   }
 
   void play({int? playAt}) {
-    print("test1: play - ${_playState.currentPosition}");
     _updatePlayState(isPlaying: true, currentPosition: playAt);
   }
 
   void stop({int? stopAt}) {
-    print("test1: stop - ${_playState.currentPosition}");
     _updatePlayState(isPlaying: false, currentPosition: stopAt);
+  }
+
+  void moveCurrentPosition(int amount) {
+    int dest = _playState.currentPosition + amount;
+
+    if (dest < 0) {
+      dest = 0;
+    }
+
+    _updatePlayState(currentPosition: dest);
   }
 }

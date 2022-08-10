@@ -27,7 +27,7 @@ class SheetView extends StatelessWidget {
 
     final List<Widget> tileRows = [];
 
-    int highlightedTileIndex = (currentPosition / (bps * 1000)).toInt();
+    int highlightedTileIndex = (bps * currentPosition / 1000).toInt();
     int currentBlockIndex = 0;
     int rowCount = sheetData.chords.length > 0
         ? (sheetData.chords.last.position / beatPerRow).toInt() + 1
