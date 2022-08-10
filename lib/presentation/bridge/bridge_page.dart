@@ -34,9 +34,7 @@ class BridgePage extends StatelessWidget {
           Column(
             children: [
               YoutubeVideoPlayer(
-                controller: YoutubePlayerController(
-                  initialVideoId: video.id,
-                ),
+                controller: viewModel.youtubePlayerController!,
               ),
               Expanded(
                 child: SingleChildScrollView(
@@ -152,7 +150,6 @@ class BridgePage extends StatelessWidget {
             visible: true,
             child: Positioned(
               bottom: 0,
-              // TODO : control box 만들기
               child: BridgeControlBar(),
             ),
           ),

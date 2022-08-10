@@ -36,6 +36,8 @@ class GoogleAuthService implements AuthService {
     // Once signed in, return the UserCredential
     UserCredential userCredential = await _auth.signInWithCredential(credential);
 
+
+
     // 백엔드 협업용 id 토큰 받아오는 코드
     if (kDebugMode) {
       print("${await userCredential.user?.getIdToken()}");
