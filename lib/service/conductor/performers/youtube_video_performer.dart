@@ -7,8 +7,7 @@ import '../performer_interface.dart';
 
 class YoutubeVideoPerformer implements PerformerInterface {
   YoutubePlayerController? _controller;
-  late PlayState _playState;
-  String? videoId;
+  PlayState? _playState;
 
   YoutubePlayerController? get controller => _controller;
 
@@ -33,14 +32,18 @@ class YoutubeVideoPerformer implements PerformerInterface {
 
     _controller!.setPlaybackRate(playState.tempo);
 
+    await Future.delayed(const Duration(milliseconds: 300));
+
+    print("after sync state : ${_controller!.value.playerState.toString()}");
+    // return _controller!.value.playerState == PlayerState.unStarted ||
+    //     _controller!.value.playerState == PlayerState.cued;
     return true;
   }
 
   @override
   Future<void> execute() async {
-
-    if (_playState.isPlaying) {
-      _controller!.play();
+    if (_playState!.isPlaying) {
+      _controller!.seekTo(Duration(milliseconds: _playState!.currentPosition));
     } else {
       _controller!.pause();
     }

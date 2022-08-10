@@ -37,7 +37,7 @@ class ConductorService {
         presetMillisecond: 0,
         onChangeRawSecond: (int second) {
           _playState = _playState.copy(
-              currentPosition: (second * _playState.tempo).toInt());
+              currentPosition: (second * 1000 * _playState.tempo).toInt());
         });
   }
 
@@ -53,9 +53,11 @@ class ConductorService {
     Loop? loop,
     int? capo,
   }) async {
-    lock.acquire();
+    await lock.acquire();
 
     try {
+      PlayState priorPlayState =   _playState;
+
       _playState = _playState.copy(
         isPlaying: isPlaying,
         currentPosition: currentPosition,
@@ -67,24 +69,20 @@ class ConductorService {
 
       List<Future<bool>> tasks = [];
 
-      stopWatchTimer.onExecute.add(
-        StopWatchExecute.stop,
-      );
-
-      // stop watch 동기화
-      stopWatchTimer.setPresetTime(
-        mSec : (_playState.currentPosition / _playState.tempo).toInt(),
-      );
-
       for (PerformerInterface performer in _performers) {
         // performer에게 playState 전파
         tasks.add(performer.syncPlayStateAndReady(playState));
       }
 
+      stopWatchTimer.onExecute.add(
+        StopWatchExecute.stop,
+      );
+
       for (Future<bool> task in tasks) {
         bool isReadySuccessful = await task;
 
         if (!isReadySuccessful) {
+          _playState = priorPlayState;
           return false;
         }
       }
@@ -92,6 +90,12 @@ class ConductorService {
       for (PerformerInterface performer in _performers) {
         performer.execute();
       }
+
+      // stop watch 동기화
+      stopWatchTimer.setPresetTime(
+        mSec : _playState.currentPosition ~/ _playState.tempo,
+        add: false,
+      );
 
       stopWatchTimer.onExecute.add(
         playState.isPlaying ? StopWatchExecute.start : StopWatchExecute.stop,
