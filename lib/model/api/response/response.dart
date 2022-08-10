@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../schema/schema.dart';
+import '../../schema/schema.dart';
 
 part 'response.g.dart';
 

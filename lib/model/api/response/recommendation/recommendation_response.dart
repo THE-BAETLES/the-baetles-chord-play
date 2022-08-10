@@ -1,4 +1,4 @@
-import 'package:the_baetles_chord_play/model/api/response.dart';
+import 'package:the_baetles_chord_play/model/api/response/response.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'recommendation_response.g.dart';
