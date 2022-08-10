@@ -4,7 +4,8 @@ class Video {
   final String title;
   final String genre;
   final String singer;
-  final double length;
+  final List<String> tags;
+  final int length;
   final int difficultyAvg;
   final int playCount;
 
@@ -14,10 +15,10 @@ class Video {
     required this.title,
     required this.genre,
     required this.singer,
+    required this.tags,
     required this.length,
     required this.difficultyAvg,
     required this.playCount,
-
   });
 
   factory Video.fromJson(Map<String, dynamic> json) {
@@ -28,6 +29,7 @@ class Video {
       genre: json['genre'],
       singer: json['singer'],
       length: json['duration'],
+      tags: json['tags'],
       difficultyAvg: json['difficulty_avg'],
       playCount: json['play_count'],
     );
@@ -54,7 +56,6 @@ class Video {
           title == other.title &&
           genre == other.genre &&
           singer == other.singer &&
-          length == other.length &&
           difficultyAvg == other.difficultyAvg &&
           playCount == other.playCount;
 
@@ -65,7 +66,6 @@ class Video {
       title.hashCode ^
       genre.hashCode ^
       singer.hashCode ^
-      length.hashCode ^
       difficultyAvg.hashCode ^
       playCount.hashCode;
 }
