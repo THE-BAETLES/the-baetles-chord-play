@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import 'package:the_baetles_chord_play/presentation/performance/component/beat_tile.dart';
+import 'package:the_baetles_chord_play/widget/molecule/beat_tile.dart';
 import 'package:the_baetles_chord_play/presentation/performance/component/mute_button.dart';
 import 'package:the_baetles_chord_play/presentation/performance/performance_view_model.dart';
 import 'package:the_baetles_chord_play/domain/model/play_state.dart';
@@ -14,25 +14,48 @@ import '../../domain/model/sheet_data.dart';
 import '../../domain/model/sheet_info.dart';
 import '../../domain/model/video.dart';
 import '../../widget/atom/app_colors.dart';
+import '../../widget/organism/sheet_view.dart';
 
-class PerformancePage extends StatelessWidget {
+class PerformancePage extends StatefulWidget {
   const PerformancePage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  State<PerformancePage> createState() => _PerformancePageState();
+}
+
+class _PerformancePageState extends State<PerformancePage> {
+  late Video video;
+  late SheetInfo sheetInfo;
+  late SheetData sheetData;
+
+  @override
+  void initState() {
+    super.initState();
+
+    print("init!");
+
     // 가로 방향으로 고정함
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
 
-    List<dynamic> arguments = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
-    Video video = arguments[0] as Video;
-    SheetInfo sheetInfo = arguments[1] as SheetInfo;
-    SheetData sheetData = arguments[2] as SheetData;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Map<String, dynamic> arguments =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      video = arguments['video'] as Video;
+      sheetInfo = arguments["sheetInfo"] as SheetInfo;
+      sheetData = arguments['sheetData'] as SheetData;
 
+      PerformanceViewModel viewModel = context.read<PerformanceViewModel>();
+      viewModel.initViewModel(
+          video: video, sheetInfo: sheetInfo, sheetData: sheetData);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     PerformanceViewModel viewModel = context.watch<PerformanceViewModel>();
-    viewModel.initViewModel(video: video, sheetInfo: sheetInfo, sheetData: sheetData);
-
-    print("hi!");
 
     return Scaffold(
       appBar: AppBar(
@@ -51,45 +74,65 @@ class PerformancePage extends StatelessWidget {
             Positioned(
               top: 0,
               left: 0,
-              child: _sheetView(context, viewModel.playState, viewModel.sheetState),
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: SheetView(
+                  currentPosition: viewModel.playState.currentPosition,
+                  sheetData: viewModel.sheetState?.sheetData ??
+                      SheetData(bpm: 80, chords: []),
+                ),
+              ),
             ),
             Positioned(
               bottom: 0,
-              child: _controlBar(context, viewModel.play, viewModel.playState, viewModel.youtubePlayerController),
-            )
+              child: _controlBar(
+                  context,
+                  viewModel.play,
+                  viewModel.stop,
+                  context.read<PerformanceViewModel>().playState,
+                  viewModel.youtubePlayerController),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _sheetView(BuildContext context, PlayState playState, SheetState sheetState) {
-    return BeatTile(chord: "A");
-  }
-
-  Widget _controlBar(BuildContext context, void Function() play, PlayState playState, final YoutubePlayerController controller) {
+  Widget _controlBar(
+      BuildContext context,
+      void Function() play,
+      void Function() stop,
+      PlayState playState,
+      final YoutubePlayerController? controller) {
     return Container(
       height: 62,
       width: MediaQuery.of(context).size.width,
       color: AppColors.gray34,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           MuteButton(
             isToggled: false,
             iconPath: 'assets/icons/ic_mute.svg',
             text: 'Mute',
           ),
-          _controlButtons(context, play, playState.isPlaying),
+          _controlButtons(context, play, stop, playState),
           Container(
-            child: YoutubeVideoPlayer(controller: controller),
+            width: 62,
+            height: 44,
+            color: Colors.black,
+            child: controller == null
+                ? null
+                : YoutubeVideoPlayer(controller: controller),
           )
         ],
       ),
     );
   }
 
-  Widget _controlButtons(BuildContext context, void Function() play, bool isPlaying) {
+  Widget _controlButtons(BuildContext context, void Function() play,
+      void Function() stop, PlayState playState) {
     return Container(
       width: 140,
       child: Row(
@@ -98,14 +141,36 @@ class PerformancePage extends StatelessWidget {
           SvgPicture.asset("assets/icons/ic_prev_2.svg", width: 26, height: 30),
           GestureDetector(
             onTap: () {
-              play();
+              if (playState.isPlaying) {
+                stop();
+              } else {
+                play();
+              }
             },
-            child: isPlaying ? SvgPicture.asset("assets/icons/ic_play2.svg", width: 22, height: 22)
-                      : SvgPicture.asset("assets/icons/ic_pause.svg", width: 22, height: 22),
+            child: playState.isPlaying
+                ? SvgPicture.asset("assets/icons/ic_pause.svg",
+                    width: 22, height: 22)
+                : SvgPicture.asset("assets/icons/ic_play2.svg",
+                    width: 22, height: 22),
           ),
           SvgPicture.asset("assets/icons/ic_next_2.svg", width: 26, height: 30),
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // Set portrait orientation
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+
+    PerformanceViewModel viewModel = context.read<PerformanceViewModel>();
+    viewModel.dispose();
+
+    super.dispose();
   }
 }

@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:the_baetles_chord_play/widget/atom/app_font_families.dart';
 
+import '../../domain/model/chord.dart';
+import '../atom/app_colors.dart';
+
 class BeatTile extends StatelessWidget {
-  final String chord;
+  final Chord? chord;
+  final bool isHighlighted;
 
   const BeatTile({
     Key? key,
-    required this.chord,
+    this.chord,
+    this.isHighlighted = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    print("build - $chord");
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 2),
       child: ClipRRect(
@@ -19,10 +23,10 @@ class BeatTile extends StatelessWidget {
         child: Container(
           width: 40,
           height: 40,
-          color: Colors.white,
+          color: isHighlighted ? AppColors.blue7F : Colors.white,
           child: Center(
             child: Text(
-              chord,
+              chord != null ? (chord?.root.noteName)! : '',
               style: TextStyle(
                 fontSize: 20,
                 fontFamily: AppFontFamilies.pretendard,
