@@ -3,37 +3,43 @@ import 'dart:core';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:the_baetles_chord_play/domain/use_case/check_nickname_overlap.dart';
+import 'package:the_baetles_chord_play/domain/use_case/check_nickname_valid.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_music_to_check_preference.dart';
+import 'package:the_baetles_chord_play/domain/use_case/get_nickname_suggestion.dart';
 import 'package:the_baetles_chord_play/domain/use_case/sign_in_with_id_token.dart';
 
 import '../../domain/model/gender.dart';
 import '../../domain/model/performer_grade.dart';
 import '../../domain/model/video.dart';
+import '../../domain/use_case/sign_up.dart';
 
 class SignUpViewModel with ChangeNotifier {
   // use case
-  final CheckNicknameOverlap checkNicknameOverlap;
+  final CheckNicknameValid checkNicknameValid;
   final GetMusicToCheckPreference getMusicToCheckPreference;
   final SignInWithIdToken signInWithIdToken;
+  final GetNicknameSuggestion getNicknameSuggestion;
+  final SignUp signUp;
 
-  static const _nicknamePageOffset = 0;
-  static const _genderPageOffset = 1;
-  static const _gradePageOffset = 2;
-  static const _preferencePageOffset = 3;
+  static const _nicknamePage = 0;
+  static const _genderPage = 1;
+  static const _gradePage = 2;
+  static const _preferencePage = 3;
   static const _completePageOffset = 4;
+
+  static const _minSelectionCount = 3;
 
   UnmodifiableListView<Video> musicToCheckPreference = UnmodifiableListView([]);
 
   final List<Video> _preferredSongs = [];
-  int _pageOffset = _nicknamePageOffset;
+  int _currentPage = _nicknamePage;
   bool _isNicknameValid = true;
   String _inputNickname = "";
   String? _confirmedNickname;
   Gender? _selectedGender;
   PerformerGrade? _selectedGrade;
 
-  int get pageOffset => _pageOffset;
+  int get pageOffset => _currentPage;
 
   bool get isNicknameValid => _isNicknameValid;
 
@@ -51,13 +57,33 @@ class SignUpViewModel with ChangeNotifier {
 
   bool get isGradeConfirmButtonVisible => _selectedGrade != null;
 
-  bool get isPreferenceConfirmButtonVisible => _preferredSongs.length >= 3;
+  bool get isPreferenceConfirmButtonVisible => _preferredSongs.length >= _minSelectionCount;
 
   SignUpViewModel(
-    this.checkNicknameOverlap,
+    this.checkNicknameValid,
     this.getMusicToCheckPreference,
     this.signInWithIdToken,
-  );
+    this.getNicknameSuggestion,
+    this.signUp,
+  ) {
+    // TODO : 가져온 닉네임 반영되도록 수정
+    // getNicknameSuggestion().then((nickname) {
+    //   _inputNickname = nickname;
+    //   notifyListeners();
+    // });
+  }
+
+  Future<void> resetViewModel() async {
+    _preferredSongs.clear();
+    _currentPage = _nicknamePage;
+    _isNicknameValid = false;
+    _inputNickname = await getNicknameSuggestion();
+    _confirmedNickname = null;
+    _selectedGender = null;
+    _selectedGrade = null;
+
+    notifyListeners();
+  }
 
   void onChangeNickname(String nickname) {
     _inputNickname = nickname;
@@ -70,17 +96,17 @@ class SignUpViewModel with ChangeNotifier {
   }
 
   Future<String?> onConfirmNickname(String nickname) async {
-    // 닉네임 중복 체크
-    bool isOverlapped = await checkNicknameOverlap(nickname);
+    // 닉네임 중복 및 유효성 체크
+    bool isValid = await checkNicknameValid(nickname);
 
-    if (isOverlapped) {
+    if (!isValid) {
       _isNicknameValid = false;
       notifyListeners();
       return "이미 사용중인 닉네임입니다!";
     }
 
     _confirmedNickname = inputNickname;
-    _pageOffset = _genderPageOffset;
+    _currentPage = _genderPage;
     notifyListeners();
     return null;
   }
@@ -93,7 +119,7 @@ class SignUpViewModel with ChangeNotifier {
   void onConfirmGender() {
     assert(_selectedGender != null);
 
-    _pageOffset = _gradePageOffset;
+    _currentPage = _gradePage;
     notifyListeners();
     return;
   }
@@ -107,11 +133,12 @@ class SignUpViewModel with ChangeNotifier {
     assert(_selectedGrade != null);
 
     Future.microtask(() async {
-      musicToCheckPreference = await getMusicToCheckPreference(_selectedGrade!);
+      musicToCheckPreference =
+          (await getMusicToCheckPreference(_selectedGrade!, _selectedGender!))!;
       notifyListeners();
     });
 
-    _pageOffset = _preferencePageOffset;
+    _currentPage = _preferencePage;
     notifyListeners();
     return;
   }
@@ -128,18 +155,24 @@ class SignUpViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> onConfirmPreferredSong() async {
-    // TODO : 서버 전송 작업
+  Future<bool> onConfirmPreferredSong() async {
+    bool isSignUpSuccessful = await signUp(
+      performerGrade: _selectedGrade!,
+      earlyFavoriteSongs: _preferredSongs,
+      nickname: _confirmedNickname!,
+      gender: _selectedGender!,
+    );
 
-    // 전송이 성공적일 때
-    _pageOffset = _completePageOffset;
-
-    // 전송이 실패했을 때
-    // TODO : sign in 페이지로 돌아가기
-
-    // TODO : sign up view model 데이터 리셋
+    if (isSignUpSuccessful) {
+      // 회원가입이 성공적일 때
+      _currentPage = _completePageOffset;
+    } else {
+      // 성공적이지 않으면 회원가입을 처음부터 다시 진행함.
+      await resetViewModel();
+    }
 
     notifyListeners();
+    return isSignUpSuccessful;
   }
 
   Future<bool> onCompleteButtonClicked() async {

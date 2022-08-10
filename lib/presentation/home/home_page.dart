@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:the_baetles_chord_play/presentation/home/video_grid_block.dart';
 
 import '../../domain/model/video.dart';
-import '../../widget/atom/app_colors.dart';
 import 'home_view_model.dart';
 import 'video_list_block.dart';
 import 'home_header.dart';

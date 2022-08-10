@@ -30,10 +30,13 @@ dependencies:
   flutter:
     sdk: flutter
 
+  retrofit: '>=3.0.0 <4.0.0'
+  logger: any
+
   firebase_core: ^1.19.1
   firebase_auth: ^3.4.1
   google_sign_in: ^5.3.3
-  youtube_player_iframe: ^2.3.0
+  youtube_player_flutter: ^8.1.0
   flutter_svg: ^1.0.3
   flutter_native_splash: ^2.2.4
   shared_preferences: ^2.0.15
@@ -41,6 +44,9 @@ dependencies:
   fluttertoast: ^8.0.9
   geolocator: ^9.0.1
   intl: ^0.17.0
+  http: ^0.13.4
+  country_codes: ^2.2.0
+  stop_watch_timer: ^1.5.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -53,6 +59,10 @@ dev_dependencies:
 
   flutter_test:
     sdk: flutter
+
+  retrofit_generator: any
+  build_runner: ^2.0.4
+  json_serializable: '>4.4.0'
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -127,6 +137,19 @@ flutter:
         - asset: assets/fonts/Montserrat/Montserrat-ExtraBold.otf
           weight: 800
         - asset: assets/fonts/Montserrat/Montserrat-Black.otf
+          weight: 900
+    - family: NotoSansKR
+      fonts:
+        - asset: assets/fonts/NotoSansKR/NotoSansKR-Regular.otf
+        - asset: assets/fonts/NotoSansKR/NotoSansKR-Thin.otf
+          weight: 100
+        - asset: assets/fonts/NotoSansKR/NotoSansKR-Light.otf
+          weight: 300
+        - asset: assets/fonts/NotoSansKR/NotoSansKR-Medium.otf
+          weight: 500
+        - asset: assets/fonts/NotoSansKR/NotoSansKR-Bold.otf
+          weight: 700
+        - asset: assets/fonts/NotoSansKR/NotoSansKR-Black.otf
           weight: 900
 
   # For details regarding fonts from package dependencies,

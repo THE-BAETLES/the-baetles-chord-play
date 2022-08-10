@@ -1,47 +1,62 @@
-import 'package:the_baetles_chord_play/data/source/local_data_source.dart';
+import 'package:country_codes/country_codes.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:the_baetles_chord_play/data/source/remote_data_source.dart';
+import 'package:the_baetles_chord_play/domain/model/performer_grade.dart';
+
+import '../../domain/model/gender.dart';
+import '../../domain/model/video.dart';
 
 class AuthRepository {
   static final AuthRepository _instance = AuthRepository._internal();
-  late final LocalDataSource _localDataSource;
   late final RemoteDataSource _remoteDataSource;
-
-  // shared preference key
-  static const userIdKey = "userId";
-  static const idTokenKey = "idToken";
 
   factory AuthRepository() {
     return _instance;
   }
 
   AuthRepository._internal() {
-    _localDataSource = LocalDataSource();
     _remoteDataSource = RemoteDataSource();
   }
 
-  Future<bool> hadSignedUp(String userId, String accessToken) async {
-    return (await _remoteDataSource.fetchUserInfo(userId, accessToken)) != null;
+  Future<bool> login(String idToken) async {
+    return (await _remoteDataSource.login(idToken));
   }
 
-  Future<bool> hadSignedIn() async {
-    await _localDataSource.isInitialized; // local data source가 준비 완료될 때까지 대기
-    return (await _localDataSource.fetchSharedPreference(idTokenKey)) != null;
+  Future<bool> signUp({
+    required String idToken,
+    required String country,
+    required PerformerGrade performerGrade,
+    required List<Video> earlyFavoriteSongs,
+    required String nickname,
+    required Gender gender,
+}) async {
+    // return (await _remoteDataSource.signUp(
+    //   idToken: idToken,
+    //   country: country.toUpperCase(),
+    //   performerGrade: performerGrade.name.toUpperCase(),
+    //   earlyFavoriteSongs: earlyFavoriteSongs.map((e) => e.toJson()).toList(),
+    //   nickname: nickname,
+    //   gender: gender.name.toUpperCase(),
+    // ));
+    return true;
   }
 
-  Future<bool> storeUserCredential(String userId, String idToken) async {
-    _localDataSource.storeSharedPreference(userIdKey, userId);
-    _localDataSource.storeSharedPreference(idTokenKey, idToken);
-
-    bool isSuccessful = await _remoteDataSource.setUserCredential(userId, idToken);
-    return isSuccessful;
+  Future<String?>? fetchIdToken({bool forceRefresh = false}) async {
+    return await FirebaseAuth.instance.currentUser?.getIdToken(forceRefresh);
   }
 
-  Future<Object?> fetchIdToken() async {
-    return await _localDataSource.fetchSharedPreference(idTokenKey);
+  String? fetchUserId() {
+    return FirebaseAuth.instance.currentUser?.uid;
   }
 
-  Future<bool> isNicknameRegistered(String nickname) async {
-    // TODO : 닉네임이 등록되어 있는지 조회
-    return Future(() => false); // dummy data
+  Future<bool> isNicknameValid(String nickname) async {
+    return await _remoteDataSource.checkNicknameValid(
+        (await fetchIdToken())!, nickname); // dummy data
+  }
+
+  Future<String> getNicknameSuggestion() async {
+    // return await _remoteDataSource
+    //     .getNicknameSuggestion((await fetchIdToken())!);
+    return "";
   }
 }

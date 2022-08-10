@@ -1,7 +1,9 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:the_baetles_chord_play/presentation/sign_up/component/toggle_box.dart';
 
 class RadioButtonList extends StatefulWidget {
+  static const int none = -1;
+
   final List<String> _texts;
   final void Function(int)? onPressed;
 
@@ -13,7 +15,7 @@ class RadioButtonList extends StatefulWidget {
 }
 
 class _RadioButtonListState extends State<RadioButtonList> {
-  int _selectedItemOffset = -1;
+  int _selectedItemIndex = RadioButtonList.none;
 
   @override
   Widget build(BuildContext context) {
@@ -24,38 +26,39 @@ class _RadioButtonListState extends State<RadioButtonList> {
   }
 
   List<Widget> _wrapTexts(List<String> texts, BuildContext context) {
-    List<Widget> result = [];
+    List<Widget> wrappedTexts = [];
 
     for (int i = 0; i < texts.length; ++i) {
       ToggleBox item = ToggleBox(
         texts[i],
         onPressed: () {
           setState(() {
-            if (_selectedItemOffset == i) {
-              _selectedItemOffset = -1;
+            if (_selectedItemIndex == i) {
+              _selectedItemIndex = -1; // 활성화된 토글 버튼 없음
             } else {
-              _selectedItemOffset = i;
+              _selectedItemIndex = i;
             }
           });
 
-          widget.onPressed?.call(_selectedItemOffset);
+          widget.onPressed?.call(_selectedItemIndex);
         },
       );
 
-      item.setIsActivated(_selectedItemOffset == i);
+      item.setIsActivated(_selectedItemIndex == i);  // 토글 상태 반영
 
-      result.add(SizedBox(
+      // item 추가
+      wrappedTexts.add(SizedBox(
         height: 62,
         width: MediaQuery.of(context).size.width,
         child: item,
       ));
 
       // divider 추가
-      result.add(Container(
+      wrappedTexts.add(Container(
         height: 12,
       ));
     }
 
-    return result;
+    return wrappedTexts;
   }
 }

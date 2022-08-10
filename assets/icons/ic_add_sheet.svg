@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <g id="btn_add_sheet" transform="translate(-259 -456)">
+    <g id="사각형_170" data-name="사각형 170" transform="translate(259 456)" fill="#fff" stroke="#80829a" stroke-width="1">
+      <rect width="16" height="16" stroke="none"/>
+      <rect x="0.5" y="0.5" width="15" height="15" fill="none"/>
+    </g>
+    <path id="패스_324" data-name="패스 324" d="M4484.343,732h6" transform="translate(-4220.343 -268)" fill="none" stroke="#80829a" stroke-width="1"/>
+    <path id="패스_325" data-name="패스 325" d="M4484.343,732h6" transform="translate(-465 4951.343) rotate(-90)" fill="none" stroke="#80829a" stroke-width="1"/>
+  </g>
+</svg>

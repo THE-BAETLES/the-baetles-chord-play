@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:the_baetles_chord_play/presentation/sign_up/component/radio_button_list.dart';
@@ -43,8 +42,10 @@ class SignUpPage extends StatelessWidget {
                   height: 30,
                   width: MediaQuery.of(context).size.width - 20,
                   child: SignUpInputField(
-                      viewModel.inputNickname, "닉네임을 입력해주세요.",
-                      maxLength: 15),
+                    viewModel.inputNickname,
+                    "닉네임을 입력해주세요.",
+                    maxLength: 15,
+                  ),
                 ),
                 Visibility(
                   visible: viewModel.isNicknameConfirmButtonVisible,
@@ -87,21 +88,11 @@ class SignUpPage extends StatelessWidget {
                   width: MediaQuery.of(context).size.width - 60,
                   child: RadioButtonList(
                     const ["남성입니다", "여성입니다"],
-                    onPressed: (int offset) {
-                      switch (offset) {
-                        case -1:
-                          viewModel.onChangeGender(null);
-                          break;
-                        case 0:
-                          viewModel.onChangeGender(Gender.male);
-                          break;
-                        case 1:
-                          viewModel.onChangeGender(Gender.female);
-                          break;
-                        default:
-                          if (kDebugMode) {
-                            print("SignUpPage: undefined offset");
-                          }
+                    onPressed: (int index) {
+                      if (index == -1) {
+                        viewModel.onChangeGender(null);
+                      } else {
+                        viewModel.onChangeGender(Gender.values[index]);
                       }
                     },
                   ),
@@ -147,7 +138,7 @@ class SignUpPage extends StatelessWidget {
                           viewModel.onChangeGrade(PerformerGrade.intermediate);
                           break;
                         case 2:
-                          viewModel.onChangeGrade(PerformerGrade.master);
+                          viewModel.onChangeGrade(PerformerGrade.expert);
                           break;
                         default:
                           if (kDebugMode) {
@@ -195,8 +186,20 @@ class SignUpPage extends StatelessWidget {
                   child: Positioned(
                     bottom: 0,
                     child: SignUpNextButton(() async {
-                      await viewModel.onConfirmPreferredSong();
-                      animatePage(viewModel.pageOffset);
+                      bool isSuccessful =
+                          await viewModel.onCompleteButtonClicked();
+
+                      if (isSuccessful) {
+                        await viewModel.onConfirmPreferredSong();
+                        animatePage(viewModel.pageOffset);
+                      } else {
+                        Fluttertoast.showToast(
+                          msg: "회원가입 도중 오류가 발생했습니다. 다시 시도해주세요.",
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                        );
+                      }
                     }),
                   ),
                 ),
@@ -250,15 +253,8 @@ class SignUpPage extends StatelessWidget {
                 Positioned(
                   bottom: 0,
                   child: SignUpNextButton(() async {
-                    bool isSuccessful =
-                        await viewModel.onCompleteButtonClicked();
-
-                    if (isSuccessful) {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          'home-page', (route) => false);
-                    } else {
-                      Navigator.of(context).pop();
-                    }
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil('home-page', (route) => false);
                   }),
                 ),
               ],

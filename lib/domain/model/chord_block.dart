@@ -1,7 +1,7 @@
-import 'note.dart';
+import 'chord.dart';
 
 class ChordBlock {
-  final Note chord;
+  final Chord chord;
   final int position;
   final double start;
   final double end;

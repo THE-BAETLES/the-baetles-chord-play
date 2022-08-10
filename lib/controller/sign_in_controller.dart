@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:the_baetles_chord_play/data/repository/auth_repository.dart';
@@ -22,14 +23,12 @@ class SignInController {
         break;
     }
 
-    String userId;
-    String accessToken;
+    String idToken;
 
     try {
-      await authService.signIn();
+      UserCredential credential = await authService.signIn();
 
-      userId = (authService.getUserId())!;
-      accessToken = (await authService.getIdToken())!;
+      idToken = (await credential.user!.getIdToken());
     } catch (e) {
       rethrow;
       if (kDebugMode) {
@@ -42,7 +41,7 @@ class SignInController {
 
     AuthRepository authRepository = AuthRepository();
 
-    if (await authRepository.hadSignedUp(userId, accessToken)) {
+    if (await authRepository.login(idToken)) {
       Navigator.pushNamedAndRemoveUntil(context, 'home-page', (route) => false);
       print("to home page!");
     } else {
