@@ -86,7 +86,6 @@ class PerformanceViewModel with ChangeNotifier {
       ),
     );
 
-    print("controller changed!!!");
     notifyListeners();
   }
 

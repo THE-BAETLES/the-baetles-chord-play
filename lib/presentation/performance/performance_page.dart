@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import 'package:the_baetles_chord_play/presentation/performance/component/beat_tile.dart';
+import 'package:the_baetles_chord_play/widget/molecule/beat_tile.dart';
 import 'package:the_baetles_chord_play/presentation/performance/component/mute_button.dart';
 import 'package:the_baetles_chord_play/presentation/performance/performance_view_model.dart';
 import 'package:the_baetles_chord_play/domain/model/play_state.dart';
@@ -14,6 +14,7 @@ import '../../domain/model/sheet_data.dart';
 import '../../domain/model/sheet_info.dart';
 import '../../domain/model/video.dart';
 import '../../widget/atom/app_colors.dart';
+import '../../widget/organism/sheet_view.dart';
 
 class PerformancePage extends StatefulWidget {
   const PerformancePage({Key? key}) : super(key: key);
@@ -69,8 +70,15 @@ class _PerformancePageState extends State<PerformancePage> {
             Positioned(
               top: 0,
               left: 0,
-              child: _sheetView(
-                  context, viewModel.playState, viewModel.sheetState),
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: SheetView(
+                  currentPosition: viewModel.playState.currentPosition,
+                  sheetData: viewModel.sheetState?.sheetData ??
+                      SheetData(bpm: 80, chords: []),
+                ),
+              ),
             ),
             Positioned(
               bottom: 0,
@@ -80,16 +88,11 @@ class _PerformancePageState extends State<PerformancePage> {
                   viewModel.stop,
                   context.read<PerformanceViewModel>().playState,
                   viewModel.youtubePlayerController),
-            )
+            ),
           ],
         ),
       ),
     );
-  }
-
-  Widget _sheetView(
-      BuildContext context, PlayState playState, SheetState? sheetState) {
-    return BeatTile(chord: "A");
   }
 
   Widget _controlBar(
@@ -103,7 +106,7 @@ class _PerformancePageState extends State<PerformancePage> {
       width: MediaQuery.of(context).size.width,
       color: AppColors.gray34,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           MuteButton(
             isToggled: false,
@@ -115,7 +118,9 @@ class _PerformancePageState extends State<PerformancePage> {
             width: 62,
             height: 44,
             color: Colors.black,
-            child: controller == null ? null : YoutubeVideoPlayer(controller: controller),
+            child: controller == null
+                ? null
+                : YoutubeVideoPlayer(controller: controller),
           )
         ],
       ),

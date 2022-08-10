@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:the_baetles_chord_play/widget/atom/app_font_families.dart';
 
+import '../../domain/model/chord.dart';
+
 class BeatTile extends StatelessWidget {
-  final String chord;
+  final Chord? chord;
 
   const BeatTile({
     Key? key,
-    required this.chord,
+    this.chord,
   }) : super(key: key);
 
   @override
@@ -22,7 +24,7 @@ class BeatTile extends StatelessWidget {
           color: Colors.white,
           child: Center(
             child: Text(
-              chord,
+              chord != null ? (chord?.root.noteName)! : '',
               style: TextStyle(
                 fontSize: 20,
                 fontFamily: AppFontFamilies.pretendard,

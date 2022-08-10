@@ -48,7 +48,10 @@ class _LoadingPageState extends State<LoadingPage> {
             "video": video,
             "sheetInfo": sheetInfo,
             "sheetData": SheetData(bpm: 30, chords: [
-              ChordBlock(Chord(Note(30), TriadType.minor), 0, 2.5234, 3.25332)
+              ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 25, 12.213696067, 13.560453428),
+              ChordBlock(Chord(Note.fromNoteName('G#3'), TriadType.major), 28, 13.606893337, 14.489251608),
+              ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 30, 14.535691517, 16.997006694),
+              ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 35, 17.043446603, 18.11156451),
             ]),
           },
         );
