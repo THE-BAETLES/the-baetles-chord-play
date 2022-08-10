@@ -43,6 +43,7 @@ class PerformanceViewModel with ChangeNotifier {
     _addPerformer(_youtubeVideoPerformer);
 
     _addPlayStateListener((final PlayState playState) {
+      print("listener call!!!!!");
       this._playState = playState;
       notifyListeners();
     });
@@ -79,7 +80,7 @@ class PerformanceViewModel with ChangeNotifier {
     _youtubeVideoPerformer.setController(
       YoutubePlayerController(
         initialVideoId: video.id,
-        flags: YoutubePlayerFlags(
+        flags: const YoutubePlayerFlags(
           autoPlay: false,
           enableCaption: false,
         ),
@@ -95,9 +96,5 @@ class PerformanceViewModel with ChangeNotifier {
 
   void stop({int? stopAt}) {
     _updatePlayState(isPlaying: false, currentPosition: stopAt);
-  }
-
-  void reset() {
-    _playState = _playState.copy(currentPosition: 0, isPlaying: false);
   }
 }

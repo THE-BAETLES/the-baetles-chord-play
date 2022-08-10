@@ -21,10 +21,13 @@ class SheetView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("sheet view build!");
+
     double bps = sheetData.bpm / 60.0;
 
     final List<Widget> tileRows = [];
 
+    int highlightedTileIndex = (currentPosition / (bps * 1000)).toInt();
     int currentBlockIndex = 0;
     int rowCount = sheetData.chords.length > 0
         ? (sheetData.chords.last.position / beatPerRow).toInt() + 1
@@ -44,11 +47,15 @@ class SheetView extends StatelessWidget {
 
         if (currentBlockIndex < sheetData.chords.length &&
             tileIndexOfSheet == sheetData.chords[currentBlockIndex].position) {
-          rowChildren
-              .add(BeatTile(chord: sheetData.chords[currentBlockIndex].chord));
+          rowChildren.add(BeatTile(
+            chord: sheetData.chords[currentBlockIndex].chord,
+            isHighlighted: highlightedTileIndex == tileIndexOfSheet,
+          ));
           currentBlockIndex++;
         } else {
-          rowChildren.add(BeatTile());
+          rowChildren.add(BeatTile(
+            isHighlighted: highlightedTileIndex == tileIndexOfSheet,
+          ));
         }
       }
 

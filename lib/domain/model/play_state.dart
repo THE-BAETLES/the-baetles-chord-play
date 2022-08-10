@@ -3,7 +3,7 @@ import 'video.dart';
 
 class PlayState {
   final bool isPlaying;
-  final int currentPosition;  // millisecond
+  int _currentPosition;  // millisecond. don't change this
   final double tempo;
   final double defaultBpm;
   final Loop loop;
@@ -11,12 +11,24 @@ class PlayState {
 
   PlayState({
     required this.isPlaying,
-    required this.currentPosition,
+    required int currentPosition,
     required this.tempo,
     required this.defaultBpm,
     required this.loop,
     required this.capo,
-  });
+  }) : _currentPosition = currentPosition;
+
+  int get currentPosition => _currentPosition;
+
+  int setCurrentPosition(int value, {bool isAdded = false}) {
+    if (isAdded) {
+      _currentPosition += value;
+    } else {
+      _currentPosition = value;
+    }
+
+    return _currentPosition;
+  }
 
   PlayState copy({
     bool? isPlaying,

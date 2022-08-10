@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:mutex/mutex.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:the_baetles_chord_play/service/conductor/performer_interface.dart';
@@ -35,14 +36,14 @@ class ConductorService {
     stopWatchTimer = StopWatchTimer(
         mode: StopWatchMode.countUp,
         presetMillisecond: 0,
-        onChangeRawSecond: (int second) {
-          _playState = _playState.copy(
-              currentPosition: (second * 1000 * _playState.tempo).toInt());
-        });
-  }
-
-  void addPlayStateListener(void Function(PlayState) listener) {
-    _playStateListeners.add(listener);
+        onChange: (int mSec) {
+          print("change!!!");
+          _playState.setCurrentPosition((mSec * _playState.tempo).toInt());
+          for (Function(PlayState) listener in _playStateListeners) {
+            listener(_playState);
+          }
+        },
+    );
   }
 
   Future<bool> updatePlayState({
@@ -114,5 +115,14 @@ class ConductorService {
   Future<void> addPerformer(final PerformerInterface performer) async {
     _performers.add(performer);
     await updatePlayState(currentPosition: currentPosition);
+  }
+
+  void addPlayStateListener(void Function(PlayState) listener) {
+    // playState가 변화할 때마다 호출될 listener들을 등록함.
+    _playStateListeners.add(listener);
+  }
+
+  ValueStream<int> getRawTime() {
+    return stopWatchTimer.rawTime;
   }
 }
