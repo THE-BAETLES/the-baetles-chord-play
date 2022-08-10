@@ -90,6 +90,7 @@ class _PerformancePageState extends State<PerformancePage> {
                   context,
                   viewModel.play,
                   viewModel.stop,
+                  viewModel.moveCurrentPosition,
                   context.read<PerformanceViewModel>().playState,
                   viewModel.youtubePlayerController),
             ),
@@ -103,6 +104,7 @@ class _PerformancePageState extends State<PerformancePage> {
       BuildContext context,
       void Function() play,
       void Function() stop,
+      void Function(int) move,
       PlayState playState,
       final YoutubePlayerController? controller) {
     return Container(
@@ -117,7 +119,7 @@ class _PerformancePageState extends State<PerformancePage> {
             iconPath: 'assets/icons/ic_mute.svg',
             text: 'Mute',
           ),
-          _controlButtons(context, play, stop, playState),
+          _controlButtons(context, play, stop, move, playState),
           Container(
             width: 62,
             height: 44,
@@ -132,13 +134,21 @@ class _PerformancePageState extends State<PerformancePage> {
   }
 
   Widget _controlButtons(BuildContext context, void Function() play,
-      void Function() stop, PlayState playState) {
+      void Function() stop, void Function(int) move, PlayState playState) {
     return Container(
       width: 140,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SvgPicture.asset("assets/icons/ic_prev_2.svg", width: 26, height: 30),
+          GestureDetector(
+            onTap: () {
+              double secondPerBeat = 1 / (playState.defaultBpm / 60.0);
+              int changeAmount = (8 * secondPerBeat * 1000).toInt();
+              move(-changeAmount);
+            },
+            child: SvgPicture.asset("assets/icons/ic_prev_2.svg",
+                width: 26, height: 30),
+          ),
           GestureDetector(
             onTap: () {
               if (playState.isPlaying) {
@@ -153,7 +163,15 @@ class _PerformancePageState extends State<PerformancePage> {
                 : SvgPicture.asset("assets/icons/ic_play2.svg",
                     width: 22, height: 22),
           ),
-          SvgPicture.asset("assets/icons/ic_next_2.svg", width: 26, height: 30),
+          GestureDetector(
+            onTap: () {
+              double secondPerBeat = 1 / (playState.defaultBpm / 60.0);
+              int changeAmount = (8 * secondPerBeat * 1000).toInt();
+              move(changeAmount);
+            },
+            child: SvgPicture.asset("assets/icons/ic_next_2.svg",
+                width: 26, height: 30),
+          )
         ],
       ),
     );
