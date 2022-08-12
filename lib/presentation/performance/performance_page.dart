@@ -32,13 +32,13 @@ class _PerformancePageState extends State<PerformancePage> {
   void initState() {
     super.initState();
 
-    print("init!");
-
     // 가로 방향으로 고정함
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
+
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Map<String, dynamic> arguments =
@@ -49,7 +49,10 @@ class _PerformancePageState extends State<PerformancePage> {
 
       PerformanceViewModel viewModel = context.read<PerformanceViewModel>();
       viewModel.initViewModel(
-          video: video, sheetInfo: sheetInfo, sheetData: sheetData);
+        video: video,
+        sheetInfo: sheetInfo,
+        sheetData: sheetData,
+      );
     });
   }
 
