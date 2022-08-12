@@ -84,6 +84,12 @@ class _PerformancePageState extends State<PerformancePage> {
                   currentPosition: viewModel.playState.currentPosition,
                   sheetData: viewModel.sheetState?.sheetData ??
                       SheetData(bpm: 80, chords: []),
+                  onClick: (int tileIndex) {
+                    viewModel.onTileClick(tileIndex);
+                  },
+                  onLongClick: (tileIndex) {
+                    viewModel.onTileLongClick(tileIndex);
+                  },
                 ),
               ),
             ),

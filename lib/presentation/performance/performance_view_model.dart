@@ -109,4 +109,14 @@ class PerformanceViewModel with ChangeNotifier {
 
     _updatePlayState(currentPosition: dest);
   }
+
+  void onTileClick(int tileIndex) {
+    double bps = _playState.defaultBpm / 60.0;
+    double spb = 1 / bps;
+    _updatePlayState(currentPosition: (tileIndex * spb).toInt() * 1000);
+  }
+
+  void onTileLongClick(int tileIndex) {
+    // TODO : 코드 변경
+  }
 }
