@@ -29,10 +29,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
   retrofit: '>=3.0.0 <4.0.0'
   logger: any
-
+  flutter_dotenv: ^5.0.2
   firebase_core: ^1.19.1
   firebase_auth: ^3.4.1
   google_sign_in: ^5.3.3
@@ -59,7 +58,6 @@ dev_dependencies:
 
   flutter_test:
     sdk: flutter
-
   retrofit_generator: any
   build_runner: ^2.0.4
   json_serializable: '>4.4.0'
@@ -87,6 +85,7 @@ flutter:
     - assets/icons/
     - assets/fonts/
     - assets/images/
+    - assets/.env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
