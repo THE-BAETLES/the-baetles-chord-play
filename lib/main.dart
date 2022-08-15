@@ -14,26 +14,27 @@ import 'package:the_baetles_chord_play/data/repository/auth_repository.dart';
 import 'package:the_baetles_chord_play/data/repository/country_repository.dart';
 import 'package:the_baetles_chord_play/data/repository/sheet_repository.dart';
 import 'package:the_baetles_chord_play/data/repository/video_repository.dart';
-import 'package:the_baetles_chord_play/domain/model/video.dart';
+import 'package:the_baetles_chord_play/domain/use_case/add_conductor_position_listener.dart';
 import 'package:the_baetles_chord_play/domain/use_case/add_performer.dart';
 import 'package:the_baetles_chord_play/domain/use_case/check_nickname_valid.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_liked_sheets_of_video.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_music_to_check_preference.dart';
-import 'package:the_baetles_chord_play/domain/use_case/add_play_state_listener.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_recommended_video.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_sheets_of_video.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_user_country.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_video_collection.dart';
+import 'package:the_baetles_chord_play/domain/use_case/set_youtube_player_controller.dart';
 import 'package:the_baetles_chord_play/domain/use_case/sign_in_with_id_token.dart';
 import 'package:the_baetles_chord_play/presentation/bridge/bridge_view_model.dart';
 import 'package:the_baetles_chord_play/presentation/home/home_view_model.dart';
 import 'package:the_baetles_chord_play/presentation/loading/loading_view_model.dart';
 import 'package:the_baetles_chord_play/presentation/performance/performance_view_model.dart';
 import 'package:the_baetles_chord_play/presentation/sign_up/sign_up_view_model.dart';
-import 'package:the_baetles_chord_play/service/auth_service.dart';
-import 'package:the_baetles_chord_play/service/conductor/conductor_service.dart';
+import 'package:the_baetles_chord_play/service/conductor/youtube_conductor_service.dart';
 import 'package:the_baetles_chord_play/service/google_auth_service.dart';
 
+import 'domain/model/loop.dart';
+import 'domain/model/play_state.dart';
 import 'domain/use_case/get_my_sheets_of_video.dart';
 import 'domain/use_case/get_nickname_suggestion.dart';
 import 'domain/use_case/get_user_id_token.dart';
@@ -105,8 +106,15 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) {
-            ConductorService conductor = ConductorService();
-            return PerformanceViewModel(UpdatePlayState(conductor), AddPerformer(conductor), AddPlayStateListener(conductor));
+            YoutubeConductorService conductor = YoutubeConductorService(initialPlayState: PlayState(
+              isPlaying: false,
+              currentPosition: 0,
+              tempo: 1.0,
+              defaultBpm: 60,
+              loop: Loop(0, -1),
+              capo: 0,
+            ));
+            return PerformanceViewModel(UpdatePlayState(conductor), AddPerformer(conductor), AddConductorPositionListener(conductor), SetYoutubePlayerController(conductor));
           },
         ),
       ],

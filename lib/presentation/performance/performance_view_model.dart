@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_baetles_chord_play/domain/model/play_state.dart';
-import 'package:the_baetles_chord_play/domain/use_case/add_play_state_listener.dart';
+import 'package:the_baetles_chord_play/domain/use_case/add_conductor_position_listener.dart';
+import 'package:the_baetles_chord_play/domain/use_case/set_youtube_player_controller.dart';
 import 'package:the_baetles_chord_play/presentation/performance/sheet_state.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -10,7 +11,7 @@ import '../../domain/model/sheet_info.dart';
 import '../../domain/model/video.dart';
 import '../../domain/use_case/add_performer.dart';
 import '../../domain/use_case/update_play_state.dart';
-import '../../service/conductor/performers/youtube_video_performer.dart';
+import '../../service/conductor/performers/call_performer.dart';
 
 class PerformanceViewModel with ChangeNotifier {
   PlayState _playState = PlayState(
@@ -23,30 +24,27 @@ class PerformanceViewModel with ChangeNotifier {
   );
 
   SheetState? _sheetState;
-  late YoutubeVideoPerformer _youtubeVideoPerformer;
+  YoutubePlayerController? _youtubeController;
 
   final AddPerformer _addPerformer;
   final UpdatePlayState _updatePlayState;
-  final AddPlayStateListener _addPlayStateListener;
+  final AddConductorPositionListener _addConductorPositionListener;
+  final SetYoutubePlayerController _setYoutubePlayerController;
 
   PlayState get playState => _playState;
 
-  YoutubePlayerController? get youtubePlayerController =>
-      _youtubeVideoPerformer.controller;
-
   SheetState? get sheetState => _sheetState;
+
+  YoutubePlayerController? get youtubePlayerController => _youtubeController;
 
   PerformanceViewModel(
     this._updatePlayState,
     this._addPerformer,
-    this._addPlayStateListener,
+    this._addConductorPositionListener,
+    this._setYoutubePlayerController,
   ) {
-    _youtubeVideoPerformer = YoutubeVideoPerformer(null);
-
-    _addPerformer(_youtubeVideoPerformer);
-
-    _addPlayStateListener((final PlayState playState) {
-      this._playState = playState;
+    _addConductorPositionListener((PlayState playState) {
+      _playState = playState;
       notifyListeners();
     });
   }
@@ -79,15 +77,24 @@ class PerformanceViewModel with ChangeNotifier {
       sheetData: sheetData,
     );
 
-    _youtubeVideoPerformer.setController(
-      YoutubePlayerController(
-        initialVideoId: video.id,
-        flags: const YoutubePlayerFlags(
-          autoPlay: false,
-          enableCaption: false,
-        ),
+    _youtubeController = YoutubePlayerController(
+      initialVideoId: video.id,
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+        enableCaption: false,
       ),
     );
+
+    _setYoutubePlayerController(_youtubeController!);
+
+    CallPerformer callPerformer = CallPerformer();
+    callPerformer.setCallback((PlayState playState) {
+      print("cptest: call performer - ${playState.isPlaying}");
+      _playState = playState;
+      notifyListeners();
+    });
+
+    _addPerformer(callPerformer);
 
     notifyListeners();
   }
@@ -113,6 +120,7 @@ class PerformanceViewModel with ChangeNotifier {
   void onTileClick(int tileIndex) {
     double bps = _playState.defaultBpm / 60.0;
     double spb = 1 / bps;
+    print("${tileIndex} ${(tileIndex * spb).toInt() * 1000}");
     _updatePlayState(currentPosition: (tileIndex * spb).toInt() * 1000);
   }
 
