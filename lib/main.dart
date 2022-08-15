@@ -23,6 +23,7 @@ import 'package:the_baetles_chord_play/domain/use_case/get_recommended_video.dar
 import 'package:the_baetles_chord_play/domain/use_case/get_sheets_of_video.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_user_country.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_video_collection.dart';
+import 'package:the_baetles_chord_play/domain/use_case/remove_conductor_position_listener.dart';
 import 'package:the_baetles_chord_play/domain/use_case/set_youtube_player_controller.dart';
 import 'package:the_baetles_chord_play/domain/use_case/sign_in_with_id_token.dart';
 import 'package:the_baetles_chord_play/presentation/bridge/bridge_view_model.dart';
@@ -106,7 +107,8 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) {
-            YoutubeConductorService conductor = YoutubeConductorService(initialPlayState: PlayState(
+            YoutubeConductorService conductor = YoutubeConductorService(
+                initialPlayState: PlayState(
               isPlaying: false,
               currentPosition: 0,
               tempo: 1.0,
@@ -114,7 +116,13 @@ class MyApp extends StatelessWidget {
               loop: Loop(0, -1),
               capo: 0,
             ));
-            return PerformanceViewModel(UpdatePlayState(conductor), AddPerformer(conductor), AddConductorPositionListener(conductor), SetYoutubePlayerController(conductor));
+            return PerformanceViewModel(
+              UpdatePlayState(conductor),
+              AddPerformer(conductor),
+              AddConductorPositionListener(conductor),
+              RemoveConductorPositionListener(conductor),
+              SetYoutubePlayerController(conductor),
+            );
           },
         ),
       ],

@@ -14,4 +14,5 @@ abstract class ConductorInterface {
     int? capo,
   });
   void addCurrentPositionListener(Function(PlayState) callBack);
+  void removeCurrentPositionListener(Function(PlayState) callBack);
 }

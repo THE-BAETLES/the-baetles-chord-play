@@ -21,29 +21,17 @@ class YoutubeConductorService implements ConductorInterface {
   late PlayState _playState;
   final ValueNotifier<int> _currentPosition = ValueNotifier(0); // ms
   final List<Function(PlayState)> _onPositionChangeCallbacks = [];
+  Timer? _timer;
 
   YoutubeConductorService({required final PlayState initialPlayState}) {
     _playState = initialPlayState;
-
-    // 주기적으로 currentPosition과 youtubeController.position 동기화
-    Timer.periodic(syncPeriod, (timer) {
-      if (!lock.isLocked && _youtubeController != null) {
-        _currentPosition.value =
-            _youtubeController!.value.position.inMilliseconds;
-
-        _playState.setCurrentPosition(_currentPosition.value);
-
-        for (Function callback in _onPositionChangeCallbacks) {
-          callback(_playState);
-        }
-      }
-    });
 
     updatePlayState();
   }
 
   Future<void> setYoutubeController(
-      final YoutubePlayerController controller) async {
+    final YoutubePlayerController controller,
+  ) async {
     _youtubeController = controller;
     await updatePlayState();
   }
@@ -107,12 +95,12 @@ class YoutubeConductorService implements ConductorInterface {
       if (newPlayState.isPlaying) {
         _youtubeController!.load(
           _youtubeController!.initialVideoId,
-          startAt: (newPlayState.currentPosition / 1000).toInt(),
+          startAt: newPlayState.currentPosition ~/ 1000,
         );
       } else {
         _youtubeController!.cue(
           _youtubeController!.initialVideoId,
-          startAt: (newPlayState.currentPosition / 1000).toInt(),
+          startAt: newPlayState.currentPosition ~/ 1000,
         );
       }
 
@@ -131,5 +119,30 @@ class YoutubeConductorService implements ConductorInterface {
   @override
   void addCurrentPositionListener(Function(PlayState) callBack) {
     _onPositionChangeCallbacks.add(callBack);
+
+    if (_onPositionChangeCallbacks.length == 1) {
+      // 주기적으로 currentPosition과 youtubeController.position 동기화
+      _timer = Timer.periodic(syncPeriod, (timer) {
+        if (!lock.isLocked && _youtubeController != null) {
+          _currentPosition.value =
+              _youtubeController!.value.position.inMilliseconds;
+
+          _playState.setCurrentPosition(_currentPosition.value);
+
+          for (Function callback in _onPositionChangeCallbacks) {
+            callback(_playState);
+          }
+        }
+      });
+    }
+  }
+
+  @override
+  void removeCurrentPositionListener(Function(PlayState) callBack) {
+    bool isRemoved = _onPositionChangeCallbacks.remove(callBack);
+
+    if (isRemoved && _onPositionChangeCallbacks.isEmpty) {
+      _timer?.cancel();
+    }
   }
 }

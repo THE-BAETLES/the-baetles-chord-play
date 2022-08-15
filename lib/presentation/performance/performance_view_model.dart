@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_baetles_chord_play/domain/model/play_state.dart';
 import 'package:the_baetles_chord_play/domain/use_case/add_conductor_position_listener.dart';
+import 'package:the_baetles_chord_play/domain/use_case/remove_conductor_position_listener.dart';
 import 'package:the_baetles_chord_play/domain/use_case/set_youtube_player_controller.dart';
 import 'package:the_baetles_chord_play/presentation/performance/sheet_state.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -29,7 +30,10 @@ class PerformanceViewModel with ChangeNotifier {
   final AddPerformer _addPerformer;
   final UpdatePlayState _updatePlayState;
   final AddConductorPositionListener _addConductorPositionListener;
+  final RemoveConductorPositionListener _removeConductorPositionListener;
   final SetYoutubePlayerController _setYoutubePlayerController;
+
+  late final Function(PlayState) _conductorPositionCallback;
 
   PlayState get playState => _playState;
 
@@ -41,9 +45,10 @@ class PerformanceViewModel with ChangeNotifier {
     this._updatePlayState,
     this._addPerformer,
     this._addConductorPositionListener,
+    this._removeConductorPositionListener,
     this._setYoutubePlayerController,
   ) {
-    _addConductorPositionListener((PlayState playState) {
+    _conductorPositionCallback = ((PlayState playState) {
       _playState = playState;
       notifyListeners();
     });
@@ -54,16 +59,9 @@ class PerformanceViewModel with ChangeNotifier {
     required final SheetInfo sheetInfo,
     required final SheetData sheetData,
   }) {
-    _playState = PlayState(
-      isPlaying: false,
-      currentPosition: 0,
-      tempo: 1.0,
-      defaultBpm: sheetData.bpm,
-      loop: Loop(0, -1),
-      capo: 0,
-    );
+    print("test1: init model!");
 
-    _updatePlayState(
+    _playState = PlayState(
       isPlaying: false,
       currentPosition: 0,
       tempo: 1.0,
@@ -87,16 +85,24 @@ class PerformanceViewModel with ChangeNotifier {
 
     _setYoutubePlayerController(_youtubeController!);
 
+    _updatePlayState(
+      isPlaying: false,
+      currentPosition: 0,
+      tempo: 1.0,
+      defaultBpm: sheetData.bpm,
+      loop: Loop(0, -1),
+      capo: 0,
+    );
+
     CallPerformer callPerformer = CallPerformer();
     callPerformer.setCallback((PlayState playState) {
-      print("cptest: call performer - ${playState.isPlaying}");
       _playState = playState;
       notifyListeners();
     });
 
     _addPerformer(callPerformer);
 
-    notifyListeners();
+    _addConductorPositionListener(_conductorPositionCallback);
   }
 
   void play({int? playAt}) {
@@ -120,11 +126,16 @@ class PerformanceViewModel with ChangeNotifier {
   void onTileClick(int tileIndex) {
     double bps = _playState.defaultBpm / 60.0;
     double spb = 1 / bps;
-    print("${tileIndex} ${(tileIndex * spb).toInt() * 1000}");
     _updatePlayState(currentPosition: (tileIndex * spb).toInt() * 1000);
   }
 
   void onTileLongClick(int tileIndex) {
     // TODO : 코드 변경
   }
+
+  void dispose() {
+    _removeConductorPositionListener(_conductorPositionCallback);
+    _youtubeController = null;
+  }
+
 }

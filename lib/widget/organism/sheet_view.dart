@@ -26,8 +26,6 @@ class SheetView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("sheet view build!");
-
     double bps = sheetData.bpm / 60.0;
 
     final List<Widget> tileRows = [];

@@ -27,6 +27,7 @@ class _PerformancePageState extends State<PerformancePage> {
   late Video video;
   late SheetInfo sheetInfo;
   late SheetData sheetData;
+  late PerformanceViewModel _viewModel;
 
   @override
   void initState() {
@@ -53,6 +54,8 @@ class _PerformancePageState extends State<PerformancePage> {
         sheetInfo: sheetInfo,
         sheetData: sheetData,
       );
+
+      _viewModel = viewModel;
     });
   }
 
@@ -96,12 +99,13 @@ class _PerformancePageState extends State<PerformancePage> {
             Positioned(
               bottom: 0,
               child: _controlBar(
-                  context,
-                  viewModel.play,
-                  viewModel.stop,
-                  viewModel.moveCurrentPosition,
-                  context.read<PerformanceViewModel>().playState,
-                  viewModel.youtubePlayerController),
+                context,
+                viewModel.play,
+                viewModel.stop,
+                viewModel.moveCurrentPosition,
+                context.read<PerformanceViewModel>().playState,
+                viewModel.youtubePlayerController,
+              ),
             ),
           ],
         ),
@@ -187,16 +191,20 @@ class _PerformancePageState extends State<PerformancePage> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _viewModel = context.read<PerformanceViewModel>();
+  }
+
+  @override
   void dispose() {
     // Set portrait orientation
     SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
 
-    PerformanceViewModel viewModel = context.read<PerformanceViewModel>();
-    viewModel.dispose();
+    _viewModel.dispose();
 
     super.dispose();
   }

@@ -21,6 +21,7 @@ class LoadingPage extends StatefulWidget {
 class _LoadingPageState extends State<LoadingPage> {
   Video? video;
   SheetInfo? sheetInfo;
+  late LoadingViewModel _viewModel;
 
   @override
   void initState() {
@@ -35,6 +36,8 @@ class _LoadingPageState extends State<LoadingPage> {
       LoadingViewModel viewModel = context.read<LoadingViewModel>();
       viewModel.loadSheet(video!, sheetInfo!);
     });
+
+    _viewModel = context.read<LoadingViewModel>();
   }
 
   @override
@@ -67,8 +70,15 @@ class _LoadingPageState extends State<LoadingPage> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _viewModel = context.read<LoadingViewModel>();
+  }
+
+  @override
   void dispose() {
-    context.read<LoadingViewModel>().onDispose();
+    _viewModel.onDispose();
     super.dispose();
   }
 }
