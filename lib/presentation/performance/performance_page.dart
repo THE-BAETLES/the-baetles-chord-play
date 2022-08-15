@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import 'package:the_baetles_chord_play/widget/molecule/beat_tile.dart';
 import 'package:the_baetles_chord_play/presentation/performance/component/mute_button.dart';
 import 'package:the_baetles_chord_play/presentation/performance/performance_view_model.dart';
 import 'package:the_baetles_chord_play/domain/model/play_state.dart';
-import 'package:the_baetles_chord_play/presentation/performance/sheet_state.dart';
 import 'package:the_baetles_chord_play/widget/atom/youtube_video_player.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -114,12 +112,13 @@ class _PerformancePageState extends State<PerformancePage> {
   }
 
   Widget _controlBar(
-      BuildContext context,
-      void Function() play,
-      void Function() stop,
-      void Function(int) move,
-      PlayState playState,
-      final YoutubePlayerController? controller) {
+    BuildContext context,
+    void Function() play,
+    void Function() stop,
+    void Function(int) move,
+    PlayState playState,
+    final YoutubePlayerController? controller,
+  ) {
     return Container(
       height: 62,
       width: MediaQuery.of(context).size.width,

@@ -98,10 +98,10 @@ class YoutubeConductorService implements ConductorInterface {
           startAt: newPlayState.currentPosition ~/ 1000,
         );
       } else {
-        _youtubeController!.cue(
-          _youtubeController!.initialVideoId,
-          startAt: newPlayState.currentPosition ~/ 1000,
+        _youtubeController!.seekTo(
+          Duration(milliseconds: newPlayState.currentPosition),
         );
+        _youtubeController!.pause();
       }
 
       _playState = newPlayState;
