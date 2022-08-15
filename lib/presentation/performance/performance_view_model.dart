@@ -80,6 +80,7 @@ class PerformanceViewModel with ChangeNotifier {
       flags: const YoutubePlayerFlags(
         autoPlay: false,
         enableCaption: false,
+        hideControls: true,
       ),
     );
 
