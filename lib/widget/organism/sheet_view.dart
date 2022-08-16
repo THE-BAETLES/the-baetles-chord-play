@@ -13,16 +13,19 @@ class SheetView extends StatelessWidget {
   final SheetData sheetData;
   final int currentPosition;
 
+  final Function(int)? onClick;
+  final Function(int)? onLongClick;
+
   const SheetView({
     Key? key,
     required this.sheetData,
     required this.currentPosition,
+    this.onClick,
+    this.onLongClick,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    print("sheet view build!");
-
     double bps = sheetData.bpm / 60.0;
 
     final List<Widget> tileRows = [];
@@ -50,27 +53,35 @@ class SheetView extends StatelessWidget {
           rowChildren.add(BeatTile(
             chord: sheetData.chords[currentBlockIndex].chord,
             isHighlighted: highlightedTileIndex == tileIndexOfSheet,
+            onClick: () {
+              this.onClick?.call(tileIndexOfSheet);
+            },
+            onLongClick: () {
+              this.onLongClick?.call(tileIndexOfSheet);
+            },
           ));
           currentBlockIndex++;
         } else {
           rowChildren.add(BeatTile(
             isHighlighted: highlightedTileIndex == tileIndexOfSheet,
+            onClick: () {
+              this.onClick?.call(tileIndexOfSheet);
+            },
+            onLongClick: () {
+              this.onLongClick?.call(tileIndexOfSheet);
+            },
           ));
         }
       }
 
-      tileRows.add(
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: rowChildren,
-        ),
-      );
+      tileRows.add(Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: rowChildren,
+      ));
 
-      tileRows.add(
-        Container(
-          height: 20,
-        ),
-      );
+      tileRows.add(Container(
+        height: 20,
+      ));
     }
 
     return Container(

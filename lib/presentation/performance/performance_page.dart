@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import 'package:the_baetles_chord_play/widget/molecule/beat_tile.dart';
 import 'package:the_baetles_chord_play/presentation/performance/component/mute_button.dart';
 import 'package:the_baetles_chord_play/presentation/performance/performance_view_model.dart';
 import 'package:the_baetles_chord_play/domain/model/play_state.dart';
-import 'package:the_baetles_chord_play/presentation/performance/sheet_state.dart';
 import 'package:the_baetles_chord_play/widget/atom/youtube_video_player.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -27,18 +25,19 @@ class _PerformancePageState extends State<PerformancePage> {
   late Video video;
   late SheetInfo sheetInfo;
   late SheetData sheetData;
+  late PerformanceViewModel _viewModel;
 
   @override
   void initState() {
     super.initState();
-
-    print("init!");
 
     // 가로 방향으로 고정함
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
+
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Map<String, dynamic> arguments =
@@ -49,7 +48,12 @@ class _PerformancePageState extends State<PerformancePage> {
 
       PerformanceViewModel viewModel = context.read<PerformanceViewModel>();
       viewModel.initViewModel(
-          video: video, sheetInfo: sheetInfo, sheetData: sheetData);
+        video: video,
+        sheetInfo: sheetInfo,
+        sheetData: sheetData,
+      );
+
+      _viewModel = viewModel;
     });
   }
 
@@ -81,18 +85,25 @@ class _PerformancePageState extends State<PerformancePage> {
                   currentPosition: viewModel.playState.currentPosition,
                   sheetData: viewModel.sheetState?.sheetData ??
                       SheetData(bpm: 80, chords: []),
+                  onClick: (int tileIndex) {
+                    viewModel.onTileClick(tileIndex);
+                  },
+                  onLongClick: (tileIndex) {
+                    viewModel.onTileLongClick(tileIndex);
+                  },
                 ),
               ),
             ),
             Positioned(
               bottom: 0,
               child: _controlBar(
-                  context,
-                  viewModel.play,
-                  viewModel.stop,
-                  viewModel.moveCurrentPosition,
-                  context.read<PerformanceViewModel>().playState,
-                  viewModel.youtubePlayerController),
+                context,
+                viewModel.play,
+                viewModel.stop,
+                viewModel.moveCurrentPosition,
+                context.read<PerformanceViewModel>().playState,
+                viewModel.youtubePlayerController,
+              ),
             ),
           ],
         ),
@@ -101,12 +112,13 @@ class _PerformancePageState extends State<PerformancePage> {
   }
 
   Widget _controlBar(
-      BuildContext context,
-      void Function() play,
-      void Function() stop,
-      void Function(int) move,
-      PlayState playState,
-      final YoutubePlayerController? controller) {
+    BuildContext context,
+    void Function() play,
+    void Function() stop,
+    void Function(int) move,
+    PlayState playState,
+    final YoutubePlayerController? controller,
+  ) {
     return Container(
       height: 62,
       width: MediaQuery.of(context).size.width,
@@ -178,16 +190,20 @@ class _PerformancePageState extends State<PerformancePage> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _viewModel = context.read<PerformanceViewModel>();
+  }
+
+  @override
   void dispose() {
     // Set portrait orientation
     SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
 
-    PerformanceViewModel viewModel = context.read<PerformanceViewModel>();
-    viewModel.dispose();
+    _viewModel.dispose();
 
     super.dispose();
   }
