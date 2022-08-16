@@ -10,7 +10,7 @@ class CallPerformer implements PerformerInterface{
   }
 
   @override
-  Future<void> cancle() {
+  Future<void> cancel() {
     // TODO: implement cancle
     throw UnimplementedError();
   }

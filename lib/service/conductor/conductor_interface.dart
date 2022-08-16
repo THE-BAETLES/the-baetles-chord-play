@@ -5,7 +5,7 @@ import '../../domain/model/play_state.dart';
 
 abstract class ConductorInterface {
   Future<void> addPerformer(final PerformerInterface performer);
-  Future<bool> updatePlayState({
+  Future<bool> syncPlayState({
     bool? isPlaying,
     int? currentPosition,
     double? tempo,

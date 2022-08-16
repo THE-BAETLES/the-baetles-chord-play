@@ -14,7 +14,7 @@ class UpdatePlayState {
     Loop? loop,
     int? capo,
   }) async {
-    _conductorService.updatePlayState(
+    _conductorService.syncPlayState(
       isPlaying: isPlaying,
       currentPosition: currentPosition,
       tempo: tempo,

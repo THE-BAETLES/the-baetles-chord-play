@@ -5,7 +5,7 @@ import '../../presentation/performance/sheet_state.dart';
 
 abstract class PerformerInterface {
   Future<bool> syncPlayStateAndReady(PlayState playState);
-  Future<void> cancle();
+  Future<void> cancel();
   Future<void> onAttachConductor(ConductorInterface conductor);
   Future<void> dispose();
 }

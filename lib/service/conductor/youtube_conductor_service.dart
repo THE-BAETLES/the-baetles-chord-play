@@ -26,25 +26,25 @@ class YoutubeConductorService implements ConductorInterface {
   YoutubeConductorService({required final PlayState initialPlayState}) {
     _playState = initialPlayState;
 
-    updatePlayState();
+    syncPlayState();
   }
 
   Future<void> setYoutubeController(
     final YoutubePlayerController controller,
   ) async {
     _youtubeController = controller;
-    await updatePlayState();
+    await syncPlayState();
   }
 
   @override
   Future<void> addPerformer(PerformerInterface performer) async {
     performers.add(performer);
     performer.onAttachConductor(this);
-    await updatePlayState();
+    await syncPlayState();
   }
 
   @override
-  Future<bool> updatePlayState({
+  Future<bool> syncPlayState({
     bool? isPlaying,
     int? currentPosition,
     double? tempo,
@@ -68,41 +68,9 @@ class YoutubeConductorService implements ConductorInterface {
         capo: capo,
       );
 
-      final List<Future<bool>> syncTasks = [];
+      _syncPlayStateWithPerformers(performers, newPlayState);
 
-      // play state 전파
-      for (PerformerInterface performer in performers) {
-        syncTasks.add(performer.syncPlayStateAndReady(newPlayState));
-      }
-
-      // performer 적용 완료 대기
-      for (int taskIdx = 0; taskIdx < syncTasks.length; ++taskIdx) {
-        bool isReadySuccessful = await syncTasks[taskIdx];
-
-        if (!isReadySuccessful) {
-          // TODO : 대기 상태 취소
-        }
-      }
-
-      // youtube controller play state 적용
-
-      if (!(_youtubeController!.value.isReady)) {
-        _youtubeController!.reload();
-      }
-
-      _youtubeController!.setPlaybackRate(newPlayState.tempo);
-
-      if (newPlayState.isPlaying) {
-        _youtubeController!.load(
-          _youtubeController!.initialVideoId,
-          startAt: newPlayState.currentPosition ~/ 1000,
-        );
-      } else {
-        _youtubeController!.seekTo(
-          Duration(milliseconds: newPlayState.currentPosition),
-        );
-        _youtubeController!.pause();
-      }
+      _syncPlayStateWithYoutubeController(_youtubeController!, newPlayState);
 
       _playState = newPlayState;
     } on Exception {
@@ -143,6 +111,48 @@ class YoutubeConductorService implements ConductorInterface {
 
     if (isRemoved && _onPositionChangeCallbacks.isEmpty) {
       _timer?.cancel();
+    }
+  }
+
+  Future<bool> _syncPlayStateWithPerformers(List<PerformerInterface> performers, PlayState playState) async {
+    final List<Future<bool>> syncTasks = [];
+
+    // play state 전파
+    for (PerformerInterface performer in performers) {
+      syncTasks.add(performer.syncPlayStateAndReady(playState));
+    }
+
+    // performer 적용 완료 대기
+    for (int taskIdx = 0; taskIdx < syncTasks.length; ++taskIdx) {
+      bool isReadySuccessful = await syncTasks[taskIdx];
+
+      if (!isReadySuccessful) {
+        // TODO : 대기 상태 취소
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  Future<void> _syncPlayStateWithYoutubeController(YoutubePlayerController controller, PlayState playState) async {
+    // youtube controller play state 적용
+    if (!(_youtubeController!.value.isReady)) {
+      _youtubeController!.reload();
+    }
+
+    _youtubeController!.setPlaybackRate(playState.tempo);
+
+    if (playState.isPlaying) {
+      _youtubeController!.load(
+        _youtubeController!.initialVideoId,
+        startAt: playState.currentPosition ~/ 1000,
+      );
+    } else {
+      _youtubeController!.seekTo(
+        Duration(milliseconds: playState.currentPosition),
+      );
+      _youtubeController!.pause();
     }
   }
 }
