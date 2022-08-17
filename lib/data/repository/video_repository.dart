@@ -1,7 +1,13 @@
 import 'dart:collection';
 
+import 'package:the_baetles_chord_play/model/api/response/search/get_search_response.dart';
+import 'package:the_baetles_chord_play/router/rest_client_factory.dart';
+
 import '../../domain/model/performer_grade.dart';
 import '../../domain/model/video.dart';
+import '../../model/api/response/response.dart';
+import '../../router/client.dart';
+import '../../router/search/search_client.dart';
 
 class VideoRepository {
   static final VideoRepository _instance = VideoRepository._internal();
@@ -15,11 +21,10 @@ class VideoRepository {
   }
 
   Future<UnmodifiableListView<Video>> fetchVideosToCheckPreference(
-    String idToken,
-    String countryCode,
-    String performerGrade,
-    String gender
-  ) async {
+      String idToken,
+      String countryCode,
+      String performerGrade,
+      String gender) async {
     // TODO : source 연결
     //
 
@@ -152,7 +157,9 @@ class VideoRepository {
     })();
   }
 
-  Future<UnmodifiableListView<Video>> fetchRecommededVideos(String idToken,) async {
+  Future<UnmodifiableListView<Video>> fetchRecommededVideos(
+    String idToken,
+  ) async {
     // TODO : source 연결
 
     // dummy data
@@ -215,5 +222,12 @@ class VideoRepository {
         ),
       ]);
     })();
+  }
+
+  Future<List<Video>> searchVideo(String searchTitle) async {
+    SearchClient client = RestClientFactory().getClient(RestClientType.search) as SearchClient;
+    GetSearchResponse response = (await client.getSearchList(searchTitle)) as GetSearchResponse;
+    List<Video> searchResult = response.toVideoList();
+    return searchResult;
   }
 }
