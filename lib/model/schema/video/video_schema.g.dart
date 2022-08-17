@@ -7,7 +7,7 @@ part of 'video_schema.dart';
 // **************************************************************************
 
 VideoSchema _$VideoSchemaFromJson(Map<String, dynamic> json) => VideoSchema(
-      id: json['id'] as String,
+      id: json['_id'] as String,
       thumbnailPath: json['thumbnail_path'] as String,
       title: json['title'] as String,
       genre: json['genre'] as String,
@@ -20,7 +20,7 @@ VideoSchema _$VideoSchemaFromJson(Map<String, dynamic> json) => VideoSchema(
 
 Map<String, dynamic> _$VideoSchemaToJson(VideoSchema instance) =>
     <String, dynamic>{
-      'id': instance.id,
+      '_id': instance.id,
       'thumbnail_path': instance.thumbnailPath,
       'title': instance.title,
       'genre': instance.genre,
