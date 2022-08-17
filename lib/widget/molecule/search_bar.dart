@@ -24,33 +24,36 @@ class SearchBar extends StatelessWidget {
           ),
         ],
       ),
-      child: Container(
-        height: 18,
-        child: const TextField(
-          textAlignVertical: TextAlignVertical.center,
-          maxLines: 1,
-          maxLength: 100,
-          autocorrect: false,
-          enableInteractiveSelection: false,
-          cursorColor: AppColors.black04,
-          decoration: InputDecoration(
-            isDense: true,
-            contentPadding: EdgeInsets.zero,
-            border: InputBorder.none,
-            counterText: '',
-            prefixIcon: SearchIcon(width: 16, height: 16),
-            hintText: '악보영상을 검색해보세요!',
-            hintStyle: TextStyle(
-              fontSize: 14,
-              fontFamily: AppFontFamilies.pretendard,
-              fontWeight: FontWeight.w300,
+      child: GestureDetector(
+        onTap: () => Navigator.of(context).pushNamed("/sheet-page"),
+        child: Container(
+          height: 18,
+          child: const TextField(
+            textAlignVertical: TextAlignVertical.center,
+            maxLines: 1,
+            maxLength: 100,
+            autocorrect: false,
+            enableInteractiveSelection: false,
+            cursorColor: AppColors.black04,
+            decoration: InputDecoration(
+              isDense: true,
+              contentPadding: EdgeInsets.zero,
+              border: InputBorder.none,
+              counterText: '',
+              prefixIcon: SearchIcon(width: 16, height: 16),
+              hintText: '악보영상을 검색해보세요!',
+              hintStyle: TextStyle(
+                fontSize: 14,
+                fontFamily: AppFontFamilies.pretendard,
+                fontWeight: FontWeight.w300,
+              ),
             ),
-          ),
-          style: TextStyle(
-            fontFamily: AppFontFamilies.pretendard,
-            fontSize: 14,
-            fontWeight: FontWeight.w300,
-            color: AppColors.black04,
+            style: TextStyle(
+              fontFamily: AppFontFamilies.pretendard,
+              fontSize: 14,
+              fontWeight: FontWeight.w300,
+              color: AppColors.black04,
+            ),
           ),
         ),
       ),

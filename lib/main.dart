@@ -8,6 +8,7 @@ import 'package:country_codes/country_codes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:the_baetles_chord_play/data/repository/auth_repository.dart';
@@ -30,7 +31,9 @@ import 'package:the_baetles_chord_play/presentation/bridge/bridge_view_model.dar
 import 'package:the_baetles_chord_play/presentation/home/home_view_model.dart';
 import 'package:the_baetles_chord_play/presentation/loading/loading_view_model.dart';
 import 'package:the_baetles_chord_play/presentation/performance/performance_view_model.dart';
+import 'package:the_baetles_chord_play/presentation/search/search_view_model.dart';
 import 'package:the_baetles_chord_play/presentation/sign_up/sign_up_view_model.dart';
+import 'package:the_baetles_chord_play/router/rest_client_factory.dart';
 import 'package:the_baetles_chord_play/service/conductor/youtube_conductor_service.dart';
 import 'package:the_baetles_chord_play/service/google_auth_service.dart';
 
@@ -39,6 +42,7 @@ import 'domain/model/play_state.dart';
 import 'domain/use_case/get_my_sheets_of_video.dart';
 import 'domain/use_case/get_nickname_suggestion.dart';
 import 'domain/use_case/get_user_id_token.dart';
+import 'domain/use_case/search_video.dart';
 import 'domain/use_case/update_play_state.dart';
 import 'domain/use_case/sign_up.dart';
 import 'utility/navigate.dart';
@@ -52,15 +56,20 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
+  await dotenv.load(fileName: '.env');
+
+  // RestClientFactory initialize
+  RestClientFactory();
+
   bool hadSignedIn = FirebaseAuth.instance.currentUser != null &&
-      await AuthRepository().login((await AuthRepository().fetchIdToken())!);
+      await AuthRepository().login((await AuthRepository().fetchIdToken(forceRefresh: true))!);
 
   await CountryCodes.init();
 
   FlutterNativeSplash.remove();
 
-  // runApp(MyApp(hadSignedIn));
-  runApp(MyApp(true));
+  runApp(MyApp(hadSignedIn));
+  // runApp(MyApp(true));
 }
 
 class MyApp extends StatelessWidget {
@@ -125,6 +134,11 @@ class MyApp extends StatelessWidget {
             );
           },
         ),
+        ChangeNotifierProvider(
+          create: (_) {
+            return SearchViewModel(SearchVideo(VideoRepository()));
+          },
+        )
       ],
       builder: (context, child) {
         return MaterialApp(

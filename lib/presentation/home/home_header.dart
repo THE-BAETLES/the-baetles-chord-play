@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../widget/atom/app_colors.dart';
+import '../../widget/atom/app_font_families.dart';
+import '../../widget/atom/search_icon.dart';
 import '../../widget/molecule/search_bar.dart';
 
 class HomeHeader extends StatelessWidget {
@@ -8,7 +10,7 @@ class HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double statusBarHeight =  MediaQuery.of(context).viewPadding.top;
+    double statusBarHeight = MediaQuery.of(context).viewPadding.top;
 
     return Stack(
       children: [
@@ -34,13 +36,11 @@ class HomeHeader extends StatelessWidget {
                 ),
               ),
               TextSpan(
-                text: 'Soyou Kim',
-                style: TextStyle(
-                  fontFamily: "Montserrat",
-                  fontWeight: FontWeight.w700,
-                  fontSize: 24
-                )
-              ),
+                  text: 'Soyou Kim',
+                  style: TextStyle(
+                      fontFamily: "Montserrat",
+                      fontWeight: FontWeight.w700,
+                      fontSize: 24)),
             ]),
           ),
         ),
@@ -51,10 +51,61 @@ class HomeHeader extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: 15),
-            child: SearchBar(),
+            child: _searchBar(context),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _searchBar(BuildContext context) {
+    return GestureDetector(
+      onTap: () => Navigator.of(context).pushNamed("/sheet-page"),
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.symmetric(vertical: 14, horizontal: 5),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: const [
+            BoxShadow(
+              color: AppColors.shadow94,
+              blurRadius: 6,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            RichText(
+              text: const TextSpan(
+                children: [
+                  WidgetSpan(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: SearchIcon(
+                        width: 17,
+                        height: 17,
+                      ),
+                    ),
+                  ),
+                  TextSpan(
+                    text: "악보영상을 검색해보세요!",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: AppFontFamilies.pretendard,
+                      fontWeight: FontWeight.w300,
+                      color: AppColors.gray9D,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

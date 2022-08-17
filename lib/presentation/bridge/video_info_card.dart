@@ -20,7 +20,7 @@ class VideoInfoCard extends StatelessWidget {
       padding: const EdgeInsets.only(top: 15, right: 15, bottom: 20, left: 15),
       child: Column(
         children: [
-          VideoSummary(video: video),
+          VideoSummary(video: video, titleMaxLines: 3),
           const Divider(
             height: 29,
             thickness: 1,

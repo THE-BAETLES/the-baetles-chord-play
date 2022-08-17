@@ -50,8 +50,9 @@ class AuthRepository {
   }
 
   Future<bool> isNicknameValid(String nickname) async {
-    return await _remoteDataSource.checkNicknameValid(
-        (await fetchIdToken())!, nickname); // dummy data
+    // return await _remoteDataSource.checkNicknameValid(
+    //     (await fetchIdToken())!, nickname); // dummy data
+    return true; // hack
   }
 
   Future<String> getNicknameSuggestion() async {

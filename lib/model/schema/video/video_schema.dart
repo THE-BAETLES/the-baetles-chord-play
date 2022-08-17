@@ -27,22 +27,26 @@ class VideoSchema {
   @JsonKey(name: 'length')
   int length;
 
-  @JsonKey(name: 'difficultyAvg')
+  @JsonKey(name: 'difficulty_avg')
   int difficultyAvg;
 
   @JsonKey(name: 'play_count')
   int playCount;
 
-  VideoSchema(
-      {required this.id,
-      required this.thumbnailPath,
-      required this.title,
-      required this.genre,
-      required this.singer,
-      required this.tags,
-      required this.length,
-      required this.difficultyAvg,
-      required this.playCount});
+  // @JsonKey(name: 'sheet_count')
+  // int sheetCount;
+
+  VideoSchema({
+    required this.id,
+    required this.thumbnailPath,
+    required this.title,
+    required this.genre,
+    required this.singer,
+    required this.tags,
+    required this.length,
+    required this.difficultyAvg,
+    required this.playCount,
+  });
 
   factory VideoSchema.fromJson(Map<String, dynamic> json) =>
       _$VideoSchemaFromJson(json);

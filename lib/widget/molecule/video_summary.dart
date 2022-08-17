@@ -8,8 +8,9 @@ import '../atom/app_colors.dart';
 
 class VideoSummary extends StatelessWidget {
   final Video video;
+  final int titleMaxLines;
 
-  const VideoSummary({Key? key, required this.video}) : super(key: key);
+  const VideoSummary({Key? key, required this.video, required this.titleMaxLines}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,7 @@ class VideoSummary extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                   overflow: TextOverflow.ellipsis,
-                  maxLines: 3,
+                  maxLines: titleMaxLines,
                 ),
               );
             },

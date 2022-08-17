@@ -226,7 +226,7 @@ class VideoRepository {
 
   Future<List<Video>> searchVideo(String searchTitle) async {
     SearchClient client = RestClientFactory().getClient(RestClientType.search) as SearchClient;
-    GetSearchResponse response = (await client.getSearchList(searchTitle)) as GetSearchResponse;
+    GetSearchResponse response = await client.getSearchList(searchTitle);
     List<Video> searchResult = response.toVideoList();
     return searchResult;
   }

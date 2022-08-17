@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:the_baetles_chord_play/data/repository/auth_repository.dart';
 
 import 'package:the_baetles_chord_play/router/client.dart';
 import 'package:the_baetles_chord_play/router/recommendation/recommendation_client.dart';
@@ -12,7 +13,7 @@ import 'package:the_baetles_chord_play/router/watch_history/watch_history_client
 
 class RestClientFactory {
   static final RestClientFactory _client_factory =
-      new RestClientFactory._internal();
+      RestClientFactory._internal();
   final dio = Dio();
 
   // TODO: Set LoadBalancer URl
@@ -25,10 +26,15 @@ class RestClientFactory {
   }
 
   RestClientFactory._internal() {
+    (() async {
+      idToken = (await FirebaseAuth.instance.currentUser?.getIdToken())!;
+      dio.options.headers['Authorization'] = "Bearer $idToken";
+    })();
+
     FirebaseAuth.instance.idTokenChanges().listen((User? user) async {
       if (user != null) {
         idToken = await user.getIdToken();
-        dio.options.headers['Authorization'] = idToken;
+        dio.options.headers['Authorization'] = "Bearer $idToken";
       }
     });
   }
@@ -39,7 +45,6 @@ class RestClientFactory {
         return RecommendationClient(dio, baseUrl: baseUrl);
         break;
       case RestClientType.search:
-        // TODO: Handle this case.
         return SearchClient(dio, baseUrl: baseUrl);
         break;
       case RestClientType.sheet:
