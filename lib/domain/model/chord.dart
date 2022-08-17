@@ -11,4 +11,25 @@ class Chord {
   String get chordName {
     return '${root.rootName}${triadType.notation}';
   }
+
+  factory Chord.fromString(String chord) {
+    List<String> splitString = chord.split(":");
+    Note root = Note.fromNoteName(splitString[0]);
+    TriadType triadType = TriadType.values.singleWhere(
+            (triad) => triad.notation == splitString[1]
+    );
+
+    return Chord(root, triadType);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Chord &&
+          runtimeType == other.runtimeType &&
+          root == other.root &&
+          triadType == other.triadType;
+
+  @override
+  int get hashCode => root.hashCode ^ triadType.hashCode;
 }

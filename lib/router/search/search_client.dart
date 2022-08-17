@@ -10,7 +10,7 @@ abstract class SearchClient extends RestClient{
   // single ton
   factory SearchClient (Dio dio, {String baseUrl}) = _SearchClient;
   // This class must include fromJson and toJson Methods;
-  @GET("/search/")
-  Future<GetSearchResponse> getSearchList(@Query('searchTitle') String searchTitle );
+  @GET("/videos/search/")
+  Future<GetSearchResponse> getSearchList(@Query('searchTitle') String searchTitle);
 }
 
