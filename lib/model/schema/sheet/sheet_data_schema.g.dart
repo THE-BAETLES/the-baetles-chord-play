@@ -10,8 +10,9 @@ SheetDataSchema _$SheetDataSchemaFromJson(Map<String, dynamic> json) =>
     SheetDataSchema(
       id: json['_id'] as String,
       bpm: json['bpm'] as int,
-      chordInfos:
-          ChordInfoSchema.fromJson(json['chord_infos'] as Map<String, dynamic>),
+      chordInfos: (json['chord_infos'] as List<dynamic>)
+          .map((e) => ChordInfoSchema.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$SheetDataSchemaToJson(SheetDataSchema instance) =>
