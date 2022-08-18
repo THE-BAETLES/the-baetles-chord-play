@@ -40,6 +40,10 @@ android {
         jvmTarget = '1.8'
     }
 
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
+    }
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
@@ -63,6 +67,10 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    aaptOptions {
+        noCompress "tflite"
+    }
 }
 
 flutter {
@@ -76,4 +84,12 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:30.2.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
+
+    implementation("androidx.activity:activity-ktx:1.4.0")
+
+    // Tensorflow lite dependencies
+    implementation 'org.tensorflow:tensorflow-lite:2.2.0'
+    implementation 'androidx.databinding:databinding-compiler-common:4.2.2'
+
+    implementation 'com.android.support:multidex:1.0.3'
 }
