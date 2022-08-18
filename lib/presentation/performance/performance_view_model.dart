@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_baetles_chord_play/controller/pitch_tracker/pitch_tracker.dart';
 import 'package:the_baetles_chord_play/domain/model/play_state.dart';
 import 'package:the_baetles_chord_play/domain/use_case/add_conductor_position_listener.dart';
 import 'package:the_baetles_chord_play/domain/use_case/remove_conductor_position_listener.dart';
@@ -13,6 +14,7 @@ import '../../domain/model/video.dart';
 import '../../domain/use_case/add_performer.dart';
 import '../../domain/use_case/update_play_state.dart';
 import '../../service/conductor/performers/call_performer.dart';
+import '../../service/conductor/performers/pitch_checker.dart';
 
 class PerformanceViewModel with ChangeNotifier {
   PlayState _playState = PlayState(
@@ -25,6 +27,8 @@ class PerformanceViewModel with ChangeNotifier {
   );
 
   SheetState? _sheetState;
+  bool isPitchBeingChecked = false;
+
   YoutubePlayerController? _youtubeController;
 
   final AddPerformer _addPerformer;
@@ -34,6 +38,9 @@ class PerformanceViewModel with ChangeNotifier {
   final SetYoutubePlayerController _setYoutubePlayerController;
 
   late final Function(PlayState) _conductorPositionCallback;
+
+  CallPerformer callPerformer = CallPerformer();
+  final PitchChecker pitchChecker = PitchChecker();
 
   PlayState get playState => _playState;
 
@@ -52,6 +59,8 @@ class PerformanceViewModel with ChangeNotifier {
       _playState = playState;
       notifyListeners();
     });
+
+
   }
 
   void initViewModel({
@@ -95,13 +104,12 @@ class PerformanceViewModel with ChangeNotifier {
       capo: 0,
     );
 
-    CallPerformer callPerformer = CallPerformer();
     callPerformer.setCallback((PlayState playState) {
       _playState = playState;
       notifyListeners();
     });
-
     _addPerformer(callPerformer);
+    _addPerformer(pitchChecker);
 
     _addConductorPositionListener(_conductorPositionCallback);
   }
@@ -139,4 +147,15 @@ class PerformanceViewModel with ChangeNotifier {
     _youtubeController = null;
   }
 
+  void onClickCheckButton() {
+    isPitchBeingChecked = !isPitchBeingChecked;
+
+    if (isPitchBeingChecked) {
+      pitchChecker.start();
+    } else {
+      pitchChecker.pause();
+    }
+
+    // notifyListeners();
+  }
 }

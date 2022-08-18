@@ -1,12 +1,17 @@
 package site.baetles.chordplay
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.res.AssetManager
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
+import android.net.ConnectivityManager
+import android.os.Build
 import android.util.Log
+import com.google.firebase.events.EventHandler
+import io.flutter.plugin.common.EventChannel
 import java.nio.BufferOverflowException
 import java.nio.ShortBuffer
 import java.util.concurrent.locks.ReentrantLock
@@ -17,32 +22,39 @@ import java.io.IOException
 import java.nio.BufferUnderflowException
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 
 
-class PitchTracker(val context : Context) {
+class PitchTracker(private var activity: Activity) : EventChannel.StreamHandler {
     // Audio recording setting
-    private val audioSource : Int = MediaRecorder.AudioSource.MIC
-    private val sampleRate : Int = 16000
-    private val recordingLength : Int = 17920
-    private val channel : Int = AudioFormat.CHANNEL_IN_MONO
-    private val encodingType : Int = AudioFormat.ENCODING_PCM_16BIT
+    private val audioSource: Int = MediaRecorder.AudioSource.MIC
+    private val sampleRate: Int = 16000
+    private val recordingLength: Int = 17920
+    private val channel: Int = AudioFormat.CHANNEL_IN_MONO
+    private val encodingType: Int = AudioFormat.ENCODING_PCM_16BIT
 
     // Audio recognition setting
     private val ACTUAL_MODEL_FILENAME = "onsets_frames_wavinput.tflite"
-    private val minimumTimeBetweenSamplesInMS : Long = 30
+    private val minimumTimeBetweenSamplesInMS: Long = 30
 
-    private val logTag : String = "PitchTracker"
+    private val logTag: String = "PitchTracker"
 
-    private var audioRecorder : AudioRecord? = null
+    private var audioRecorder: AudioRecord? = null
     private var recordingBuffer = ShortBuffer.allocate(recordingLength)
-    private var recordingBufferLock : ReentrantLock = ReentrantLock()
-    private var tflInterpreter : Interpreter? = null
+    private var recordingBufferLock: ReentrantLock = ReentrantLock()
+    private var tflInterpreter: Interpreter? = null
 
-    private var recorderThread : Thread? = null
-    private var recognitionThread : Thread? = null
+    private var recorderThread: Thread? = null
+    private var recognitionThread: Thread? = null
 
     private var shouldContinueRecording = false
-    private var shouldContinueRecognition= false
+    private var shouldContinueRecognition = false
+
+    private var isPlaying: Boolean = false
+
+    // for handling stream
+    private var eventSink: EventChannel.EventSink? = null;
 
 
     init {
@@ -50,13 +62,17 @@ class PitchTracker(val context : Context) {
         Log.v(logTag, "Audio Engine Prepare")
 
         tflInterpreter = try {
-            Interpreter(loadModelFile(context.assets, ACTUAL_MODEL_FILENAME)!!)
+            Interpreter(loadModelFile(activity.assets, ACTUAL_MODEL_FILENAME)!!)
 
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
 
         tflInterpreter!!.resizeInput(0, intArrayOf(recordingLength, 1))
+    }
+
+    fun isPlaying() : Boolean {
+        return this.isPlaying;
     }
 
 
@@ -75,16 +91,17 @@ class PitchTracker(val context : Context) {
 
 
     fun start() {
+        isPlaying = true
         startRecording()
         startRecognition()
     }
 
 
     fun stop() {
+        isPlaying = false;
         stopRecording()
         stopRecognition()
     }
-
 
     fun startRecording() {
         if (recorderThread != null) {
@@ -127,7 +144,7 @@ class PitchTracker(val context : Context) {
             bufferSizeInByte = sampleRate * 2
         }
 
-        var inputBuffer : ShortArray = ShortArray(size = bufferSizeInByte / 2);
+        var inputBuffer: ShortArray = ShortArray(size = bufferSizeInByte / 2);
 
         // Create AudioRecord object
         audioRecorder = AudioRecord(
@@ -160,7 +177,7 @@ class PitchTracker(val context : Context) {
             try {
                 // Transfer data from audioBuffer to recordingBuffer
                 recordingBuffer.put(inputBuffer)
-            } catch (e : BufferOverflowException) {
+            } catch (e: BufferOverflowException) {
                 Log.w(logTag, "recording buffer overflow. some data is wasted.")
             } finally {
                 recordingBufferLock.unlock()
@@ -202,7 +219,7 @@ class PitchTracker(val context : Context) {
     private fun recognize() {
         val inputBuffer = ShortArray(recordingLength)
         val floatInputBuffer = Array(recordingLength) { FloatArray(1) }
-        val outputScores = Array(1) { Array(32) {FloatArray(88) } }
+        val outputScores = Array(1) { Array(32) { FloatArray(88) } }
         val prevResult = IntArray(88)
 
         while (shouldContinueRecognition) {
@@ -218,16 +235,18 @@ class PitchTracker(val context : Context) {
                 recordingBuffer.limit(inputBuffer.size)
                 recordingBuffer.get(inputBuffer)
                 recordingBuffer.clear()
-            } catch (e : BufferUnderflowException) {
+            } catch (e: BufferUnderflowException) {
                 Log.w(logTag, "recording buffer underflow.")
             } finally {
                 recordingBufferLock.unlock()
             }
 
-            inputBuffer.forEachIndexed { idx, elem -> floatInputBuffer[idx][0] = elem / Short.MAX_VALUE.toFloat() }
+            inputBuffer.forEachIndexed { idx, elem ->
+                floatInputBuffer[idx][0] = elem / Short.MAX_VALUE.toFloat()
+            }
 
             val inputArray = arrayOf(floatInputBuffer)
-            val outputMap:  MutableMap<Int, Any> = HashMap()
+            val outputMap: MutableMap<Int, Any> = HashMap()
             outputMap[0] = outputScores
 
             // Run the model
@@ -246,11 +265,11 @@ class PitchTracker(val context : Context) {
 
             // Send Event
             for (i in 0 until 88) {
-                if(prevResult[i] == 0 && result[i] > 0) {
-                    println("NoteOn - midiNum : ${i + 21}")
+                if (prevResult[i] == 0 && result[i] > 0) {
+                    activity?.runOnUiThread { eventSink?.success(i) }
                 }
-                if(prevResult[i] > 0 && result[i] == 0) {
-                    println("NoteOff - midiNum : ${i + 21}")
+                if (prevResult[i] > 0 && result[i] == 0) {
+                    // off
                 }
 
                 prevResult[i] = result[i]
@@ -258,9 +277,19 @@ class PitchTracker(val context : Context) {
 
             try {
                 Thread.sleep(minimumTimeBetweenSamplesInMS)
-            } catch(e: InterruptedException) {
+            } catch (e: InterruptedException) {
                 Log.w(logTag, "Recognition thread run without sleeping")
             }
         }
+    }
+
+    override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+        eventSink = events;
+        start();
+    }
+
+    override fun onCancel(arguments: Any?) {
+        stop();
+        eventSink = null;
     }
 }

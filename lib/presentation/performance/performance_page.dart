@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import 'package:the_baetles_chord_play/presentation/performance/component/mute_button.dart';
+import 'package:the_baetles_chord_play/presentation/performance/component/toggle_button.dart';
 import 'package:the_baetles_chord_play/presentation/performance/performance_view_model.dart';
 import 'package:the_baetles_chord_play/domain/model/play_state.dart';
 import 'package:the_baetles_chord_play/widget/atom/youtube_video_player.dart';
@@ -63,6 +63,7 @@ class _PerformancePageState extends State<PerformancePage> {
 
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: Colors.transparent),
         toolbarHeight: 52,
         backgroundColor: Colors.white,
         iconTheme: const IconThemeData(
@@ -130,7 +131,7 @@ class _PerformancePageState extends State<PerformancePage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          MuteButton(
+          ToggleButton(
             isToggled: false,
             iconPath: 'assets/icons/ic_mute.svg',
             text: 'Mute',
@@ -143,7 +144,13 @@ class _PerformancePageState extends State<PerformancePage> {
             child: controller == null
                 ? null
                 : YoutubeVideoPlayer(controller: controller),
-          )
+          ),
+          ToggleButton(
+            isToggled: false,
+            iconPath: 'assets/icons/ic_check.svg',
+            text: 'Check On',
+            onClick: () =>  _viewModel.onClickCheckButton() ,
+          ),
         ],
       ),
     );
