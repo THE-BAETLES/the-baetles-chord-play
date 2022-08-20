@@ -8,6 +8,7 @@ import '../../widget/atom/app_colors.dart';
 import '../../widget/atom/app_font_families.dart';
 import '../../widget/atom/search_icon.dart';
 import '../../widget/molecule/video_block.dart';
+import '../performance/performance_view_model.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -17,6 +18,8 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  late SearchViewModel _viewModel;
+
   @override
   Widget build(BuildContext context) {
     SearchViewModel viewModel = context.watch<SearchViewModel>();
@@ -118,8 +121,14 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _viewModel = context.read<SearchViewModel>();
+  }
+
+  @override
   void dispose() {
-    context.read<SearchViewModel>().dispose();
+    _viewModel.dispose();
     super.dispose();
   }
 }

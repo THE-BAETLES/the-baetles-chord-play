@@ -6,21 +6,22 @@ import '../../domain/use_case/search_video.dart';
 class SearchViewModel extends ChangeNotifier {
   final SearchVideo _searchVideo;
   final TextEditingController _controller = TextEditingController();
+  List<Video> _searchResult = [];
 
   TextEditingController get controller => _controller;
+  List<Video> get searchResult => _searchResult;
 
   SearchViewModel(this._searchVideo);
 
-  List<Video> searchResult = [];
-
   void search(String searchTitle) async {
-    searchResult = await _searchVideo(searchTitle);
+    _searchResult = await _searchVideo(searchTitle);
     notifyListeners();
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    _controller.clear();
+    searchResult.clear();
     super.dispose();
   }
 }
