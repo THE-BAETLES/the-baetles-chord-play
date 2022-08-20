@@ -23,6 +23,7 @@ import 'package:the_baetles_chord_play/domain/use_case/get_recommended_video.dar
 import 'package:the_baetles_chord_play/domain/use_case/get_shared_sheets_of_video.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_sheets_of_video.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_user_country.dart';
+import 'package:the_baetles_chord_play/domain/use_case/get_user_nickname.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_video_collection.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_watch_history.dart';
 import 'package:the_baetles_chord_play/domain/use_case/remove_conductor_position_listener.dart';
@@ -100,25 +101,24 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => HomeViewModel(
-              GetVideoCollection(VideoRepository(), AuthRepository()),
-              GetRecommendedVideo(VideoRepository(), AuthRepository()),
-              GetWatchHistory(VideoRepository())),
+            GetVideoCollection(VideoRepository(), AuthRepository()),
+            GetRecommendedVideo(VideoRepository(), AuthRepository()),
+            GetWatchHistory(VideoRepository()),
+            GetUserNickname(AuthRepository()),
+          ),
         ),
         ChangeNotifierProvider(
           create: (_) => BridgeViewModel(
-            GetMySheetsOfVideo(
-              GetSheetsOfVideo(SheetRepository()),
-            ),
-            GetLikedSheetsOfVideo(
-              GetSheetsOfVideo(SheetRepository()),
-            ),
-            GetSharedSheetsOfVideo(
-              GetSheetsOfVideo(SheetRepository()),
-            ),
-            GenerateVideo(
-              VideoRepository()
-            )
-          ),
+              GetMySheetsOfVideo(
+                GetSheetsOfVideo(SheetRepository()),
+              ),
+              GetLikedSheetsOfVideo(
+                GetSheetsOfVideo(SheetRepository()),
+              ),
+              GetSharedSheetsOfVideo(
+                GetSheetsOfVideo(SheetRepository()),
+              ),
+              GenerateVideo(VideoRepository())),
         ),
         ChangeNotifierProvider(
           create: (_) => LoadingViewModel(),

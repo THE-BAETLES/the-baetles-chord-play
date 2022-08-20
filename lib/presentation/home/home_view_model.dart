@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_recommended_video.dart';
+import 'package:the_baetles_chord_play/domain/use_case/get_user_nickname.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_video_collection.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_watch_history.dart';
 
@@ -11,19 +12,28 @@ class HomeViewModel with ChangeNotifier {
   final GetVideoCollection _getVideoCollection;
   final GetRecommendedVideo _getRecommendedVideo;
   final GetWatchHistory _getWatchHistory;
+  final GetUserNickname _getUserNickname;
+
+  late final String userName;
 
   List<Video>? collectionVideos;
   UnmodifiableListView<Video>? recommendedVideos;
 
-  HomeViewModel(this._getVideoCollection, this._getRecommendedVideo, this._getWatchHistory) {
+  HomeViewModel(
+    this._getVideoCollection,
+    this._getRecommendedVideo,
+    this._getWatchHistory,
+    this._getUserNickname,
+  ) {
     _loadContent();
+    userName = _getUserNickname()!;
   }
 
   Future<void> _loadContent() async {
     List<Future<void>> tasks = [];
 
     tasks.add(Future(() async {
-        collectionVideos = (await _getWatchHistory());
+      collectionVideos = (await _getWatchHistory());
     }));
 
     tasks.add(Future(() async {

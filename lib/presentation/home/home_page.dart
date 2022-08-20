@@ -31,11 +31,12 @@ class HomePage extends StatelessWidget {
         child: Column(
           children: [
             // header
-            HomeHeader(),
+            HomeHeader(userName: viewModel.userName),
 
             Container(height: 30),
 
             VideoListBlock(
+              userName: viewModel.userName,
               videos: viewModel.collectionVideos ?? [],
               onVideoClicked: (Video video) {
                 viewModel.onVideoClicked(context, video);

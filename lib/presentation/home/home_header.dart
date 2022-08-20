@@ -6,7 +6,9 @@ import '../../widget/atom/search_icon.dart';
 import '../../widget/molecule/search_bar.dart';
 
 class HomeHeader extends StatelessWidget {
-  const HomeHeader({Key? key}) : super(key: key);
+  final String userName;
+
+  const HomeHeader({Key? key, required this.userName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,7 @@ class HomeHeader extends StatelessWidget {
           child: RichText(
             text: TextSpan(children: <TextSpan>[
               TextSpan(
-                text: 'Hello,\n',
+                text: '안녕하세요,\n',
                 style: TextStyle(
                   fontFamily: "Montserrat",
                   fontWeight: FontWeight.w400,
@@ -36,11 +38,20 @@ class HomeHeader extends StatelessWidget {
                 ),
               ),
               TextSpan(
-                  text: 'Soyou Kim',
-                  style: TextStyle(
-                      fontFamily: "Montserrat",
-                      fontWeight: FontWeight.w700,
-                      fontSize: 24)),
+                text: "$userName",
+                style: TextStyle(
+                    fontFamily: "Montserrat",
+                    fontWeight: FontWeight.w700,
+                    fontSize: 24),
+              ),
+              TextSpan(
+                text: '님!',
+                style: TextStyle(
+                  fontFamily: "Montserrat",
+                  fontWeight: FontWeight.w400,
+                  fontSize: 24,
+                ),
+              ),
             ]),
           ),
         ),

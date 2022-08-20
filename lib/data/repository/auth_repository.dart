@@ -57,4 +57,8 @@ class AuthRepository {
     return await _remoteDataSource
         .getNicknameSuggestion((await fetchIdToken())!);
   }
+
+  String? getUserNickname() {
+    return FirebaseAuth.instance.currentUser?.displayName;
+  }
 }
