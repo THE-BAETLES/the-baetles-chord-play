@@ -14,7 +14,7 @@ import '../../domain/model/video.dart';
 import '../../domain/use_case/add_performer.dart';
 import '../../domain/use_case/update_play_state.dart';
 import '../../service/conductor/performers/call_performer.dart';
-import '../../service/conductor/performers/pitch_checker.dart';
+import '../../service/conductor/performers/chord_checker.dart';
 
 class PerformanceViewModel with ChangeNotifier {
   PlayState _playState = PlayState(
@@ -27,7 +27,8 @@ class PerformanceViewModel with ChangeNotifier {
   );
 
   SheetState? _sheetState;
-  bool isPitchBeingChecked = false;
+  bool _isPitchBeingChecked = false;
+  bool _isMuted = false;
 
   YoutubePlayerController? _youtubeController;
 
@@ -36,15 +37,17 @@ class PerformanceViewModel with ChangeNotifier {
   final AddConductorPositionListener _addConductorPositionListener;
   final RemoveConductorPositionListener _removeConductorPositionListener;
   final SetYoutubePlayerController _setYoutubePlayerController;
+  final List<int> correctIndexes = [];
 
   late final Function(PlayState) _conductorPositionCallback;
 
-  CallPerformer callPerformer = CallPerformer();
-  final PitchChecker pitchChecker = PitchChecker();
+  CallPerformer _callPerformer = CallPerformer();
+  ChordChecker? _chordChecker;
 
   PlayState get playState => _playState;
-
   SheetState? get sheetState => _sheetState;
+  bool get isMuted => _isMuted;
+  bool get isPitchBeingChecked => _isPitchBeingChecked;
 
   YoutubePlayerController? get youtubePlayerController => _youtubeController;
 
@@ -59,8 +62,6 @@ class PerformanceViewModel with ChangeNotifier {
       _playState = playState;
       notifyListeners();
     });
-
-
   }
 
   void initViewModel({
@@ -86,10 +87,11 @@ class PerformanceViewModel with ChangeNotifier {
 
     _youtubeController = YoutubePlayerController(
       initialVideoId: video.id,
-      flags: const YoutubePlayerFlags(
+      flags: YoutubePlayerFlags(
         autoPlay: false,
         enableCaption: false,
         hideControls: true,
+        mute: isMuted,
       ),
     );
 
@@ -104,12 +106,18 @@ class PerformanceViewModel with ChangeNotifier {
       capo: 0,
     );
 
-    callPerformer.setCallback((PlayState playState) {
+    _callPerformer.setCallback((PlayState playState) {
       _playState = playState;
       notifyListeners();
     });
-    _addPerformer(callPerformer);
-    _addPerformer(pitchChecker);
+    _addPerformer(_callPerformer);
+
+    _chordChecker = ChordChecker(sheetData);
+    _chordChecker?.setOnCorrectCallback((correctPosition) {
+      correctIndexes.add(correctPosition ~/ (sheetData.bpm / 60.0));
+      notifyListeners();
+    });
+    _addPerformer(_chordChecker!);
 
     _addConductorPositionListener(_conductorPositionCallback);
   }
@@ -145,17 +153,34 @@ class PerformanceViewModel with ChangeNotifier {
   void dispose() {
     _removeConductorPositionListener(_conductorPositionCallback);
     _youtubeController = null;
+    _chordChecker?.pause();
+
+    _isPitchBeingChecked = false;
+    _isMuted = false;
   }
 
-  void onClickCheckButton() {
-    isPitchBeingChecked = !isPitchBeingChecked;
+  void onCheckButtonClicked() {
+    _isPitchBeingChecked = !_isPitchBeingChecked;
 
-    if (isPitchBeingChecked) {
-      pitchChecker.start();
+    if (_isPitchBeingChecked) {
+      _chordChecker?.start();
     } else {
-      pitchChecker.pause();
+      _chordChecker?.pause();
     }
 
-    // notifyListeners();
+    notifyListeners();
   }
+
+  void onMuteButtonClicked() {
+    _isMuted = !_isMuted;
+
+    if (_isMuted) {
+      youtubePlayerController?.mute();
+    } else {
+      youtubePlayerController?.unMute();
+    }
+
+    notifyListeners();
+  }
+
 }

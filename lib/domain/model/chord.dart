@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:the_baetles_chord_play/domain/model/triad_type.dart';
 
 import 'note.dart';
@@ -32,4 +33,18 @@ class Chord {
 
   @override
   int get hashCode => root.hashCode ^ triadType.hashCode;
+
+  List<Note> getNotes() {
+    switch(this.triadType) {
+      case TriadType.major:
+        return [root, Note(root.noteNumber + 4), Note(root.noteNumber + 3)];
+      case TriadType.minor:
+        return [root, Note(root.noteNumber + 3), Note(root.noteNumber + 4)];
+      default:
+        if (kDebugMode) {
+          print("warning! undefined triadType for method 'getNotes'");
+        }
+        return [root];
+    }
+  }
 }

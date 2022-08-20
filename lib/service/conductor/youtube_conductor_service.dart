@@ -114,6 +114,11 @@ class YoutubeConductorService implements ConductorInterface {
     }
   }
 
+  @override
+  PlayState getPlayState() {
+    return _playState;
+  }
+
   Future<bool> _syncPlayStateWithPerformers(List<PerformerInterface> performers, PlayState playState) async {
     final List<Future<bool>> syncTasks = [];
 

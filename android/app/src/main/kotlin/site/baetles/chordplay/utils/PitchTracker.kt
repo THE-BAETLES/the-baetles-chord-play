@@ -29,7 +29,7 @@ import android.net.NetworkRequest
 class PitchTracker(private var activity: Activity) : EventChannel.StreamHandler {
     // Audio recording setting
     private val audioSource: Int = MediaRecorder.AudioSource.MIC
-    private val sampleRate: Int = 16000
+    private val sampleRate: Int = 32000
     private val recordingLength: Int = 17920
     private val channel: Int = AudioFormat.CHANNEL_IN_MONO
     private val encodingType: Int = AudioFormat.ENCODING_PCM_16BIT
@@ -220,7 +220,6 @@ class PitchTracker(private var activity: Activity) : EventChannel.StreamHandler 
         val inputBuffer = ShortArray(recordingLength)
         val floatInputBuffer = Array(recordingLength) { FloatArray(1) }
         val outputScores = Array(1) { Array(32) { FloatArray(88) } }
-        val prevResult = IntArray(88)
 
         while (shouldContinueRecognition) {
             // Prevent simultaneous access to buffer
@@ -263,17 +262,18 @@ class PitchTracker(private var activity: Activity) : EventChannel.StreamHandler 
                 }
             }
 
+            val playedChords = IntArray(result.count { it > 0 })
+            var chordCount = 0
+
             // Send Event
             for (i in 0 until 88) {
-                if (prevResult[i] == 0 && result[i] > 0) {
-                    activity?.runOnUiThread { eventSink?.success(i) }
+                if (result[i] > 0) {
+                    playedChords[chordCount] = i
+                    chordCount++
                 }
-                if (prevResult[i] > 0 && result[i] == 0) {
-                    // off
-                }
-
-                prevResult[i] = result[i]
             }
+
+            activity?.runOnUiThread { eventSink?.success(playedChords) }
 
             try {
                 Thread.sleep(minimumTimeBetweenSamplesInMS)

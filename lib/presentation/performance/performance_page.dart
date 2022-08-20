@@ -12,7 +12,9 @@ import '../../domain/model/sheet_data.dart';
 import '../../domain/model/sheet_info.dart';
 import '../../domain/model/video.dart';
 import '../../widget/atom/app_colors.dart';
+import '../../widget/atom/app_font_families.dart';
 import '../../widget/organism/sheet_view.dart';
+import 'component/svg_toggle_button.dart';
 
 class PerformancePage extends StatefulWidget {
   const PerformancePage({Key? key}) : super(key: key);
@@ -63,67 +65,76 @@ class _PerformancePageState extends State<PerformancePage> {
 
     return Scaffold(
       appBar: AppBar(
-        systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+        systemOverlayStyle:
+            const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
         toolbarHeight: 52,
         backgroundColor: Colors.white,
         iconTheme: const IconThemeData(
           color: AppColors.black04,
         ),
         elevation: 0,
+        title: Text(sheetInfo.title,
+            style: TextStyle(
+              color: AppColors.black04,
+              fontFamily: AppFontFamilies.notosanskr,
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
+            ),
+            textAlign: TextAlign.center),
       ),
       backgroundColor: AppColors.grayF5,
-      body: SafeArea(
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            Positioned(
-              top: 0,
-              left: 0,
-              child: Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                child: SheetView(
-                  currentPosition: viewModel.playState.currentPosition,
-                  sheetData: viewModel.sheetState?.sheetData ??
-                      SheetData(
-                        id: 'hellodummy',
-                        bpm: 80,
-                        chords: [],
-                      ),
-                  onClick: (int tileIndex) {
-                    viewModel.onTileClick(tileIndex);
-                  },
-                  onLongClick: (tileIndex) {
-                    viewModel.onTileLongClick(tileIndex);
-                  },
-                ),
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Positioned(
+            top: 0,
+            left: 0,
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: SheetView(
+                currentPosition: viewModel.playState.currentPosition,
+                sheetData: viewModel.sheetState?.sheetData ??
+                    SheetData(
+                      id: 'hellodummy',
+                      bpm: 80,
+                      chords: [],
+                    ),
+                correctIndexes: viewModel.correctIndexes,
+                onClick: (int tileIndex) {
+                  viewModel.onTileClick(tileIndex);
+                },
+                onLongClick: (tileIndex) {
+                  viewModel.onTileLongClick(tileIndex);
+                },
               ),
             ),
-            Positioned(
-              bottom: 0,
-              child: _controlBar(
-                context,
-                viewModel.play,
-                viewModel.stop,
-                viewModel.moveCurrentPosition,
-                context.read<PerformanceViewModel>().playState,
-                viewModel.youtubePlayerController,
-              ),
+          ),
+          Positioned(
+            bottom: 0,
+            child: _controlBar(
+              context,
+              viewModel.play,
+              viewModel.stop,
+              viewModel.moveCurrentPosition,
+              context.read<PerformanceViewModel>().playState,
+              viewModel.youtubePlayerController,
+              viewModel,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _controlBar(
-    BuildContext context,
-    void Function() play,
-    void Function() stop,
-    void Function(int) move,
-    PlayState playState,
-    final YoutubePlayerController? controller,
-  ) {
+      BuildContext context,
+      void Function() play,
+      void Function() stop,
+      void Function(int) move,
+      PlayState playState,
+      final YoutubePlayerController? controller,
+      final PerformanceViewModel viewModel) {
     return Container(
       height: 62,
       width: MediaQuery.of(context).size.width,
@@ -131,26 +142,69 @@ class _PerformancePageState extends State<PerformancePage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          ToggleButton(
-            isToggled: false,
-            iconPath: 'assets/icons/ic_mute.svg',
-            text: 'Mute',
+          SizedBox(width: 13),
+          Expanded(
+            flex: 1,
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                  child: SvgToggleButton(
+                    isToggled: viewModel.isMuted,
+                    iconPath: 'assets/icons/ic_mute.svg',
+                    text: 'Mute',
+                    onClick: viewModel.onMuteButtonClicked,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                  child: SvgToggleButton(
+                    isToggled: false,
+                    iconPath: 'assets/icons/ic_repeat.svg',
+                    text: 'Repeat',
+                  ),
+                ),
+              ],
+            ),
           ),
           _controlButtons(context, play, stop, move, playState),
-          Container(
-            width: 62,
-            height: 44,
-            color: Colors.black,
-            child: controller == null
-                ? null
-                : YoutubeVideoPlayer(controller: controller),
+          Expanded(
+            flex: 1,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                  child: Container(
+                    width: 62,
+                    height: 44,
+                    color: Colors.black,
+                    child: controller == null
+                        ? null
+                        : YoutubeVideoPlayer(controller: controller),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                  child: SvgToggleButton(
+                    isToggled: viewModel.isPitchBeingChecked,
+                    iconPath: 'assets/icons/ic_check2.svg',
+                    text: 'Check On',
+                    onClick: () => viewModel.onCheckButtonClicked(),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                  child: SvgToggleButton(
+                    isToggled: false,
+                    iconPath: 'assets/icons/ic_record.svg',
+                    text: 'Rec.',
+                  ),
+                ),
+              ],
+            ),
           ),
-          ToggleButton(
-            isToggled: false,
-            iconPath: 'assets/icons/ic_check.svg',
-            text: 'Check On',
-            onClick: () =>  _viewModel.onClickCheckButton() ,
-          ),
+          SizedBox(width: 13),
         ],
       ),
     );
@@ -159,7 +213,7 @@ class _PerformancePageState extends State<PerformancePage> {
   Widget _controlButtons(BuildContext context, void Function() play,
       void Function() stop, void Function(int) move, PlayState playState) {
     return Container(
-      width: 140,
+      width: 130,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -210,12 +264,17 @@ class _PerformancePageState extends State<PerformancePage> {
   void dispose() {
     // Set portrait orientation
     SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
 
-    _viewModel.dispose();
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],
+    );
 
+    _viewModel.dispose();
     super.dispose();
   }
 }

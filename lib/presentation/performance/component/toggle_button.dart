@@ -7,14 +7,14 @@ import '../../../widget/atom/app_text_styles.dart';
 class ToggleButton extends StatelessWidget {
   final bool isToggled;
   final String text;
-  final String iconPath;
+  final Widget icon;
   final Function()? onClick;
 
   const ToggleButton({
     Key? key,
     required this.isToggled,
     required this.text,
-    required this.iconPath,
+    required this.icon,
     this.onClick,
   }) : super(key: key);
 
@@ -24,25 +24,28 @@ class ToggleButton extends StatelessWidget {
       onTap: onClick,
       child: Container(
         width: 49,
-        height: 38,
+        height: 40,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(5),
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 3),
             decoration: BoxDecoration(
               color: AppColors.gray3E,
+              borderRadius: BorderRadius.circular(3),
               border: isToggled ? Border.all(color: AppColors.blue9C) : null,
             ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 3),
-                  child: SvgPicture.asset(iconPath),
+                  padding: const EdgeInsets.symmetric(vertical: 3),
+                  child: icon,
                 ),
                 Text(
                   text,
-                  style: AppTextStyles.controlButtonTextStyle,
+                  style: AppTextStyles.controlButtonTextStyle.copyWith(
+                    color: isToggled ? AppColors.blue9C : AppColors.gray9B,
+                  ),
                 ),
               ],
             ),
