@@ -2,12 +2,14 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_my_sheets_of_video.dart';
+import 'package:the_baetles_chord_play/domain/use_case/get_shared_sheets_of_video.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_sheets_of_video.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../domain/model/instrument.dart';
 import '../../domain/model/sheet_info.dart';
 import '../../domain/model/video.dart';
+import '../../domain/use_case/generate_video.dart';
 import '../../domain/use_case/get_liked_sheets_of_video.dart';
 import '../../domain/use_case/get_user_id_token.dart';
 
@@ -19,10 +21,10 @@ class BridgeViewModel with ChangeNotifier {
   YoutubePlayerController? youtubePlayerController;
 
   // use cases
-  final GetUserIdToken getUserIdToken;
-  final GetSheetsOfVideo getSheetsOfVideo;
-  final GetMySheetsOfVideo getMySheetsOfVideo;
-  final GetLikedSheetsOfVideo getLikedSheetIdsOfVideo;
+  final GenerateVideo _generateVideo;
+  final GetMySheetsOfVideo _getMySheetsOfVideo;
+  final GetLikedSheetsOfVideo _getLikedSheetsOfVideo;
+  final GetSharedSheetsOfVideo _getSharedSheetsOfVideo;
 
   UnmodifiableListView<SheetInfo>? _mySheets;
   UnmodifiableListView<SheetInfo>? _likedSheets;
@@ -33,6 +35,8 @@ class BridgeViewModel with ChangeNotifier {
   UnmodifiableListView<SheetInfo>? get likedSheets => _likedSheets;
 
   UnmodifiableListView<SheetInfo>? get sharedSheets => _sharedSheets;
+
+  Video? get video => _video;
 
   SheetInfo? get selectedSheet => _selectedSheet;
 
@@ -56,17 +60,16 @@ class BridgeViewModel with ChangeNotifier {
   int get tabBarOffset => _tabBarOffset;
 
   BridgeViewModel(
-    this.getUserIdToken,
-    this.getSheetsOfVideo,
-    this.getMySheetsOfVideo,
-    this.getLikedSheetIdsOfVideo,
+    this._getMySheetsOfVideo,
+    this._getLikedSheetsOfVideo,
+    this._getSharedSheetsOfVideo,
+    this._generateVideo,
   );
 
-  Future<void> onPageInit(Video video) async {
+  Future<void> onPageBuild(Video video) async {
     if (this._video != video) {
-      _tabBarOffset = 0;
       this._video = video;
-      _loadSheets(video);
+      _tabBarOffset = 0;
 
       youtubePlayerController = YoutubePlayerController(
         initialVideoId: video.id,
@@ -75,6 +78,9 @@ class BridgeViewModel with ChangeNotifier {
           enableCaption: false,
         ),
       );
+
+      await _generateVideo(video);
+      _loadSheets(video);
     }
   }
 
@@ -83,10 +89,11 @@ class BridgeViewModel with ChangeNotifier {
   }
 
   Future<void> _loadSheets(Video video) async {
-    _mySheets = await getMySheetsOfVideo(video.id);
-    _sharedSheets = await getSheetsOfVideo(video.id);
+    _mySheets = UnmodifiableListView(await _getMySheetsOfVideo(video.id));
     _likedSheets =
-        await getLikedSheetIdsOfVideo((await getUserIdToken())!, video.id);
+        UnmodifiableListView(await _getLikedSheetsOfVideo(video.id));
+    _sharedSheets =
+        UnmodifiableListView(await _getSharedSheetsOfVideo(video.id));
 
     notifyListeners();
   }

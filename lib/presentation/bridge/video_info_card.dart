@@ -11,7 +11,8 @@ class VideoInfoCard extends StatelessWidget {
   final Video video;
   final void Function(Instrument?)? onChangeInstrument;
 
-  const VideoInfoCard({Key? key, required this.video, this.onChangeInstrument}) : super(key: key);
+  const VideoInfoCard({Key? key, required this.video, this.onChangeInstrument})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,11 @@ class VideoInfoCard extends StatelessWidget {
       padding: const EdgeInsets.only(top: 15, right: 15, bottom: 20, left: 15),
       child: Column(
         children: [
-          VideoSummary(video: video, titleMaxLines: 3),
+          VideoSummary(
+            video: video,
+            titleMaxLines: 3,
+            width: MediaQuery.of(context).size.width,
+          ),
           const Divider(
             height: 29,
             thickness: 1,

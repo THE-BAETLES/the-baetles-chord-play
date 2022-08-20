@@ -20,9 +20,11 @@ import 'package:the_baetles_chord_play/domain/use_case/check_nickname_valid.dart
 import 'package:the_baetles_chord_play/domain/use_case/get_liked_sheets_of_video.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_music_to_check_preference.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_recommended_video.dart';
+import 'package:the_baetles_chord_play/domain/use_case/get_shared_sheets_of_video.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_sheets_of_video.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_user_country.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_video_collection.dart';
+import 'package:the_baetles_chord_play/domain/use_case/get_watch_history.dart';
 import 'package:the_baetles_chord_play/domain/use_case/remove_conductor_position_listener.dart';
 import 'package:the_baetles_chord_play/domain/use_case/set_youtube_player_controller.dart';
 import 'package:the_baetles_chord_play/domain/use_case/sign_in_with_id_token.dart';
@@ -38,6 +40,7 @@ import 'package:the_baetles_chord_play/service/google_auth_service.dart';
 
 import 'domain/model/loop.dart';
 import 'domain/model/play_state.dart';
+import 'domain/use_case/generate_video.dart';
 import 'domain/use_case/get_my_sheets_of_video.dart';
 import 'domain/use_case/get_nickname_suggestion.dart';
 import 'domain/use_case/get_user_id_token.dart';
@@ -61,14 +64,13 @@ Future<void> main() async {
   RestClientFactory();
 
   bool hadSignedIn = FirebaseAuth.instance.currentUser != null &&
-      await AuthRepository().login((await AuthRepository().fetchIdToken(forceRefresh: true))!);
+      await AuthRepository().login((await AuthRepository().fetchIdToken())!);
 
   await CountryCodes.init();
 
   FlutterNativeSplash.remove();
 
-  // runApp(MyApp(hadSignedIn));
-  runApp(MyApp(true));
+  runApp(MyApp(hadSignedIn));
 }
 
 class MyApp extends StatelessWidget {
@@ -99,16 +101,24 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => HomeViewModel(
               GetVideoCollection(VideoRepository(), AuthRepository()),
-              GetRecommendedVideo(VideoRepository(), AuthRepository())),
+              GetRecommendedVideo(VideoRepository(), AuthRepository()),
+              GetWatchHistory(VideoRepository())),
         ),
         ChangeNotifierProvider(
           create: (_) => BridgeViewModel(
-              GetUserIdToken(AuthRepository()),
+            GetMySheetsOfVideo(
               GetSheetsOfVideo(SheetRepository()),
-              GetMySheetsOfVideo(
-                  GetSheetsOfVideo(SheetRepository()), AuthRepository()),
-              GetLikedSheetsOfVideo(
-                  GetSheetsOfVideo(SheetRepository()), SheetRepository())),
+            ),
+            GetLikedSheetsOfVideo(
+              GetSheetsOfVideo(SheetRepository()),
+            ),
+            GetSharedSheetsOfVideo(
+              GetSheetsOfVideo(SheetRepository()),
+            ),
+            GenerateVideo(
+              VideoRepository()
+            )
+          ),
         ),
         ChangeNotifierProvider(
           create: (_) => LoadingViewModel(),

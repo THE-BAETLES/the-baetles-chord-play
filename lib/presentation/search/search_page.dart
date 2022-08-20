@@ -96,15 +96,20 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _searchResultList(SearchViewModel viewModel) {
-    final List<VideoBlock> videoBlocks = [];
+    final List<Widget> videoBlocks = [];
 
     for (Video video in viewModel.searchResult) {
-      videoBlocks.add(VideoBlock(
-        video: video,
-        onClick: (Video video) {
-          Navigator.pushNamed(context, "/bridge-page", arguments: video);
-        },
-      ));
+      videoBlocks.add(
+        ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: VideoBlock(
+            video: video,
+            onClick: (Video video) {
+              Navigator.pushNamed(context, "/bridge-page", arguments: video);
+            },
+          ),
+        ),
+      );
     }
 
     return ListView(

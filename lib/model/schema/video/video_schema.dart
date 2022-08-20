@@ -54,6 +54,20 @@ class VideoSchema {
   @override
   Map<String, dynamic> toJson() => _$VideoSchemaToJson(this);
 
+  factory VideoSchema.fromVideo(Video video) {
+    return VideoSchema(
+      id: video.id,
+      thumbnailPath: video.thumbnailPath,
+      title: video.title,
+      genre: video.genre,
+      singer: video.singer,
+      tags: video.tags,
+      length: video.length,
+      difficultyAvg: video.difficultyAvg,
+      playCount: video.playCount,
+    );
+  }
+
   Video toVideo() {
     return Video(
       id: id,

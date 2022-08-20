@@ -9,9 +9,9 @@ class RemoteDataSource {
   // singleton instance
   static final RemoteDataSource _instance = RemoteDataSource._internal();
 
-  static const apiServerHost = "52.78.232.241";
-  static const portNumber = "8080";
-  static const httpUriHead = "http://${apiServerHost}:${portNumber}";
+  static const apiServerHost = "api.baetles.site";
+  static const versionPath = "v1";
+  static const httpUriHead = "https://${apiServerHost}/${versionPath}";
   static const contentType = "content-type";
   static const acceptType = "accept";
   static const jsonType = "application/json";
@@ -44,8 +44,6 @@ class RemoteDataSource {
         acceptType: jsonType,
       },
     );
-
-    print(response.body);
 
     return response.statusCode == ok;
   }

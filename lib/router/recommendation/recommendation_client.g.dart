@@ -6,7 +6,7 @@ part of 'recommendation_client.dart';
 // RetrofitGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps
+// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
 
 class _RecommendationClient implements RecommendationClient {
   _RecommendationClient(this._dio, {this.baseUrl}) {

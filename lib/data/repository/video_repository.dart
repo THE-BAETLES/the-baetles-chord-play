@@ -1,11 +1,17 @@
 import 'dart:collection';
 
+import 'package:the_baetles_chord_play/model/api/request/video/post_video_request.dart';
 import 'package:the_baetles_chord_play/model/api/response/search/get_search_response.dart';
+import 'package:the_baetles_chord_play/model/api/response/video/get_watch_history_response.dart';
 import 'package:the_baetles_chord_play/router/rest_client_factory.dart';
+import 'package:the_baetles_chord_play/router/video/video_client.dart';
 
 import '../../domain/model/performer_grade.dart';
 import '../../domain/model/video.dart';
 import '../../model/api/response/response.dart';
+import '../../model/api/response/video/get_recommendation_response.dart';
+import '../../model/api/response/video/post_video_response.dart';
+import '../../model/schema/video/video_schema.dart';
 import '../../router/client.dart';
 import '../../router/search/search_client.dart';
 
@@ -26,7 +32,6 @@ class VideoRepository {
       String performerGrade,
       String gender) async {
     // TODO : source 연결
-    //
 
     // dummy data
     return await (() async {
@@ -91,8 +96,7 @@ class VideoRepository {
   }
 
   Future<UnmodifiableListView<Video>> fetchVideoCollection(
-    String idToken,
-  ) async {
+      String idToken,) async {
     // TODO : source 연결
 
     // dummy data
@@ -157,10 +161,14 @@ class VideoRepository {
     })();
   }
 
-  Future<UnmodifiableListView<Video>> fetchRecommededVideos(
-    String idToken,
-  ) async {
-    // TODO : source 연결
+  Future<UnmodifiableListView<Video>> fetchRecommededVideos({
+    int offset = 0,
+    int limit = 25,
+  }) async {
+    VideoClient client = RestClientFactory().getClient(
+        RestClientType.video) as VideoClient;
+    GetRecommendationResponse response = await client.getRecommendation(offset, limit);
+    List<Video> videos = response.toVideoList();
 
     // dummy data
     return await (() async {
@@ -225,9 +233,27 @@ class VideoRepository {
   }
 
   Future<List<Video>> searchVideo(String searchTitle) async {
-    SearchClient client = RestClientFactory().getClient(RestClientType.search) as SearchClient;
+    SearchClient client =
+    RestClientFactory().getClient(RestClientType.search) as SearchClient;
     GetSearchResponse response = await client.getSearchList(searchTitle);
     List<Video> searchResult = response.toVideoList();
     return searchResult;
+  }
+
+  Future<void> generateVideo(Video video) async {
+    VideoClient client =
+    RestClientFactory().getClient(RestClientType.video) as VideoClient;
+    PostVideoResponse response = await client.postVideo(
+      video.id,
+      PostVideoRequest(video: VideoSchema.fromVideo(video)),
+    );
+    return;
+  }
+
+  Future<List<Video>> getWatchHistory({int offset = 0, int limit = 25}) async {
+    VideoClient client =
+    RestClientFactory().getClient(RestClientType.video) as VideoClient;
+    GetWatchHistoryResponse response = await client.getWatchHistory(0, limit);
+    return response.toVideoList();
   }
 }

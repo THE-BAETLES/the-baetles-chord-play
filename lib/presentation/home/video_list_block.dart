@@ -7,7 +7,7 @@ import '../../domain/model/video.dart';
 import '../../widget/molecule/block_title.dart';
 
 class VideoListBlock extends StatelessWidget {
-  final UnmodifiableListView<Video> videos;
+  final List<Video> videos;
   late final void Function(Video)? _onVideoClicked;
 
   VideoListBlock({

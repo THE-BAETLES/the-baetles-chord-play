@@ -25,30 +25,41 @@ class VideoBlock extends StatelessWidget {
       child: Container(
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-        height: 92,
-        child: Row(
-          children: [
-            Stack(
+        height: 82,
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints contstraints) {
+            return Row(
               children: [
-                VideoThumbnail(
-                  thumbnailPath: video.thumbnailPath,
-                  width: 72,
-                  height: 72,
+                Stack(
+                  children: [
+                    VideoThumbnail(
+                      thumbnailPath: video.thumbnailPath,
+                      width: 72,
+                      height: 72,
+                    ),
+                    Positioned(
+                      child: DurationBadge(
+                        duration: Duration(milliseconds: video.length),
+                      ),
+                      bottom: 4,
+                      right: 4,
+                    ),
+                  ],
                 ),
-                Positioned(
-                  child: DurationBadge(
-                    duration: Duration(milliseconds: video.length),
+                Container(
+                  width: 14,
+                ),
+                Expanded(
+                  flex: 1,
+                  child: VideoSummary(
+                    video: video,
+                    titleMaxLines: 2,
+                    width: 10,
                   ),
-                  bottom: 4,
-                  right: 4,
                 ),
               ],
-            ),
-            Container(
-              width: 14,
-            ),
-            VideoSummary(video: video, titleMaxLines: 2,),
-          ],
+            );
+          },
         ),
       ),
     );

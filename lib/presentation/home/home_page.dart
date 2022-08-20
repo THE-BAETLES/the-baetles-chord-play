@@ -36,7 +36,7 @@ class HomePage extends StatelessWidget {
             Container(height: 30),
 
             VideoListBlock(
-              videos: viewModel.collectionVideos ?? UnmodifiableListView([]),
+              videos: viewModel.collectionVideos ?? [],
               onVideoClicked: (Video video) {
                 viewModel.onVideoClicked(context, video);
               },
@@ -49,6 +49,10 @@ class HomePage extends StatelessWidget {
               onVideoClicked: (Video video) {
                 viewModel.onVideoClicked(context, video);
               },
+            ),
+
+            Container(
+              height: 60,
             ),
           ],
         ),

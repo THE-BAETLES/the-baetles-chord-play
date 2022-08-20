@@ -8,7 +8,6 @@ import 'package:the_baetles_chord_play/router/recommendation/recommendation_clie
 import 'package:the_baetles_chord_play/router/search/search_client.dart';
 import 'package:the_baetles_chord_play/router/sheet/sheet_client.dart';
 import 'package:the_baetles_chord_play/router/video/video_client.dart';
-import 'package:the_baetles_chord_play/router/watch_history/watch_history_client.dart';
 
 
 class RestClientFactory {
@@ -48,16 +47,10 @@ class RestClientFactory {
         return SearchClient(dio, baseUrl: baseUrl);
         break;
       case RestClientType.sheet:
-        // TODO: Handle this case.
         return SheetClient(dio, baseUrl: baseUrl);
         break;
       case RestClientType.video:
         return VideoClient(dio, baseUrl: baseUrl);
-        // TODO: Handle this case.
-        break;
-      case RestClientType.watchHistory:
-        return WatchHistoryClient(dio, baseUrl: baseUrl);
-        // TODO: Handle this case.
         break;
     }
   }

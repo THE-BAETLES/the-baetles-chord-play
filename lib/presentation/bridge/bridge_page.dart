@@ -20,9 +20,9 @@ class BridgePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Video video = ModalRoute.of(context)!.settings.arguments as Video;
     BridgeViewModel viewModel = context.watch<BridgeViewModel>();
-    viewModel.onPageInit(video);
+    Video video = ModalRoute.of(context)!.settings.arguments as Video;
+    viewModel.onPageBuild(video);
 
     return Scaffold(
       extendBodyBehindAppBar: true,

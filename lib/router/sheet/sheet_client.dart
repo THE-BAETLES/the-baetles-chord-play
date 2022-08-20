@@ -1,6 +1,7 @@
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 import 'package:the_baetles_chord_play/model/api/request/sheet/post_sheet_request.dart';
+import 'package:the_baetles_chord_play/model/api/response/sheet/patch_sheet_response.dart';
 import 'package:the_baetles_chord_play/model/schema/sheet/sheet_schema.dart';
 import 'package:the_baetles_chord_play/router/client.dart';
 
@@ -18,25 +19,25 @@ abstract class SheetClient extends RestClient{
   // single ton
   factory SheetClient (Dio dio, {String baseUrl}) = _SheetClient;
   // This class must include fromJson and toJson Methods;
-  @GET('')
+  @GET('/sheets')
   Future<GetConditionSheetResponse> getSheetsByVideoId(@Query('videoId') String videoId);
 
-  @GET('')
+  @GET('/sheets')
   Future<GetConditionSheetResponse> getSheetsByUserId();
 
-  @GET('/{sheetId}')
+  @GET('/sheets/{sheetId}')
   Future<GetSheetResponse> getSheet();
 
-  @GET('/{sheetId}')
+  @GET('/sheets/{sheetId}')
   Future<GetSheetDataResponse> getSheetData(@Path('sheetId') sheetId);
 
-  @POST('')
+  @POST('/sheets')
   Future<PostSheetResponse> createSheetData(@Body() PostSheetRequest postSheetRequest);
 
-  @DELETE('/{sheetId}')
+  @DELETE('/sheets/{sheetId}')
   Future<DeleteSheetResponse> deleteSheetData(@Path('sheetId') String sheetId);
 
   @PATCH('/{sheetId}')
-  Future<PatchSheetRequest> patchSheet(@Path('sheetId') String sheetId, @Body() PatchSheetRequest patchSheetRequest);
+  Future<PatchSheetResponse> patchSheet(@Path('sheetId') String sheetId, @Body() PatchSheetRequest patchSheetRequest);
 
 }

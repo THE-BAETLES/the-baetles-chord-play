@@ -53,3 +53,30 @@ class SheetSchema {
     );
   }
 }
+
+@JsonSerializable()
+class AllSheetSchema {
+  @JsonKey(name: 'shared')
+  List<SheetSchema> sharedList;
+
+  @JsonKey(name: 'like')
+  List<SheetSchema> likeList;
+
+  @JsonKey(name: 'my')
+  List<SheetSchema> myList;
+
+  AllSheetSchema({required this.sharedList, required this.likeList, required this.myList});
+
+  factory AllSheetSchema.fromJson(Map<String, dynamic> json) =>
+      _$AllSheetSchemaFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AllSheetSchemaToJson(this);
+
+  Map<String, List<SheetInfo>> toMap() {
+    Map<String, List<SheetInfo>> result = {};
+    result['shared'] = sharedList.map((e) => e.toSheetInfo()).toList();
+    result['like'] = sharedList.map((e) => e.toSheetInfo()).toList();
+    result['my'] = sharedList.map((e) => e.toSheetInfo()).toList();
+    return result;
+  }
+}

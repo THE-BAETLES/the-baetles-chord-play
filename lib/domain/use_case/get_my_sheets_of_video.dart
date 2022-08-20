@@ -7,15 +7,11 @@ import '../model/sheet_info.dart';
 
 class GetMySheetsOfVideo {
   final GetSheetsOfVideo getSheetsOfVideo;
-  final AuthRepository authRepository;
 
-  GetMySheetsOfVideo(this.getSheetsOfVideo, this.authRepository);
+  GetMySheetsOfVideo(this.getSheetsOfVideo);
 
-  Future<UnmodifiableListView<SheetInfo>> call(String videoId) async {
-    UnmodifiableListView<SheetInfo> sheets = await getSheetsOfVideo(videoId);
-    String? idToken = await authRepository.fetchIdToken();
-
-    List<SheetInfo> mySheets = sheets.where((sheet) => sheet.userId == idToken).toList();
+  Future<List<SheetInfo>> call(String videoId) async {
+    List<SheetInfo> mySheets = (await getSheetsOfVideo(videoId))['my'] ?? [];
     return UnmodifiableListView<SheetInfo>(mySheets);
   }
 }

@@ -19,7 +19,6 @@ class VideoThumbnail extends StatelessWidget {
       thumbnailPath,
       width: width,
       height: height,
-      color: Colors.grey,
     );
   }
 }
