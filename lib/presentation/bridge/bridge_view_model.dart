@@ -80,7 +80,7 @@ class BridgeViewModel with ChangeNotifier {
       );
 
       await _generateVideo(video);
-      _loadSheets(video);
+      await _loadSheets(video);
     }
   }
 

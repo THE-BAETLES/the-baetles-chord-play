@@ -96,7 +96,8 @@ class VideoRepository {
   }
 
   Future<UnmodifiableListView<Video>> fetchVideoCollection(
-      String idToken,) async {
+    String idToken,
+  ) async {
     // TODO : source 연결
 
     // dummy data
@@ -165,9 +166,10 @@ class VideoRepository {
     int offset = 0,
     int limit = 25,
   }) async {
-    VideoClient client = RestClientFactory().getClient(
-        RestClientType.video) as VideoClient;
-    GetRecommendationResponse response = await client.getRecommendation(offset, limit);
+    VideoClient client =
+        RestClientFactory().getClient(RestClientType.video) as VideoClient;
+    GetRecommendationResponse response =
+        await client.getRecommendation(offset, limit);
     List<Video> videos = response.toVideoList();
 
     // dummy data
@@ -234,7 +236,7 @@ class VideoRepository {
 
   Future<List<Video>> searchVideo(String searchTitle) async {
     SearchClient client =
-    RestClientFactory().getClient(RestClientType.search) as SearchClient;
+        RestClientFactory().getClient(RestClientType.search) as SearchClient;
     GetSearchResponse response = await client.getSearchList(searchTitle);
     List<Video> searchResult = response.toVideoList();
     return searchResult;
@@ -242,7 +244,7 @@ class VideoRepository {
 
   Future<void> generateVideo(Video video) async {
     VideoClient client =
-    RestClientFactory().getClient(RestClientType.video) as VideoClient;
+        RestClientFactory().getClient(RestClientType.video) as VideoClient;
     PostVideoResponse response = await client.postVideo(
       video.id,
       PostVideoRequest(video: VideoSchema.fromVideo(video)),
@@ -252,7 +254,7 @@ class VideoRepository {
 
   Future<List<Video>> getWatchHistory({int offset = 0, int limit = 25}) async {
     VideoClient client =
-    RestClientFactory().getClient(RestClientType.video) as VideoClient;
+        RestClientFactory().getClient(RestClientType.video) as VideoClient;
     GetWatchHistoryResponse response = await client.getWatchHistory(0, limit);
     return response.toVideoList();
   }

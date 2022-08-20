@@ -75,8 +75,8 @@ class AllSheetSchema {
   Map<String, List<SheetInfo>> toMap() {
     Map<String, List<SheetInfo>> result = {};
     result['shared'] = sharedList.map((e) => e.toSheetInfo()).toList();
-    result['like'] = sharedList.map((e) => e.toSheetInfo()).toList();
-    result['my'] = sharedList.map((e) => e.toSheetInfo()).toList();
+    result['like'] = likeList.map((e) => e.toSheetInfo()).toList();
+    result['my'] = myList.map((e) => e.toSheetInfo()).toList();
     return result;
   }
 }

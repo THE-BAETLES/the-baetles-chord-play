@@ -24,7 +24,7 @@ class SheetDataSchema {
 
   Map<String, dynamic> toJson() => _$SheetDataSchemaToJson(this);
 
-  SheetData toChordData() {
+  SheetData toSheetData() {
     final List<ChordBlock> chordBlocks = [];
 
     for (ChordInfoSchema chordInfo in chordInfos) {

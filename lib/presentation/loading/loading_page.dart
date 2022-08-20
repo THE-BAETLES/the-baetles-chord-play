@@ -50,14 +50,7 @@ class _LoadingPageState extends State<LoadingPage> {
           arguments: {
             "video": video,
             "sheetInfo": sheetInfo,
-            "sheetData": SheetData(id: 'imdummy', bpm: 60, chords: [
-              ChordBlock(Chord(Note.fromNoteName('C3'), TriadType.major), 12, 12, 13),
-              // ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 25, 12.213696067, 13.560453428),
-              // ChordBlock(Chord(Note.fromNoteName('G#3'), TriadType.major), 28, 13.606893337, 14.489251608),
-              // ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 30, 14.535691517, 16.997006694),
-              // ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 35, 17.043446603, 18.11156451),
-              // ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 300, 17.043446603, 18.11156451),
-            ]),
+            "sheetData": viewModel.sheetData
           },
         );
       });

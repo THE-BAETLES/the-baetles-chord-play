@@ -8,6 +8,6 @@ class GenerateVideo {
   GenerateVideo(this._videoRepository);
 
   Future<void> call(Video video) async {
-    _videoRepository.generateVideo(video);
+    await _videoRepository.generateVideo(video);
   }
 }
