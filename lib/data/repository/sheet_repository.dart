@@ -19,21 +19,23 @@ class SheetRepository {
 
   SheetRepository._internal();
 
-  Future<Map<String, List<SheetInfo>>> fetchSheetsByVideoId(
-      String videoId) async {
-    SheetClient client = RestClientFactory().getClient(
-        RestClientType.sheet) as SheetClient;
-    GetConditionSheetResponse response = (await client.getSheetsByVideoId(
-        videoId));
+  Future<Map<String, List<SheetInfo>>> fetchSheetsByVideoId(String videoId) async {
+    SheetClient client = RestClientFactory().getClient(RestClientType.sheet) as SheetClient;
+    GetConditionSheetResponse response = (await client.getSheetsByVideoId(videoId));
     Map<String, List<SheetInfo>> sheets = response.data!.toMap();
 
     return sheets;
   }
 
-  Future<SheetData> fetchSheetDataBySheetId(String sheetId) async {
+  Future<SheetData?> fetchSheetDataBySheetId(String sheetId) async {
     SheetClient client = RestClientFactory().getClient(RestClientType.sheet) as SheetClient;
     GetSheetDataResponse response = await client.getSheetData(sheetId);
-    SheetData sheetData = response.toSheetData();
+    SheetData? sheetData;
+
+    if (response.code == "200") {
+      sheetData = response.toSheetData();
+    }
+
     return sheetData;
   }
 }

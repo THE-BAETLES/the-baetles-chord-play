@@ -21,6 +21,7 @@ import 'package:the_baetles_chord_play/domain/use_case/get_liked_sheets_of_video
 import 'package:the_baetles_chord_play/domain/use_case/get_music_to_check_preference.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_recommended_video.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_shared_sheets_of_video.dart';
+import 'package:the_baetles_chord_play/domain/use_case/get_sheet_data.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_sheets_of_video.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_user_country.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_user_nickname.dart';
@@ -121,7 +122,9 @@ class MyApp extends StatelessWidget {
               GenerateVideo(VideoRepository())),
         ),
         ChangeNotifierProvider(
-          create: (_) => LoadingViewModel(),
+          create: (_) => LoadingViewModel(
+            GetSheetData(SheetRepository()),
+          ),
         ),
         ChangeNotifierProvider(
           create: (_) {
