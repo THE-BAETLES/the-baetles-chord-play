@@ -29,7 +29,7 @@ import android.net.NetworkRequest
 class PitchTracker(private var activity: Activity) : EventChannel.StreamHandler {
     // Audio recording setting
     private val audioSource: Int = MediaRecorder.AudioSource.MIC
-    private val sampleRate: Int = 32000
+    private val sampleRate: Int = 16000
     private val recordingLength: Int = 17920
     private val channel: Int = AudioFormat.CHANNEL_IN_MONO
     private val encodingType: Int = AudioFormat.ENCODING_PCM_16BIT
@@ -268,7 +268,7 @@ class PitchTracker(private var activity: Activity) : EventChannel.StreamHandler 
             // Send Event
             for (i in 0 until 88) {
                 if (result[i] > 0) {
-                    playedChords[chordCount] = i
+                    playedChords[chordCount] = i + 1
                     chordCount++
                 }
             }
