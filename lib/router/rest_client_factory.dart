@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_client_sse/flutter_client_sse.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:the_baetles_chord_play/data/repository/auth_repository.dart';
 
@@ -14,9 +15,7 @@ class RestClientFactory {
   static final RestClientFactory _client_factory =
       RestClientFactory._internal();
   final dio = Dio();
-
   // TODO: Set LoadBalancer URl
-
   final baseUrl = dotenv.env['API_BASE_URL']!;
   late String idToken;
 

@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_client_sse/flutter_client_sse.dart';
+import 'package:the_baetles_chord_play/router/client.dart';
+import 'package:the_baetles_chord_play/router/rest_client_factory.dart';
+import 'package:the_baetles_chord_play/router/sheet/sheet_client.dart';
+import 'package:the_baetles_chord_play/service/progress_service.dart';
 
 import '../../domain/model/chord.dart';
 import '../../domain/model/chord_block.dart';
@@ -20,13 +25,30 @@ class LoadingViewModel extends ChangeNotifier {
   SheetData? get sheetData => _sheetData;
 
   LoadingViewModel(this._getSheetData);
-
+  
+  void onProgressHandler(SSEModel event){
+    String? status = event.data;
+    if(status == "1"){
+      _progress = 33.3;
+    }else if(status == "2"){
+      _progress = 66.6;
+    }else if(status == "3"){
+      _progress = 99.9;
+    }
+    notifyListeners();
+  }
+  
+  void sseDoneHandler() async {
+    SheetClient client = RestClientFactory().getClient(RestClientType.sheet) as SheetClient;
+    _sheetData = (await client.getAISheet()).toSheetData();
+    notifyListeners();
+  }
+  
   void loadSheet(Video video, SheetInfo sheetInfo) async {
     _sheetData = await _getSheetData(sheetInfo.id);
 
     if (_sheetData == null) {
-      print("start sse");
-      // sse 로 불러오기!
+      ProgressService().start(video.id, onProgressHandler, sseDoneHandler);
     } else {
       _progress = 100;
       notifyListeners();
