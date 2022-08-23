@@ -3,5 +3,5 @@ abstract class RestClient {
 }
 
 enum RestClientType {
-  search, sheet, recommendation, video, watchHistory
+  search, sheet, recommendation, video
 }

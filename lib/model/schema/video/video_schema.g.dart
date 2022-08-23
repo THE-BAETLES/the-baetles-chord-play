@@ -14,7 +14,7 @@ VideoSchema _$VideoSchemaFromJson(Map<String, dynamic> json) => VideoSchema(
       singer: json['singer'] as String,
       tags: (json['tags'] as List<dynamic>).map((e) => e as String).toList(),
       length: json['length'] as int,
-      difficultyAvg: json['difficultyAvg'] as int,
+      difficultyAvg: json['difficulty_avg'] as int,
       playCount: json['play_count'] as int,
     );
 
@@ -27,6 +27,6 @@ Map<String, dynamic> _$VideoSchemaToJson(VideoSchema instance) =>
       'singer': instance.singer,
       'tags': instance.tags,
       'length': instance.length,
-      'difficultyAvg': instance.difficultyAvg,
+      'difficulty_avg': instance.difficultyAvg,
       'play_count': instance.playCount,
     };

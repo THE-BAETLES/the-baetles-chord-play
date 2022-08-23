@@ -13,6 +13,11 @@ class SearchIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SvgPicture.asset("assets/icons/ic_search.svg");
+    return SvgPicture.asset(
+      "assets/icons/ic_search.svg",
+      width: width,
+      height: height,
+      fit: BoxFit.cover,
+    );
   }
 }

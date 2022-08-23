@@ -11,9 +11,7 @@ GetConditionSheetResponse _$GetConditionSheetResponseFromJson(
     GetConditionSheetResponse(
       json['code'] as String,
       json['message'] as String,
-      (json['data'] as List<dynamic>)
-          .map((e) => SheetSchema.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      AllSheetSchema.fromJson(json['data'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$GetConditionSheetResponseToJson(

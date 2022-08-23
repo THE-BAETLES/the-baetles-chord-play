@@ -1,23 +1,19 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'watch_history_response.dart';
+part of 'post_video_response.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-WatchHistoryResponse _$WatchHistoryResponseFromJson(
-        Map<String, dynamic> json) =>
-    WatchHistoryResponse(
+PostVideoResponse _$PostVideoResponseFromJson(Map<String, dynamic> json) =>
+    PostVideoResponse(
       json['code'] as String,
       json['message'] as String,
-      (json['data'] as List<dynamic>)
-          .map((e) => VideoSchema.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      VideoSchema.fromJson(json['data'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$WatchHistoryResponseToJson(
-        WatchHistoryResponse instance) =>
+Map<String, dynamic> _$PostVideoResponseToJson(PostVideoResponse instance) =>
     <String, dynamic>{
       'code': instance.code,
       'message': instance.message,

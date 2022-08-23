@@ -5,11 +5,11 @@ import 'package:the_baetles_chord_play/data/repository/sheet_repository.dart';
 import '../model/sheet_info.dart';
 
 class GetSheetsOfVideo {
-  final SheetRepository sheetRepository;
+  final SheetRepository _sheetRepository;
 
-  GetSheetsOfVideo(this.sheetRepository);
+  GetSheetsOfVideo(this._sheetRepository);
 
-  Future<UnmodifiableListView<SheetInfo>> call(String videoId) async {
-    return await sheetRepository.fetchSheetsByVideoId(videoId);
+  Future<Map<String, List<SheetInfo>>> call(String videoId) async {
+    return await _sheetRepository.fetchSheetsByVideoId(videoId);
   }
 }

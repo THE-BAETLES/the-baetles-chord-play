@@ -20,6 +20,10 @@ class PlayState {
 
   int get currentPosition => _currentPosition;
 
+  double get bps => defaultBpm / 60.0;
+
+  double get spb => 1.0 / bps;
+
   int setCurrentPosition(int value, {bool isAdded = false}) {
     if (isAdded) {
       _currentPosition += value;

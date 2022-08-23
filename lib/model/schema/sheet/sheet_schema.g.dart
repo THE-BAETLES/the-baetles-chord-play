@@ -26,3 +26,23 @@ Map<String, dynamic> _$SheetSchemaToJson(SheetSchema instance) =>
       'updated_at': instance.updatedAt.toIso8601String(),
       'like_count': instance.likeCount,
     };
+
+AllSheetSchema _$AllSheetSchemaFromJson(Map<String, dynamic> json) =>
+    AllSheetSchema(
+      sharedList: (json['shared'] as List<dynamic>)
+          .map((e) => SheetSchema.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      likeList: (json['like'] as List<dynamic>)
+          .map((e) => SheetSchema.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      myList: (json['my'] as List<dynamic>)
+          .map((e) => SheetSchema.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$AllSheetSchemaToJson(AllSheetSchema instance) =>
+    <String, dynamic>{
+      'shared': instance.sharedList,
+      'like': instance.likeList,
+      'my': instance.myList,
+    };
