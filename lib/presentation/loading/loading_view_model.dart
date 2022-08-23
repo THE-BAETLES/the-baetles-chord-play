@@ -41,12 +41,12 @@ class LoadingViewModel extends ChangeNotifier {
   void sseDoneHandler() async {
     SheetClient client = RestClientFactory().getClient(RestClientType.sheet) as SheetClient;
     _sheetData = (await client.getAISheet()).toSheetData();
+    ProgressService().stop();
     notifyListeners();
   }
   
   void loadSheet(Video video, SheetInfo sheetInfo) async {
     _sheetData = await _getSheetData(sheetInfo.id);
-
     if (_sheetData == null) {
       ProgressService().start(video.id, onProgressHandler, sseDoneHandler);
     } else {

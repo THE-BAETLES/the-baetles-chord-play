@@ -12,7 +12,6 @@ class ProgressService {
     return _progressService;
   }
 
-
   ProgressService._internal() {
     (() async {
       idToken = (await FirebaseAuth.instance.currentUser?.getIdToken())!;
