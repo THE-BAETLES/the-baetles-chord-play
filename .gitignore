@@ -1,3 +1,5 @@
+# config
+/assets/config/*.env
 # Miscellaneous
 *.class
 *.log
