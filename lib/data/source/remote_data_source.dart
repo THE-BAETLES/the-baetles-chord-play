@@ -52,7 +52,7 @@ class RemoteDataSource {
     required String idToken,
     required String country,
     required String performerGrade,
-    required List<Map<String, dynamic>> earlyFavoriteSongs,
+    required List<String> earlyFavoriteSongs,
     required String nickname,
     required String gender,
   }) async {
@@ -66,7 +66,7 @@ class RemoteDataSource {
       body: jsonEncode({
         "country": country,
         "performer_grade": performerGrade,
-        "earlyFavoriteSongs": earlyFavoriteSongs,
+        "sign_favorite": earlyFavoriteSongs,
         "nickname": nickname,
         "gender": gender
       }),

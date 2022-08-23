@@ -158,7 +158,7 @@ class SignUpViewModel with ChangeNotifier {
   Future<bool> onConfirmPreferredSong() async {
     bool isSignUpSuccessful = await signUp(
       performerGrade: _selectedGrade!,
-      earlyFavoriteSongs: _preferredSongs,
+      earlyFavoriteSongs: _preferredSongs.map((e) => e.id).toList(),
       nickname: _confirmedNickname!,
       gender: _selectedGender!,
     );

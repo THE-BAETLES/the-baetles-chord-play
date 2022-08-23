@@ -23,6 +23,6 @@ abstract class VideoClient extends RestClient {
   @POST('/videos/{videoId}')
   Future<PostVideoResponse> postVideo(@Path('videoId') String videoId, @Body() PostVideoRequest postVideoRequest);
 
-  @GET('/videos/recommendation')
+  @GET('/recommendation')
   Future<GetRecommendationResponse> getRecommendation(@Query('offset') int offset, @Query('limit') int limit);
 }

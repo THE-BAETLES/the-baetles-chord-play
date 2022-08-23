@@ -15,7 +15,7 @@ class SignUp {
 
   Future<bool> call({
     required PerformerGrade performerGrade,
-    required List<Video> earlyFavoriteSongs,
+    required List<String> earlyFavoriteSongs,
     required String nickname,
     required Gender gender,
   }) async {

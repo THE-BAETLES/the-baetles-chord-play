@@ -150,7 +150,7 @@ class PerformanceViewModel with ChangeNotifier {
     // TODO : 코드 변경
   }
 
-  void dispose() {
+  void reset() {
     _removeConductorPositionListener(_conductorPositionCallback);
     _youtubeController = null;
     _chordChecker?.pause();

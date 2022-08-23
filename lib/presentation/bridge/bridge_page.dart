@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:the_baetles_chord_play/presentation/bridge/sheet_creation_dialog.dart';
 import 'package:the_baetles_chord_play/presentation/bridge/video_info_card.dart';
 import 'package:the_baetles_chord_play/widget/atom/app_font_families.dart';
 import 'package:the_baetles_chord_play/widget/atom/youtube_video_player.dart';
@@ -22,7 +23,7 @@ class BridgePage extends StatelessWidget {
   Widget build(BuildContext context) {
     BridgeViewModel viewModel = context.watch<BridgeViewModel>();
     Video video = ModalRoute.of(context)!.settings.arguments as Video;
-    viewModel.onPageBuild(video);
+    viewModel.onPageBuild(context, video);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -50,111 +51,116 @@ class BridgePage extends StatelessWidget {
                         color: AppColors.grayF8,
                         thickness: 8,
                       ),
-                      DefaultTabController(
-                        length: 3,
-                        child: Builder(builder: (context) {
-                          final tabController =
-                              DefaultTabController.of(context)!;
-                          tabController.addListener(() {
-                            viewModel.onChangeTabIndex(tabController.index);
-                          });
-
-                          return Wrap(
-                            children: [
-                              const TabBar(
-                                isScrollable: true,
-                                padding: EdgeInsets.symmetric(horizontal: 15),
-                                tabs: [
-                                  Tab(
-                                    child: Text("내 악보"),
-                                    height: 40,
-                                  ),
-                                  Tab(
-                                    child: Text("좋아요"),
-                                    height: 40,
-                                  ),
-                                  Tab(
-                                    child: Text("공유된 악보"),
-                                    height: 40,
-                                  ),
-                                ],
-                                labelColor: AppColors.blue4E,
-                                labelStyle: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: AppFontFamilies.pretendard,
-                                ),
-                                unselectedLabelColor: AppColors.gray80,
-                                unselectedLabelStyle: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w400,
-                                  fontFamily: AppFontFamilies.pretendard,
-                                ),
-                                indicatorColor: AppColors.blue4E,
-                                indicatorSize: TabBarIndicatorSize.label,
-                              ),
-                              const Divider(
-                                height: 3,
-                                thickness: 1,
-                                color: AppColors.grayE9,
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width,
-                                padding: EdgeInsets.symmetric(horizontal: 15),
-                                height: 50,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    MiddleHighlightText(
-                                      leftText: "총 ",
-                                      middleText:
-                                          viewModel.sheetCount.toString(),
-                                      rightText: "개의 악보",
-                                    ),
-                                    AddSheetButton(),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 500,
-                                child: TabBarView(
-                                  children: [
-                                    BridgeSheetListView(
-                                      sheets: viewModel.mySheets,
-                                      videoTitle: video.title,
-                                    ),
-                                    BridgeSheetListView(
-                                      sheets: viewModel.likedSheets,
-                                      videoTitle: video.title,
-                                    ),
-                                    BridgeSheetListView(
-                                      sheets: viewModel.sharedSheets,
-                                      videoTitle: video.title,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          );
-                        }),
-                      ),
+                      _tabController(context, viewModel),
                     ],
                   ),
                 ),
               ),
             ],
           ),
-          Visibility(
+          const Visibility(
             visible: true,
             child: Positioned(
               bottom: 0,
               child: BridgeControlBar(),
             ),
           ),
+          Visibility(
+            visible: viewModel.isInputSheetDetailPopupVisible,
+            child: SheetCreationDialog(),
+          )
         ],
       ),
+    );
+  }
+
+  Widget _tabController(BuildContext context, BridgeViewModel viewModel) {
+    return DefaultTabController(
+      length: 3,
+      child: Builder(builder: (context) {
+        final tabController = DefaultTabController.of(context)!;
+        tabController.addListener(() {
+          viewModel.onChangeTabIndex(tabController.index);
+        });
+
+        return Wrap(
+          children: [
+            const TabBar(
+              isScrollable: true,
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              tabs: [
+                Tab(
+                  height: 40,
+                  child: Text("내 악보"),
+                ),
+                Tab(
+                  height: 40,
+                  child: Text("좋아요"),
+                ),
+                Tab(
+                  height: 40,
+                  child: Text("공유된 악보"),
+                ),
+              ],
+              labelColor: AppColors.blue4E,
+              labelStyle: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                fontFamily: AppFontFamilies.pretendard,
+              ),
+              unselectedLabelColor: AppColors.gray80,
+              unselectedLabelStyle: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w400,
+                fontFamily: AppFontFamilies.pretendard,
+              ),
+              indicatorColor: AppColors.blue4E,
+              indicatorSize: TabBarIndicatorSize.label,
+            ),
+            const Divider(
+              height: 3,
+              thickness: 1,
+              color: AppColors.grayE9,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              height: 50,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  MiddleHighlightText(
+                    leftText: "총 ",
+                    middleText: viewModel.sheetCount.toString(),
+                    rightText: "개의 악보",
+                  ),
+                  AddSheetButton(onClick: viewModel.onClickCreateSheetButton),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 500,
+              child: TabBarView(
+                children: [
+                  BridgeSheetListView(
+                    sheets: viewModel.mySheets,
+                    videoTitle: viewModel.video?.title ?? "",
+                  ),
+                  BridgeSheetListView(
+                    sheets: viewModel.likedSheets,
+                    videoTitle: viewModel.video?.title ?? "",
+                  ),
+                  BridgeSheetListView(
+                    sheets: viewModel.sharedSheets,
+                    videoTitle: viewModel.video?.title ?? "",
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      }),
     );
   }
 }

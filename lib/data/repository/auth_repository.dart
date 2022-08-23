@@ -26,7 +26,7 @@ class AuthRepository {
     required String idToken,
     required String country,
     required PerformerGrade performerGrade,
-    required List<Video> earlyFavoriteSongs,
+    required List<String> earlyFavoriteSongs,
     required String nickname,
     required Gender gender,
 }) async {
@@ -34,7 +34,7 @@ class AuthRepository {
       idToken: idToken,
       country: country.toUpperCase(),
       performerGrade: performerGrade.name.toUpperCase(),
-      earlyFavoriteSongs: earlyFavoriteSongs.map((e) => e.toJson()).toList(),
+      earlyFavoriteSongs: earlyFavoriteSongs,
       nickname: nickname,
       gender: gender.name.toUpperCase(),
     ));

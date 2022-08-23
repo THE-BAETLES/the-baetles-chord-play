@@ -274,7 +274,7 @@ class _PerformancePageState extends State<PerformancePage> {
       overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],
     );
 
-    _viewModel.dispose();
+    _viewModel.reset();
     super.dispose();
   }
 }

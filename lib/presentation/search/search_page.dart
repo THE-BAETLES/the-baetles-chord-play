@@ -128,7 +128,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   void dispose() {
-    _viewModel.dispose();
+    _viewModel.reset();
     super.dispose();
   }
 }

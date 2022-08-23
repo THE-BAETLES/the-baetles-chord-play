@@ -1,15 +1,17 @@
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
-import 'package:the_baetles_chord_play/model/api/request/sheet/post_sheet_request.dart';
+import 'package:the_baetles_chord_play/model/api/request/sheet/post_sheet_data_request.dart';
 import 'package:the_baetles_chord_play/model/api/response/sheet/patch_sheet_response.dart';
 import 'package:the_baetles_chord_play/model/schema/sheet/sheet_schema.dart';
 import 'package:the_baetles_chord_play/router/client.dart';
 
 import '../../model/api/request/sheet/patch_sheet_request.dart';
+import '../../model/api/request/sheet/post_sheet_request.dart';
 import '../../model/api/response/sheet/delete_sheet_response.dart';
 import '../../model/api/response/sheet/get_condition_sheet_response.dart';
 import '../../model/api/response/sheet/get_sheet_data_response.dart';
 import '../../model/api/response/sheet/get_sheet_response.dart';
+import '../../model/api/response/sheet/post_sheet_data_response.dart';
 import '../../model/api/response/sheet/post_sheet_response.dart';
 
 part 'sheet_client.g.dart';
@@ -32,7 +34,10 @@ abstract class SheetClient extends RestClient{
   Future<GetSheetDataResponse> getSheetData(@Path('sheetId') sheetId);
 
   @POST('/sheets')
-  Future<PostSheetResponse> createSheetData(@Body() PostSheetRequest postSheetRequest);
+  Future<PostSheetResponse> postSheet(@Body() PostSheetRequest postSheetRequest);
+
+  @POST('/sheets/data')
+  Future<PostSheetDataResponse> postSheetData(@Body() PostSheetDataRequest postSheetDataRequest);
 
   @DELETE('/sheets/{sheetId}')
   Future<DeleteSheetResponse> deleteSheetData(@Path('sheetId') String sheetId);

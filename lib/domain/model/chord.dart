@@ -16,11 +16,18 @@ class Chord {
   factory Chord.fromString(String chord) {
     List<String> splitString = chord.split(":");
     Note root = Note.fromNoteName(splitString[0]);
-    TriadType triadType = TriadType.values.singleWhere(
-            (triad) => triad.notation == splitString[1]
-    );
+    TriadType triadType = TriadType.values
+        .singleWhere((triad) => triad.notation == splitString[1]);
 
     return Chord(root, triadType);
+  }
+
+  @override
+  String toString() {
+    String rootString = root.toString();
+    String result =
+        '${rootString.substring(0, rootString.length - 1)}:${triadType.notation}';
+    return result;
   }
 
   @override
@@ -35,7 +42,7 @@ class Chord {
   int get hashCode => root.hashCode ^ triadType.hashCode;
 
   List<Note> getNotes() {
-    switch(this.triadType) {
+    switch (this.triadType) {
       case TriadType.major:
         return [root, Note(root.noteNumber + 4), Note(root.noteNumber + 3)];
       case TriadType.minor:

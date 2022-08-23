@@ -6,6 +6,7 @@ import 'dart:developer';
 import 'package:country_codes/country_codes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -31,6 +32,7 @@ import 'package:the_baetles_chord_play/domain/use_case/remove_conductor_position
 import 'package:the_baetles_chord_play/domain/use_case/set_youtube_player_controller.dart';
 import 'package:the_baetles_chord_play/domain/use_case/sign_in_with_id_token.dart';
 import 'package:the_baetles_chord_play/presentation/bridge/bridge_view_model.dart';
+import 'package:the_baetles_chord_play/presentation/bridge/sheet_creation_dialog_view_model.dart';
 import 'package:the_baetles_chord_play/presentation/home/home_view_model.dart';
 import 'package:the_baetles_chord_play/presentation/loading/loading_view_model.dart';
 import 'package:the_baetles_chord_play/presentation/performance/performance_view_model.dart';
@@ -42,6 +44,7 @@ import 'package:the_baetles_chord_play/service/google_auth_service.dart';
 
 import 'domain/model/loop.dart';
 import 'domain/model/play_state.dart';
+import 'domain/use_case/create_sheet.dart';
 import 'domain/use_case/generate_video.dart';
 import 'domain/use_case/get_my_sheets_of_video.dart';
 import 'domain/use_case/get_nickname_suggestion.dart';
@@ -67,6 +70,12 @@ Future<void> main() async {
 
   bool hadSignedIn = FirebaseAuth.instance.currentUser != null &&
       await AuthRepository().login((await AuthRepository().fetchIdToken())!);
+
+  if (kDebugMode) {
+    if (hadSignedIn) {
+      print("sign up success");
+    }
+  }
 
   await CountryCodes.init();
 
@@ -110,16 +119,18 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => BridgeViewModel(
-              GetMySheetsOfVideo(
-                GetSheetsOfVideo(SheetRepository()),
-              ),
-              GetLikedSheetsOfVideo(
-                GetSheetsOfVideo(SheetRepository()),
-              ),
-              GetSharedSheetsOfVideo(
-                GetSheetsOfVideo(SheetRepository()),
-              ),
-              GenerateVideo(VideoRepository())),
+            GetMySheetsOfVideo(
+              GetSheetsOfVideo(SheetRepository()),
+            ),
+            GetLikedSheetsOfVideo(
+              GetSheetsOfVideo(SheetRepository()),
+            ),
+            GetSharedSheetsOfVideo(
+              GetSheetsOfVideo(SheetRepository()),
+            ),
+            GenerateVideo(VideoRepository()),
+            CreateSheet(SheetRepository()),
+          ),
         ),
         ChangeNotifierProvider(
           create: (_) => LoadingViewModel(
@@ -149,6 +160,11 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) {
             return SearchViewModel(SearchVideo(VideoRepository()));
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (_) {
+            return SheetCreationDialogViewModel();
           },
         )
       ],

@@ -18,10 +18,8 @@ class SearchViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  @override
-  void dispose() {
+  void reset() {
     _controller.clear();
     searchResult.clear();
-    super.dispose();
   }
 }

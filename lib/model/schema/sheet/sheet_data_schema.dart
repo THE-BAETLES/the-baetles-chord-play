@@ -22,6 +22,16 @@ class SheetDataSchema {
   factory SheetDataSchema.fromJson(Map<String, dynamic> json) =>
       _$SheetDataSchemaFromJson(json);
 
+  factory SheetDataSchema.fromSheetData(SheetData sheetData) {
+    return SheetDataSchema(
+      id: sheetData.id,
+      bpm: (sheetData.bpm).toInt(),
+      chordInfos: sheetData.chords.map((e) {
+        return ChordInfoSchema.fromChordBlock(e);
+      }).toList(),
+    );
+  }
+
   Map<String, dynamic> toJson() => _$SheetDataSchemaToJson(this);
 
   SheetData toSheetData() {

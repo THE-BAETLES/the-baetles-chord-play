@@ -21,6 +21,15 @@ class ChordInfoSchema {
   factory ChordInfoSchema.fromJson(Map<String, dynamic> json) =>
       _$ChordInfoSchemaFromJson(json);
 
+  factory ChordInfoSchema.fromChordBlock(ChordBlock chordBlock) {
+    return ChordInfoSchema(
+      chord: chordBlock.toString(),
+      start: (chordBlock.start).toInt(),
+      end: (chordBlock.end).toInt(),
+      position: chordBlock.position,
+    );
+  }
+
   Map<String, dynamic> toJson() => _$ChordInfoSchemaToJson(this);
 
   ChordBlock toChordBlock() {

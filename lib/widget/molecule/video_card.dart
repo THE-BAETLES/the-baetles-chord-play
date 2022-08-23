@@ -40,8 +40,13 @@ class VideoCard extends StatelessWidget {
             // header
             Container(
               child: ClipRRect(
-                child: Image.network(video.thumbnailPath,
-                    width: 186, height: 186, fit: BoxFit.cover),
+                child: Image.network(
+                  video.thumbnailPath,
+                  width: 186,
+                  height: 186,
+                  fit: BoxFit.cover,
+
+                ),
                 borderRadius: BorderRadius.vertical(
                   top: Radius.circular(4),
                 ),
@@ -78,7 +83,7 @@ class VideoCard extends StatelessWidget {
                       ),
                       Container(width: 20),
                       MusicSheetCount(
-                        count: 2422523,
+                        count: 0,
                         formatter: NumberFormat.compact(),
                       ),
                     ],

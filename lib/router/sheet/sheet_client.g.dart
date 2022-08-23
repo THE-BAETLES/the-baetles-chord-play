@@ -74,7 +74,7 @@ class _SheetClient implements SheetClient {
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<GetSheetDataResponse>(
             Options(method: 'GET', headers: _headers, extra: _extra)
-                .compose(_dio.options, '/sheets/${sheetId}',
+                .compose(_dio.options, '/sheets/${sheetId}/data',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = GetSheetDataResponse.fromJson(_result.data!);
@@ -82,7 +82,7 @@ class _SheetClient implements SheetClient {
   }
 
   @override
-  Future<PostSheetResponse> createSheetData(postSheetRequest) async {
+  Future<PostSheetResponse> postSheet(postSheetRequest) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -95,6 +95,23 @@ class _SheetClient implements SheetClient {
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = PostSheetResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<PostSheetDataResponse> postSheetData(postSheetDataRequest) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(postSheetDataRequest.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<PostSheetDataResponse>(
+            Options(method: 'POST', headers: _headers, extra: _extra)
+                .compose(_dio.options, '/sheets/data',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = PostSheetDataResponse.fromJson(_result.data!);
     return value;
   }
 

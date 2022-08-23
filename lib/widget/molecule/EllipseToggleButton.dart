@@ -10,6 +10,7 @@ class EllipseToggleButton extends StatefulWidget {
   final TextStyle textStyleOnActivated;
   final TextStyle textStyleOnInActivated;
   final BorderRadius borderRadius;
+  final bool autoToggle;
 
   EllipseToggleButton({
     Key? key,
@@ -19,6 +20,7 @@ class EllipseToggleButton extends StatefulWidget {
     required this.textStyleOnActivated,
     required this.textStyleOnInActivated,
     required this.borderRadius,
+    this.autoToggle = true,
   }) : super(key: key);
 
   @override
@@ -39,11 +41,13 @@ class _EllipseToggleButtonState extends State<EllipseToggleButton> {
         height: constraints.maxHeight,
         child: ElevatedButton(
           onPressed: () {
-            setState(() {
-              _isActivated = !_isActivated;
+            if (widget.autoToggle) {
+              setState(() {
+                _isActivated = !_isActivated;
+              });
+            }
 
-              widget.onPressed(_isActivated);
-            });
+            widget.onPressed(_isActivated);
           },
           style: ElevatedButton.styleFrom(
             primary: _isActivated ? AppColors.blue4E : Colors.white,
