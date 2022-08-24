@@ -122,14 +122,9 @@ class _PerformancePageState extends State<PerformancePage> {
               width: MediaQuery.of(context).size.width,
               child: SheetView(
                 currentPosition: viewModel.playState.currentPosition,
-                sheetData: viewModel.sheetState?.sheetData ??
-                    SheetData(
-                      id: 'hellodummy',
-                      bpm: 80,
-                      chords: [],
-                    ),
-                correctIndexes: viewModel.correctIndexes,
-                wrongIndexes: viewModel.wrongIndexes,
+                sheetData: (viewModel.sheetState?.sheetData)!,
+                correctIndexes: viewModel.correctIndexes.toList(),
+                wrongIndexes: viewModel.wrongIndexes.toList(),
                 onClick: (int tileIndex) {
                   viewModel.onTileClick(tileIndex);
                 },

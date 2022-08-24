@@ -37,8 +37,8 @@ class PerformanceViewModel with ChangeNotifier {
   final AddConductorPositionListener _addConductorPositionListener;
   final RemoveConductorPositionListener _removeConductorPositionListener;
   final SetYoutubePlayerController _setYoutubePlayerController;
-  final List<int> correctIndexes = [];
-  final List<int> wrongIndexes = [];
+  final Set<int> correctIndexes = {};
+  final Set<int> wrongIndexes = {};
 
   late final Function(PlayState) _conductorPositionCallback;
 

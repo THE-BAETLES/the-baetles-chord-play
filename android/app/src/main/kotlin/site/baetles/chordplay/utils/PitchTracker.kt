@@ -247,7 +247,9 @@ class PitchTracker(private var activity: Activity) : EventChannel.StreamHandler 
             tflInterpreter!!.runForMultipleInputsOutputs(inputArray, outputMap)
 
             // top 5 구하기
-            val validCount = 8
+            val validCount = 16
+            val limit = 6
+            val threshold = 2
 
             val restemp = outputMap[0] as Array<Array<FloatArray>>
             val result = IntArray(88)
@@ -260,8 +262,6 @@ class PitchTracker(private var activity: Activity) : EventChannel.StreamHandler 
                 }
             }
 
-            val limit = 6
-            val threshold = 2
             val playedChords = IntArray(88)
             var chordCount = 0
 

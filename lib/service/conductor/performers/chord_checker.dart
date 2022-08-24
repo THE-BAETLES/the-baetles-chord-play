@@ -19,6 +19,7 @@ class ChordChecker implements PerformerInterface {
   Function(int)? _onCorrectCallback;
   Function(int)? _onWrongCallback;
   int? _listeningPosition;
+  bool _isCurrentBeatCorrect = true;
 
   ChordChecker(this._sheetData);
 
@@ -79,8 +80,12 @@ class ChordChecker implements PerformerInterface {
     int currentPosition =
         (_playState!.currentPosition / 1000.0) ~/ _playState!.spb;
 
-    if (_listeningPosition != currentPosition && _listeningPosition != null) {
+    if (_listeningPosition != currentPosition &&
+        _listeningPosition != null &&
+        !_isCurrentBeatCorrect) {
       _onWrongCallback?.call(_listeningPosition!);
+      print("오답 : { index: ${_listeningPosition} }");
+      _listeningPosition = null;
     }
 
     if (_sheetData.chords.isEmpty ||
@@ -92,18 +97,22 @@ class ChordChecker implements PerformerInterface {
       return chordBlock.position <= currentPosition;
     });
 
-    if (currentPosition - lastBlock.position > _playState!.spb) {
+    if (currentPosition - lastBlock.position >= 1) {
       // 가장 최근의 코드가 이미 지나간 코드인 경우
       return;
     }
 
     if (_listeningPosition != currentPosition) {
       _listeningPosition = currentPosition;
+      _isCurrentBeatCorrect = false;
     }
 
     Set<int> simplifiedNotes =
         detectedNotes.map((note) => (note.keyNumber - 1) % 12 + 1).toSet();
-    List<int> answer = lastBlock.chord.getNotes().map((e) => (e.keyNumber - 1) % 12 + 1).toList();
+    List<int> answer = lastBlock.chord
+        .getNotes()
+        .map((e) => (e.keyNumber - 1) % 12 + 1)
+        .toList();
 
     bool isCorrect = true;
 
@@ -115,11 +124,9 @@ class ChordChecker implements PerformerInterface {
     }
 
     if (isCorrect) {
+      _isCurrentBeatCorrect = true;
       _onCorrectCallback?.call(currentPosition);
-      _listeningPosition = -1;
-      print("정답");
-    } else {
-      print("오답");
+      print("정답 : { index: ${currentPosition} }");
     }
   }
 
