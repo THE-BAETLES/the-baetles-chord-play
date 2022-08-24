@@ -83,11 +83,8 @@ class ChordChecker implements PerformerInterface {
     int currentPosition =
         (_playState!.currentPosition / 1000.0) ~/ _playState!.spb;
 
-    if (_listeningPosition != currentPosition) {
-      if (_listeningPosition != null) {
-        _onWrongCallback?.call(_listeningPosition!);
-      }
-      _listeningPosition = currentPosition;
+    if (_listeningPosition != currentPosition && _listeningPosition != null) {
+      _onWrongCallback?.call(_listeningPosition!);
     }
 
     if (_sheetData.chords.isEmpty ||
@@ -104,12 +101,16 @@ class ChordChecker implements PerformerInterface {
       return;
     }
 
-    Set<int> simplifiedNotes = detectedNotes.map((note) => note.keyNumber % 12).toSet();
+    if (_listeningPosition != currentPosition) {
+      _listeningPosition = currentPosition;
+    }
+
+    Set<int> simplifiedNotes =
+        detectedNotes.map((note) => note.keyNumber % 12).toSet();
     List<Note> answer = lastBlock.chord.getNotes();
 
     bool isCorrect = true;
 
-    // TODO : 최적화
     for (Note answerNote in answer) {
       if (!simplifiedNotes.contains(answerNote.keyNumber % 12)) {
         isCorrect = false;

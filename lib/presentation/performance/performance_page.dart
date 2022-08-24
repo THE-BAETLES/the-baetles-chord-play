@@ -49,6 +49,7 @@ class _PerformancePageState extends State<PerformancePage> {
       sheetData = arguments['sheetData'] as SheetData;
 
       PerformanceViewModel viewModel = context.read<PerformanceViewModel>();
+
       viewModel.initViewModel(
         video: video,
         sheetInfo: sheetInfo,

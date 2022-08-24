@@ -37,7 +37,7 @@ class SheetView extends StatelessWidget {
     final List<Widget> tileRows = [];
 
     int highlightedTileIndex = bps * currentPosition ~/ 1000;
-    int currentBlockIndex = 0;
+    int currentChordIndex = 0;
     int rowCount = sheetData.chords.isNotEmpty
         ? sheetData.chords.last.position ~/ beatPerRow + 1
         : 0;
@@ -54,39 +54,33 @@ class SheetView extends StatelessWidget {
 
         int tileIndexOfSheet = rowIndex * beatPerRow + tileIndex;
 
-        if (currentBlockIndex < sheetData.chords.length &&
-            tileIndexOfSheet == sheetData.chords[currentBlockIndex].position) {
+        Color borderColor = Colors.transparent;
 
-          Color borderColor = Colors.transparent;
+        if (correctIndexes.contains(tileIndexOfSheet)) {
+          borderColor = AppColors.blue71;
+        } else if (wrongIndexes.contains(tileIndexOfSheet)) {
+          borderColor = AppColors.redFF;
+        }
 
-          if (correctIndexes.contains(tileIndexOfSheet)) {
-            borderColor = AppColors.blue71;
-          } else if (wrongIndexes.contains(tileIndexOfSheet)) {
-            borderColor = AppColors.redFF;
-          }
+        bool hasChord = currentChordIndex < sheetData.chords.length &&
+            tileIndexOfSheet == sheetData.chords[currentChordIndex].position;
 
-          rowChildren.add(BeatTile(
-            chord: sheetData.chords[currentBlockIndex].chord,
-            isHighlighted: highlightedTileIndex == tileIndexOfSheet,
-            borderColor: borderColor,
-            onClick: () {
-              onClick?.call(tileIndexOfSheet);
-            },
-            onLongClick: () {
-              onLongClick?.call(tileIndexOfSheet);
-            },
-          ));
-          currentBlockIndex++;
-        } else {
-          rowChildren.add(BeatTile(
-            isHighlighted: highlightedTileIndex == tileIndexOfSheet,
-            onClick: () {
-              onClick?.call(tileIndexOfSheet);
-            },
-            onLongClick: () {
-              onLongClick?.call(tileIndexOfSheet);
-            },
-          ));
+        rowChildren.add(BeatTile(
+          chord: hasChord ? sheetData.chords[currentChordIndex].chord : null,
+          isHighlighted: highlightedTileIndex == tileIndexOfSheet,
+          borderColor: borderColor,
+          onClick: () {
+            onClick?.call(tileIndexOfSheet);
+          },
+          onLongClick: () {
+            onLongClick?.call(tileIndexOfSheet);
+          },
+        ));
+
+        while (currentChordIndex < sheetData.chords.length &&
+            tileIndexOfSheet == sheetData.chords[currentChordIndex].position) {
+          // 같은 포지션에 코드가 두 개 이상 있으면 두번째부터 무시함.
+          currentChordIndex++;
         }
       }
 

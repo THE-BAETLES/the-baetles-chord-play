@@ -21,6 +21,11 @@ class Note {
     return tryConvertKeyNumberToNoteName(keyNumber)!;
   }
 
+  String get noteNameWithoutOctave {
+    String nameWithOctave = noteName;
+    return nameWithOctave.substring(0, nameWithOctave.length - 1);
+  }
+
   int get noteNumber {
     return keyNumber + 20;
   }

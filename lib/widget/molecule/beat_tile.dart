@@ -42,7 +42,7 @@ class BeatTile extends StatelessWidget {
             color: isHighlighted ? AppColors.blue7F : Colors.white,
             child: Center(
               child: Text(
-                chord != null ? (chord?.root.noteName)! : '',
+                chord != null ? (chord?.root.noteNameWithoutOctave)! : '',
                 style: TextStyle(
                   fontSize: 20,
                   fontFamily: AppFontFamilies.pretendard,
