@@ -33,7 +33,7 @@ abstract class SheetClient extends RestClient{
   @GET('/sheets/{sheetId}')
   Future<GetSheetResponse> getSheet();
 
-  @GET('/sheets/{sheetId}/data')
+  @GET('/sheets/data/{sheetId}')
   Future<GetSheetDataResponse> getSheetData(@Path('sheetId') sheetId);
 
   @POST('/sheets')

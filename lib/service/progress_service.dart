@@ -6,7 +6,8 @@ import 'package:dio/dio.dart';
 
 class ProgressService {
   static final ProgressService _progressService = ProgressService._internal();
-  final baseUrl = dotenv.env['API_BASE_URL']!;
+  // final baseUrl = dotenv.env['API_BASE_URL']!;
+  final baseUrl = "https://api.baetles.site/v1";
   late String idToken;
 
   factory ProgressService() {

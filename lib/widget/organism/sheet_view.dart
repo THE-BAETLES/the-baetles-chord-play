@@ -59,9 +59,9 @@ class SheetView extends StatelessWidget {
 
           Color borderColor = Colors.transparent;
 
-          if (correctIndexes.contains(tileIndex)) {
+          if (correctIndexes.contains(tileIndexOfSheet)) {
             borderColor = AppColors.blue71;
-          } else if (wrongIndexes.contains(tileIndex)) {
+          } else if (wrongIndexes.contains(tileIndexOfSheet)) {
             borderColor = AppColors.redFF;
           }
 

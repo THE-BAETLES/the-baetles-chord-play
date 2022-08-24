@@ -8,8 +8,8 @@ part 'chord_info_schema.g.dart';
 @JsonSerializable()
 class ChordInfoSchema {
   String chord;
-  int start;
-  int end;
+  double start;
+  double end;
   int position;
 
   ChordInfoSchema(
@@ -24,8 +24,8 @@ class ChordInfoSchema {
   factory ChordInfoSchema.fromChordBlock(ChordBlock chordBlock) {
     return ChordInfoSchema(
       chord: chordBlock.toString(),
-      start: (chordBlock.start).toInt(),
-      end: (chordBlock.end).toInt(),
+      start: chordBlock.start,
+      end: chordBlock.end,
       position: chordBlock.position,
     );
   }
@@ -33,11 +33,12 @@ class ChordInfoSchema {
   Map<String, dynamic> toJson() => _$ChordInfoSchemaToJson(this);
 
   ChordBlock toChordBlock() {
+    List<String> splitString = chord.split(':');
     return ChordBlock(
-      Chord.fromString("${chord}3"),
+      Chord.fromString("${splitString[0]}3:${splitString[1]}"),
       position,
-      start as double,
-      end as double,
+      start,
+      end,
     );
   }
 }

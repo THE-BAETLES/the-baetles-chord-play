@@ -43,7 +43,7 @@ class SheetDataSchema {
 
     return SheetData(
       id: id,
-      bpm: bpm as double,
+      bpm: bpm.toDouble(),
       chords: chordBlocks,
     );
   }

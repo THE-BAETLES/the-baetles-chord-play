@@ -72,12 +72,12 @@ class _LoadingPageState extends State<LoadingPage> {
             Positioned(
               left: 0,
               top: 0,
-              child: Row(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   LinearProgressIndicator(
-                    value: viewModel.progress,
+                    value: viewModel.progress / 100.0,
                     semanticsLabel: 'Linear progress indicator',
                     color: Colors.black,
                   ),
