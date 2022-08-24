@@ -6,6 +6,7 @@ import 'package:the_baetles_chord_play/widget/atom/marker_stick.dart';
 
 import '../../domain/model/sheet_data.dart';
 import '../atom/app_colors.dart';
+import '../atom/chord_text.dart';
 
 class SheetView extends StatelessWidget {
   static const int beatPerWord = 4;
@@ -55,18 +56,34 @@ class SheetView extends StatelessWidget {
         int tileIndexOfSheet = rowIndex * beatPerRow + tileIndex;
 
         Color borderColor = Colors.transparent;
+        Color textColor = AppColors.black04;
 
         if (correctIndexes.contains(tileIndexOfSheet)) {
           borderColor = AppColors.blue71;
+          textColor = AppColors.blue71;
         } else if (wrongIndexes.contains(tileIndexOfSheet)) {
           borderColor = AppColors.redFF;
+          textColor = AppColors.redFF;
+        }
+
+        if (highlightedTileIndex == tileIndexOfSheet) {
+          textColor = Colors.white;
         }
 
         bool hasChord = currentChordIndex < sheetData.chords.length &&
             tileIndexOfSheet == sheetData.chords[currentChordIndex].position;
 
         rowChildren.add(BeatTile(
-          chord: hasChord ? sheetData.chords[currentChordIndex].chord : null,
+          child: hasChord
+              ? ChordText(
+                  root: sheetData.chords[currentChordIndex].chord.root
+                      .noteNameWithoutOctave,
+                  postfix: sheetData
+                      .chords[currentChordIndex].chord.triadType.shortNotation,
+                  rootColor: textColor,
+                  postfixColor: textColor,
+                )
+              : null,
           isHighlighted: highlightedTileIndex == tileIndexOfSheet,
           borderColor: borderColor,
           onClick: () {

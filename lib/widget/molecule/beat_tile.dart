@@ -5,7 +5,7 @@ import '../../domain/model/chord.dart';
 import '../atom/app_colors.dart';
 
 class BeatTile extends StatelessWidget {
-  final Chord? chord;
+  final Widget? child;
   final bool isHighlighted;
   final Color? borderColor;
   final Function()? onClick;
@@ -13,7 +13,7 @@ class BeatTile extends StatelessWidget {
 
   const BeatTile({
     Key? key,
-    this.chord,
+    this.child,
     this.isHighlighted = false,
     this.borderColor,
     this.onClick,
@@ -41,14 +41,7 @@ class BeatTile extends StatelessWidget {
             height: 40,
             color: isHighlighted ? AppColors.blue7F : Colors.white,
             child: Center(
-              child: Text(
-                chord != null ? (chord?.root.noteNameWithoutOctave)! : '',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontFamily: AppFontFamilies.pretendard,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
+              child: child,
             ),
           ),
         ),
