@@ -168,7 +168,7 @@ class HomePage extends StatelessWidget {
                   height: 32,
                   padding: EdgeInsets.all(5),
                   child: SvgPicture.asset(
-                    "assets/icons/ic_record.svg",
+                    "assets/icons/ic_record1.svg",
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -177,7 +177,7 @@ class HomePage extends StatelessWidget {
                   height: 32,
                   padding: EdgeInsets.all(5),
                   child: SvgPicture.asset(
-                    "assets/icons/ic_record.svg",
+                    "assets/icons/ic_record1.svg",
                     color: AppColors.blue4E,
                     fit: BoxFit.cover,
                   ),

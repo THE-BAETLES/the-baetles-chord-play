@@ -199,7 +199,7 @@ class _PerformancePageState extends State<PerformancePage> {
                   padding: const EdgeInsets.symmetric(horizontal: 2.0),
                   child: SvgToggleButton(
                     isToggled: false,
-                    iconPath: 'assets/icons/ic_record.svg',
+                    iconPath: 'assets/icons/ic_record2.svg',
                     text: 'Rec.',
                   ),
                 ),
