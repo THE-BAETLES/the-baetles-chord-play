@@ -78,7 +78,7 @@ class LoadingViewModel extends ChangeNotifier {
     }
   }
 
-  void onDispose() {
+  void reset() {
     _progress = 0;
     _sheetData = null;
   }
