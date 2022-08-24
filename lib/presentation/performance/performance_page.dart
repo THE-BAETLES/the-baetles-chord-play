@@ -15,6 +15,7 @@ import '../../widget/atom/app_colors.dart';
 import '../../widget/atom/app_font_families.dart';
 import '../../widget/organism/sheet_view.dart';
 import 'component/svg_toggle_button.dart';
+import 'component/transposition_button.dart';
 
 class PerformancePage extends StatefulWidget {
   const PerformancePage({Key? key}) : super(key: key);
@@ -74,14 +75,40 @@ class _PerformancePageState extends State<PerformancePage> {
           color: AppColors.black04,
         ),
         elevation: 0,
-        title: Text(sheetInfo.title,
-            style: TextStyle(
-              color: AppColors.black04,
-              fontFamily: AppFontFamilies.notosanskr,
-              fontWeight: FontWeight.w500,
-              fontSize: 14,
+        title: Text(
+          sheetInfo.title,
+          style: TextStyle(
+            color: AppColors.black04,
+            fontFamily: AppFontFamilies.notosanskr,
+            fontWeight: FontWeight.w500,
+            fontSize: 14,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        actions: [
+          Container(
+            width: 22,
+            height: 20.52,
+            child: SvgPicture.asset(
+              "assets/icons/ic_empty_heart.svg",
+              fit: BoxFit.contain,
             ),
-            textAlign: TextAlign.center),
+          ),
+          Container(
+            width: 16,
+          ),
+          Container(
+            width: 28,
+            height: 29,
+            child: SvgPicture.asset(
+              "assets/icons/ic_expansion.svg",
+              fit: BoxFit.contain,
+            ),
+          ),
+          Container(
+            width: 16,
+          ),
+        ],
       ),
       backgroundColor: AppColors.grayF5,
       body: Stack(
@@ -165,6 +192,22 @@ class _PerformancePageState extends State<PerformancePage> {
                     iconPath: 'assets/icons/ic_repeat.svg',
                     text: 'Repeat',
                   ),
+                ),
+                Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                    child: ToggleButton(
+                        isToggled: false,
+                        text: "tempo",
+                        icon: Text("X 1.0",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: AppFontFamilies.montserrat,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                            )))),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                  child: TranspositionButton(),
                 ),
               ],
             ),

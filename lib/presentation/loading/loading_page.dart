@@ -142,7 +142,6 @@ class _LoadingPageState extends State<LoadingPage> {
       DeviceOrientation.portraitUp,
     ]);
 
-    _viewModel.reset();
     super.dispose();
   }
 }
