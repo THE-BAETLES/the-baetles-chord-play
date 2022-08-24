@@ -41,6 +41,7 @@ import 'package:the_baetles_chord_play/presentation/sign_up/sign_up_view_model.d
 import 'package:the_baetles_chord_play/router/rest_client_factory.dart';
 import 'package:the_baetles_chord_play/service/conductor/youtube_conductor_service.dart';
 import 'package:the_baetles_chord_play/service/google_auth_service.dart';
+import 'package:the_baetles_chord_play/service/progress_service.dart';
 
 import 'domain/model/loop.dart';
 import 'domain/model/play_state.dart';
@@ -67,6 +68,9 @@ Future<void> main() async {
 
   // RestClientFactory initialize
   RestClientFactory();
+
+  // ProgressService initialize
+  ProgressService();
 
   bool hadSignedIn = FirebaseAuth.instance.currentUser != null &&
       await AuthRepository().login((await AuthRepository().fetchIdToken())!);

@@ -7,7 +7,7 @@ class Note {
 
   // region constructors
   Note(this.keyNumber) {
-    assert(1 <= keyNumber && keyNumber <= 88);
+    assert (1 <= keyNumber || keyNumber <= 88);
   }
 
   Note.fromNoteNumber(int noteNumber) : this(noteNumber - 20);

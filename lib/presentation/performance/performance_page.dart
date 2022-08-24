@@ -101,6 +101,7 @@ class _PerformancePageState extends State<PerformancePage> {
                       chords: [],
                     ),
                 correctIndexes: viewModel.correctIndexes,
+                wrongIndexes: viewModel.wrongIndexes,
                 onClick: (int tileIndex) {
                   viewModel.onTileClick(tileIndex);
                 },

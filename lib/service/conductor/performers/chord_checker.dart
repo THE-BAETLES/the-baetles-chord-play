@@ -17,6 +17,8 @@ class ChordChecker implements PerformerInterface {
   ConductorInterface? _conductor;
   PlayState? _playState;
   Function(int)? _onCorrectCallback;
+  Function(int)? _onWrongCallback;
+  int? _listeningPosition;
 
   ChordChecker(this._sheetData);
 
@@ -69,8 +71,24 @@ class ChordChecker implements PerformerInterface {
     _onCorrectCallback = null;
   }
 
+  void setOnWrongCallback(Function(int) callback) {
+    _onWrongCallback = callback;
+  }
+
+  void removeOnWrongCallback() {
+    _onWrongCallback = null;
+  }
+
   void _streamListenerCallback(List<Note> detectedNotes) {
-    int currentPosition = (_playState!.currentPosition / 1000.0) ~/ _playState!.spb;
+    int currentPosition =
+        (_playState!.currentPosition / 1000.0) ~/ _playState!.spb;
+
+    if (_listeningPosition != currentPosition) {
+      if (_listeningPosition != null) {
+        _onWrongCallback?.call(_listeningPosition!);
+      }
+      _listeningPosition = currentPosition;
+    }
 
     if (_sheetData.chords.isEmpty ||
         _sheetData.chords.first.position > currentPosition) {
@@ -86,12 +104,25 @@ class ChordChecker implements PerformerInterface {
       return;
     }
 
+    Set<int> simplifiedNotes = detectedNotes.map((note) => note.keyNumber % 12).toSet();
     List<Note> answer = lastBlock.chord.getNotes();
 
-    if (detectedNotes.toSet().containsAll(answer)) {
+    bool isCorrect = true;
+
+    // TODO : 최적화
+    for (Note answerNote in answer) {
+      if (!simplifiedNotes.contains(answerNote.keyNumber % 12)) {
+        isCorrect = false;
+        break;
+      }
+    }
+
+    if (isCorrect) {
       _onCorrectCallback?.call(currentPosition);
+      _listeningPosition = -1;
+      print("정답");
     } else {
-      _onCorrectCallback?.call(currentPosition);
+      print("오답");
     }
   }
 

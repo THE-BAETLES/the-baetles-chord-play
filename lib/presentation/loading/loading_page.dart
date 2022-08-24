@@ -49,16 +49,43 @@ class _LoadingPageState extends State<LoadingPage> {
           "/performance-page",
           arguments: {
             "video": video,
-            "sheetInfo": sheetInfo,
-            "sheetData": viewModel.sheetData
+            "sheetInfo": viewModel.sheetInfo,
+            "sheetData": viewModel.sheetData,
           },
         );
       });
     }
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: IconTheme.of(context).copyWith(
+          color: Colors.black,
+        ),
+      ),
       body: Container(
-        child: Text('로딩 ${video?.title} ${viewModel.progress}%...'),
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: Stack(
+          children: [
+            Positioned(
+              left: 0,
+              top: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  LinearProgressIndicator(
+                    value: viewModel.progress,
+                    semanticsLabel: 'Linear progress indicator',
+                    color: Colors.black,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -42,7 +42,7 @@ class BridgeViewModel with ChangeNotifier {
 
   UnmodifiableListView<SheetInfo>? get sharedSheets => _sharedSheets;
 
-  List<ChordBlock>? chordBlocksToDuplicate = null;  // 나중에 SheetBuilder로 분리
+  List<ChordBlock>? chordBlocksToDuplicate = null; // 나중에 SheetBuilder로 분리
 
   Video? get video => _video;
 
@@ -90,7 +90,8 @@ class BridgeViewModel with ChangeNotifier {
         ),
       );
 
-      SheetCreationDialogViewModel viewModel = context.read<SheetCreationDialogViewModel>();
+      SheetCreationDialogViewModel viewModel =
+          context.read<SheetCreationDialogViewModel>();
       viewModel.addOnCompleteCallback(onCompleteSettingSheetDetail);
       viewModel.addOnCancelCallback(onCancelSettingSheetDetail);
 
@@ -161,10 +162,16 @@ class BridgeViewModel with ChangeNotifier {
     );
   }
 
-  void onCompleteSettingSheetDetail(String title, double bpm) {
-    chordBlocksToDuplicate = null;
-    notifyListeners();
+  Future<void> onCompleteSettingSheetDetail(String title, double bpm) async {
+    await _createSheet(
+      videoId: _video!.id,
+      title: title,
+      bpm: bpm,
+      chords: chordBlocksToDuplicate!,
+    );
 
+    chordBlocksToDuplicate = null;
+    await _loadSheets(_video!);
   }
 
   void onCancelSettingSheetDetail() {

@@ -38,6 +38,7 @@ class PerformanceViewModel with ChangeNotifier {
   final RemoveConductorPositionListener _removeConductorPositionListener;
   final SetYoutubePlayerController _setYoutubePlayerController;
   final List<int> correctIndexes = [];
+  final List<int> wrongIndexes = [];
 
   late final Function(PlayState) _conductorPositionCallback;
 
@@ -114,7 +115,13 @@ class PerformanceViewModel with ChangeNotifier {
 
     _chordChecker = ChordChecker(sheetData);
     _chordChecker?.setOnCorrectCallback((correctPosition) {
-      correctIndexes.add(correctPosition ~/ (sheetData.bpm / 60.0));
+      correctIndexes.add(correctPosition);
+      wrongIndexes.remove(correctPosition);
+      notifyListeners();
+    });
+    _chordChecker?.setOnWrongCallback((wrongPosition) {
+      wrongIndexes.add(wrongPosition);
+      correctIndexes.remove(wrongPosition);
       notifyListeners();
     });
     _addPerformer(_chordChecker!);

@@ -50,7 +50,7 @@ class _SheetClient implements SheetClient {
   }
 
   @override
-  Future<GetSheetDataResponse> getAISheet() async {
+  Future<GetSheetDataResponse> getAISheet(videoId) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -58,7 +58,7 @@ class _SheetClient implements SheetClient {
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<GetSheetDataResponse>(
             Options(method: 'GET', headers: _headers, extra: _extra)
-                .compose(_dio.options, '/sheets/ai',
+                .compose(_dio.options, '/sheets/ai/${videoId}',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = GetSheetDataResponse.fromJson(_result.data!);

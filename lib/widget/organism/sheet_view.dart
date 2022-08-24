@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:the_baetles_chord_play/widget/molecule/beat_tile.dart';
 import 'package:the_baetles_chord_play/widget/atom/marker_stick.dart';
@@ -13,6 +14,7 @@ class SheetView extends StatelessWidget {
 
   final SheetData sheetData;
   final List<int> correctIndexes;
+  final List<int> wrongIndexes;
   final int currentPosition;
 
   final Function(int)? onClick;
@@ -23,6 +25,7 @@ class SheetView extends StatelessWidget {
     required this.sheetData,
     required this.currentPosition,
     required this.correctIndexes,
+    required this.wrongIndexes,
     this.onClick,
     this.onLongClick,
   }) : super(key: key);
@@ -53,12 +56,19 @@ class SheetView extends StatelessWidget {
 
         if (currentBlockIndex < sheetData.chords.length &&
             tileIndexOfSheet == sheetData.chords[currentBlockIndex].position) {
+
+          Color borderColor = Colors.transparent;
+
+          if (correctIndexes.contains(tileIndex)) {
+            borderColor = AppColors.blue71;
+          } else if (wrongIndexes.contains(tileIndex)) {
+            borderColor = AppColors.redFF;
+          }
+
           rowChildren.add(BeatTile(
             chord: sheetData.chords[currentBlockIndex].chord,
             isHighlighted: highlightedTileIndex == tileIndexOfSheet,
-            borderColor: correctIndexes.contains(tileIndexOfSheet)
-                ? AppColors.blue71
-                : null,
+            borderColor: borderColor,
             onClick: () {
               onClick?.call(tileIndexOfSheet);
             },

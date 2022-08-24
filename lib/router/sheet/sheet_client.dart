@@ -27,8 +27,8 @@ abstract class SheetClient extends RestClient{
   @GET('/sheets')
   Future<GetConditionSheetResponse> getSheetsByUserId();
 
-  @GET('/sheets/ai')
-  Future<GetSheetDataResponse> getAISheet();
+  @GET('/sheets/ai/{videoId}')
+  Future<GetSheetDataResponse> getAISheet(@Path("videoId") String videoId);
 
   @GET('/sheets/{sheetId}')
   Future<GetSheetResponse> getSheet();
