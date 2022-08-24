@@ -178,4 +178,12 @@ class BridgeViewModel with ChangeNotifier {
     chordBlocksToDuplicate = null;
     notifyListeners();
   }
+
+  void reset() {
+    _video = null;
+    _selectedInstrument = Instrument.guitar;
+    _tabBarOffset = 0;
+    _selectedSheet = null;
+    youtubePlayerController = null;
+  }
 }

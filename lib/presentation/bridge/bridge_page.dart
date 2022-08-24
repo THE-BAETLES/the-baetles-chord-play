@@ -16,8 +16,15 @@ import 'bridge_control_bar.dart';
 import 'bridge_sheet_list_view.dart';
 import 'bridge_view_model.dart';
 
-class BridgePage extends StatelessWidget {
+class BridgePage extends StatefulWidget {
   const BridgePage({Key? key}) : super(key: key);
+
+  @override
+  State<BridgePage> createState() => _BridgePageState();
+}
+
+class _BridgePageState extends State<BridgePage> {
+  BridgeViewModel? _viewModel;
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +79,17 @@ class BridgePage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    _viewModel = context.read<BridgeViewModel>();
+  }
+
+  @override
+  void dispose() {
+    _viewModel?.reset();
+    super.dispose();
   }
 
   Widget _tabController(BuildContext context, BridgeViewModel viewModel) {
