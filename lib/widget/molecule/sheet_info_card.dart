@@ -86,7 +86,7 @@ class SheetInfoCard extends StatelessWidget {
                     children: [
                       Container(
                         child: UserInfoView(
-                          userNickname: "chobe1",
+                          userNickname: "baetles",
                           userProfileImagePath:
                               "https://avatars.githubusercontent.com/u/40628765?v=4",
                         ),

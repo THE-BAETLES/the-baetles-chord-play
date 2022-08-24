@@ -267,8 +267,8 @@ class _PerformancePageState extends State<PerformancePage> {
     // Set portrait orientation
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
-      DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
     ]);
 
     SystemChrome.setEnabledSystemUIMode(

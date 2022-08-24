@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 import 'package:the_baetles_chord_play/presentation/loading/loading_view_model.dart';
 
-import '../../domain/model/chord.dart';
-import '../../domain/model/chord_block.dart';
-import '../../domain/model/note.dart';
-import '../../domain/model/sheet_data.dart';
-import '../../domain/model/triad_type.dart';
 import '../../domain/model/video.dart';
 import '../../domain/model/sheet_info.dart';
+import '../../widget/atom/app_colors.dart';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({Key? key}) : super(key: key);
@@ -26,6 +24,12 @@ class _LoadingPageState extends State<LoadingPage> {
   @override
   void initState() {
     super.initState();
+
+    // 가로 방향으로 고정함
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Map<String, dynamic> arguments =
@@ -57,6 +61,7 @@ class _LoadingPageState extends State<LoadingPage> {
     }
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -64,28 +69,60 @@ class _LoadingPageState extends State<LoadingPage> {
           color: Colors.black,
         ),
       ),
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: Stack(
-          children: [
-            Positioned(
+      body: Stack(
+        children: [
+          Container(
+            child: Positioned(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height -
+                  MediaQuery.of(context).padding.top,
               left: 0,
               top: 0,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  LinearProgressIndicator(
-                    value: viewModel.progress / 100.0,
-                    semanticsLabel: 'Linear progress indicator',
-                    color: Colors.black,
+                  SvgPicture.asset(
+                    "assets/icons/ic_guitar.svg",
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.contain,
+                  ),
+                  Container(
+                    height: 25,
+                  ),
+                  Container(
+                    child: Text(
+                      "배틀즈 봇이 열심히 악보를 분석하는 중...${viewModel.progress}%",
+                    ),
+                  ),
+                  Container(
+                    height: 16,
+                  ),
+                  Container(
+                    width: 340,
+                    padding: EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: AppColors.blue4E,
+                          width: 1,
+                        )),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: LinearProgressIndicator(
+                        value: viewModel.progress / 100.0,
+                        semanticsLabel: 'Linear progress indicator',
+                        color: AppColors.blue4E,
+                        backgroundColor: Colors.white,
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -99,6 +136,12 @@ class _LoadingPageState extends State<LoadingPage> {
 
   @override
   void dispose() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.portraitUp,
+    ]);
+
     _viewModel.onDispose();
     super.dispose();
   }

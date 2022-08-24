@@ -71,50 +71,6 @@ class LoadingViewModel extends ChangeNotifier {
     _sheetInfo = sheetInfo;
     _sheetData = await _getSheetData(sheetInfo.id);
     if (_sheetData == null) {
-      // _sheetData = SheetData(
-      //   id: '1234567',
-      //   bpm: 60,
-      //   chords: [
-      //     ChordBlock(
-      //       Chord.fromString("C2:maj"),
-      //       4,
-      //       4,
-      //       5,
-      //     ),
-      //     ChordBlock(
-      //       Chord.fromString("C2:maj"),
-      //       5,
-      //       5,
-      //       6,
-      //     ),
-      //     ChordBlock(
-      //       Chord.fromString("C2:maj"),
-      //       6,
-      //       6,
-      //       7,
-      //     ),
-      //     ChordBlock(
-      //       Chord.fromString("C2:maj"),
-      //       7,
-      //       7,
-      //       8,
-      //     ),
-      //     ChordBlock(
-      //       Chord.fromString("C2:maj"),
-      //       8,
-      //       8,
-      //       9,
-      //     ),
-      //     ChordBlock(
-      //       Chord.fromString("C3:maj"),
-      //       12,
-      //       12,
-      //       13,
-      //     ),
-      //   ],
-      // );
-      // _progress = 100;
-      // notifyListeners();
       ProgressService().start(video.id, onProgressHandler, sseDoneHandler);
     } else {
       _progress = 100;
