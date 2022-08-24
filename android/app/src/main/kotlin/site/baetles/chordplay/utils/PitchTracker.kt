@@ -2,15 +2,11 @@ package site.baetles.chordplay
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
 import android.content.res.AssetManager
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
-import android.net.ConnectivityManager
-import android.os.Build
 import android.util.Log
-import com.google.firebase.events.EventHandler
 import io.flutter.plugin.common.EventChannel
 import java.nio.BufferOverflowException
 import java.nio.ShortBuffer
@@ -22,8 +18,6 @@ import java.io.IOException
 import java.nio.BufferUnderflowException
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
-import android.net.NetworkCapabilities
-import android.net.NetworkRequest
 
 
 class PitchTracker(private var activity: Activity) : EventChannel.StreamHandler {
@@ -252,10 +246,13 @@ class PitchTracker(private var activity: Activity) : EventChannel.StreamHandler 
             // Run the model
             tflInterpreter!!.runForMultipleInputsOutputs(inputArray, outputMap)
 
+            // top 5 구하기
+            val validCount = 8
+
             val restemp = outputMap[0] as Array<Array<FloatArray>>
             val result = IntArray(88)
 
-            for (i in 0 until 32) {
+            for (i in 32 - validCount until 32) {
                 for (j in 0 until 88) {
                     if (restemp[0][i][j] > 0) {
                         result[j] = result[j] + 1
@@ -263,18 +260,33 @@ class PitchTracker(private var activity: Activity) : EventChannel.StreamHandler 
                 }
             }
 
-            val playedChords = IntArray(result.count { it > 0 })
+            val limit = 6
+            val threshold = 2
+            val playedChords = IntArray(88)
             var chordCount = 0
 
-            // Send Event
+            // 계수 정렬
+            var countToChordList: Array<IntArray> = Array(validCount + 1 ) { IntArray(88) }
+            var listSizeOfIdx: IntArray = IntArray(validCount + 1)
+
             for (i in 0 until 88) {
-                if (result[i] > 0) {
-                    playedChords[chordCount] = i + 1
+                countToChordList[result[i]][listSizeOfIdx[result[i]]] = i
+                listSizeOfIdx[result[i]]++
+            }
+
+            for (i in validCount downTo threshold) {
+                for (j in 0 until listSizeOfIdx[i]) {
+                    playedChords[chordCount] = countToChordList[i][j] + 1
                     chordCount++
+                }
+
+                if (chordCount >= limit) {
+                    break
                 }
             }
 
-            activity?.runOnUiThread { eventSink?.success(playedChords) }
+            // Send Event
+            activity?.runOnUiThread { eventSink?.success(playedChords.copyOfRange(0, chordCount)) }
 
             try {
                 Thread.sleep(minimumTimeBetweenSamplesInMS)

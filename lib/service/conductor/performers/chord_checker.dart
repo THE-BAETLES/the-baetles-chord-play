@@ -102,13 +102,13 @@ class ChordChecker implements PerformerInterface {
     }
 
     Set<int> simplifiedNotes =
-        detectedNotes.map((note) => note.keyNumber % 12).toSet();
-    List<Note> answer = lastBlock.chord.getNotes();
+        detectedNotes.map((note) => (note.keyNumber - 1) % 12 + 1).toSet();
+    List<int> answer = lastBlock.chord.getNotes().map((e) => (e.keyNumber - 1) % 12 + 1).toList();
 
     bool isCorrect = true;
 
-    for (Note answerNote in answer) {
-      if (!simplifiedNotes.contains(answerNote.keyNumber % 12)) {
+    for (int answerNote in answer) {
+      if (!simplifiedNotes.contains(answerNote)) {
         isCorrect = false;
         break;
       }

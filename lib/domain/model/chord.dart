@@ -44,9 +44,9 @@ class Chord {
   List<Note> getNotes() {
     switch (this.triadType) {
       case TriadType.major:
-        return [root, Note(root.noteNumber + 4), Note(root.noteNumber + 3)];
+        return [root, Note(root.keyNumber + 4), Note(root.keyNumber + 7)];
       case TriadType.minor:
-        return [root, Note(root.noteNumber + 3), Note(root.noteNumber + 4)];
+        return [root, Note(root.keyNumber + 3), Note(root.keyNumber + 7)];
       default:
         if (kDebugMode) {
           print("warning! undefined triadType for method 'getNotes'");
