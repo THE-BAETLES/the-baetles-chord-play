@@ -235,7 +235,7 @@ class _PerformancePageState extends State<PerformancePage> {
                     isToggled: viewModel.isPitchBeingChecked,
                     iconPath: 'assets/icons/ic_check2.svg',
                     text: 'Check On',
-                    onClick: () => viewModel.onCheckButtonClicked(),
+                    onClick: viewModel.onCheckButtonClicked,
                   ),
                 ),
                 Padding(

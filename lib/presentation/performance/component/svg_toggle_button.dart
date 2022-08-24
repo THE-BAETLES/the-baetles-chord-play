@@ -28,6 +28,7 @@ class SvgToggleButton extends StatelessWidget {
     return ToggleButton(
       isToggled: isToggled,
       text: text,
+      onClick: onClick,
       icon: SvgPicture.asset(
         iconPath,
         width: iconWidth,

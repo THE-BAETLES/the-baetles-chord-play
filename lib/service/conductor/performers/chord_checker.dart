@@ -30,11 +30,7 @@ class ChordChecker implements PerformerInterface {
 
   @override
   Future<bool> syncPlayStateAndReady(PlayState playState) async {
-    if (playState.isPlaying && !_pitchTracker.hasListener) {
-      start();
-    } else if (!playState.isPlaying && _pitchTracker.hasListener) {
-      pause();
-    }
+    _playState = playState;
 
     return true;
   }

@@ -226,13 +226,14 @@ class PitchTracker(private var activity: Activity) : EventChannel.StreamHandler 
             recordingBufferLock.lock()
 
             try {
-                if (recordingBuffer.hasRemaining()) {
-                    continue
+                val elemCount = recordingBuffer.position()
+
+                for (i in elemCount until inputBuffer.size) {
+                    inputBuffer[i - elemCount] = inputBuffer[i]
                 }
 
                 recordingBuffer.flip()
-                recordingBuffer.limit(inputBuffer.size)
-                recordingBuffer.get(inputBuffer)
+                recordingBuffer.get(inputBuffer, inputBuffer.size - elemCount, elemCount)
                 recordingBuffer.clear()
             } catch (e: BufferUnderflowException) {
                 Log.w(logTag, "recording buffer underflow.")
