@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:the_baetles_chord_play/controller/pitch_tracker/pitch_tracker.dart';
+import 'package:the_baetles_chord_play/domain/model/chord_block.dart';
 import 'package:the_baetles_chord_play/domain/model/play_state.dart';
 import 'package:the_baetles_chord_play/domain/use_case/add_conductor_position_listener.dart';
 import 'package:the_baetles_chord_play/domain/use_case/remove_conductor_position_listener.dart';
@@ -7,7 +8,9 @@ import 'package:the_baetles_chord_play/domain/use_case/set_youtube_player_contro
 import 'package:the_baetles_chord_play/presentation/performance/sheet_state.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../../domain/model/chord.dart';
 import '../../domain/model/loop.dart';
+import '../../domain/model/note.dart';
 import '../../domain/model/sheet_data.dart';
 import '../../domain/model/sheet_info.dart';
 import '../../domain/model/video.dart';
@@ -29,6 +32,7 @@ class PerformanceViewModel with ChangeNotifier {
   SheetState? _sheetState;
   bool _isPitchBeingChecked = false;
   bool _isMuted = false;
+  int? _editingPosition;
 
   YoutubePlayerController? _youtubeController;
 
@@ -49,6 +53,8 @@ class PerformanceViewModel with ChangeNotifier {
   SheetState? get sheetState => _sheetState;
   bool get isMuted => _isMuted;
   bool get isPitchBeingChecked => _isPitchBeingChecked;
+  bool get isEditing => _editingPosition != null;
+  Note? get editingRoot => (_sheetState?.sheetData.chords.cast<ChordBlock?>())?.firstWhere((element) => element?.position == _editingPosition, orElse: () => null)?.chord.root;
 
   YoutubePlayerController? get youtubePlayerController => _youtubeController;
 
@@ -154,7 +160,8 @@ class PerformanceViewModel with ChangeNotifier {
   }
 
   void onTileLongClick(int tileIndex) {
-    // TODO : 코드 변경
+    _editingPosition = tileIndex;
+    notifyListeners();
   }
 
   void reset() {
@@ -190,4 +197,24 @@ class PerformanceViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  void onCancelEdit() {
+    _editingPosition = null;
+  }
+
+  void onApplyEdit(Chord chord) {
+    int? index = _sheetState!.sheetData.chords.indexWhere((element) => element.position >= _editingPosition!);
+
+    double spb = 1 / (_sheetState!.sheetData.bpm / 60.0);
+    ChordBlock newChord = ChordBlock(chord, _editingPosition!, _editingPosition! * spb, (_editingPosition! + 1) * spb);
+
+    if (index == -1) {
+      _sheetState?.sheetData.chords.add(newChord);
+    } else if (_sheetState!.sheetData.chords[index].position == _editingPosition) {
+      _sheetState?.sheetData.chords[index] = newChord;
+    } else {
+      _sheetState?.sheetData.chords.insert(index, newChord);
+    }
+
+    _editingPosition = null;
+  }
 }

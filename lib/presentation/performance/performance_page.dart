@@ -2,17 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:the_baetles_chord_play/domain/model/triad_type.dart';
 import 'package:the_baetles_chord_play/presentation/performance/component/toggle_button.dart';
 import 'package:the_baetles_chord_play/presentation/performance/performance_view_model.dart';
 import 'package:the_baetles_chord_play/domain/model/play_state.dart';
 import 'package:the_baetles_chord_play/widget/atom/youtube_video_player.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../../domain/model/chord.dart';
+import '../../domain/model/note.dart';
 import '../../domain/model/sheet_data.dart';
 import '../../domain/model/sheet_info.dart';
 import '../../domain/model/video.dart';
 import '../../widget/atom/app_colors.dart';
 import '../../widget/atom/app_font_families.dart';
+import '../../widget/molecule/EllipseToggleButton.dart';
 import '../../widget/organism/sheet_view.dart';
 import 'component/svg_toggle_button.dart';
 import 'component/transposition_button.dart';
@@ -44,7 +48,10 @@ class _PerformancePageState extends State<PerformancePage> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Map<String, dynamic> arguments =
-          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      ModalRoute
+          .of(context)!
+          .settings
+          .arguments as Map<String, dynamic>;
       video = arguments['video'] as Video;
       sheetInfo = arguments["sheetInfo"] as SheetInfo;
       sheetData = arguments['sheetData'] as SheetData;
@@ -68,7 +75,7 @@ class _PerformancePageState extends State<PerformancePage> {
     return Scaffold(
       appBar: AppBar(
         systemOverlayStyle:
-            const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+        const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
         toolbarHeight: 52,
         backgroundColor: Colors.white,
         iconTheme: const IconThemeData(
@@ -118,8 +125,14 @@ class _PerformancePageState extends State<PerformancePage> {
             top: 0,
             left: 0,
             child: Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width,
               child: SheetView(
                 currentPosition: viewModel.playState.currentPosition,
                 sheetData: (viewModel.sheetState?.sheetData)!,
@@ -141,9 +154,43 @@ class _PerformancePageState extends State<PerformancePage> {
               viewModel.play,
               viewModel.stop,
               viewModel.moveCurrentPosition,
-              context.read<PerformanceViewModel>().playState,
+              context
+                  .read<PerformanceViewModel>()
+                  .playState,
               viewModel.youtubePlayerController,
               viewModel,
+            ),
+          ),
+          Visibility(
+            visible: viewModel.isEditing,
+            child: Positioned(
+              left: 0,
+              top: 0,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width,
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height,
+              child: Dialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: SizedBox(
+                  width: 200,
+                  height: 200,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _chordRow(Note((viewModel.editingRoot?.keyNumber ?? 12) - 1), viewModel),
+                      _chordRow(viewModel.editingRoot, viewModel),
+                      _chordRow(Note((viewModel.editingRoot?.keyNumber ?? 12) + 1), viewModel),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
         ],
@@ -151,8 +198,7 @@ class _PerformancePageState extends State<PerformancePage> {
     );
   }
 
-  Widget _controlBar(
-      BuildContext context,
+  Widget _controlBar(BuildContext context,
       void Function() play,
       void Function() stop,
       void Function(int) move,
@@ -161,7 +207,10 @@ class _PerformancePageState extends State<PerformancePage> {
       final PerformanceViewModel viewModel) {
     return Container(
       height: 62,
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
       color: AppColors.gray34,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -189,17 +238,20 @@ class _PerformancePageState extends State<PerformancePage> {
                   ),
                 ),
                 Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                    child: ToggleButton(
-                        isToggled: false,
-                        text: "tempo",
-                        icon: Text("X 1.0",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: AppFontFamilies.montserrat,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w700,
-                            )))),
+                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                  child: ToggleButton(
+                    isToggled: false,
+                    text: "tempo",
+                    icon: Text("X 1.0",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: AppFontFamilies.montserrat,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 2.0),
                   child: TranspositionButton(),
@@ -276,9 +328,9 @@ class _PerformancePageState extends State<PerformancePage> {
             },
             child: playState.isPlaying
                 ? SvgPicture.asset("assets/icons/ic_pause.svg",
-                    width: 22, height: 22)
+                width: 22, height: 22)
                 : SvgPicture.asset("assets/icons/ic_play2.svg",
-                    width: 22, height: 22),
+                width: 22, height: 22),
           ),
           GestureDetector(
             onTap: () {
@@ -289,6 +341,79 @@ class _PerformancePageState extends State<PerformancePage> {
             child: SvgPicture.asset("assets/icons/ic_next_2.svg",
                 width: 26, height: 30),
           )
+        ],
+      ),
+    );
+  }
+
+  Widget _chordRow(Note? note, PerformanceViewModel viewModel) {
+    return Container(
+      width: 300,
+      height: 44,
+      margin: EdgeInsets.symmetric(
+        vertical: 10,
+        horizontal: 18,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            flex: 1,
+            child: EllipseToggleButton(
+              text: "${note?.noteNameWithoutOctave} minor",
+              initState: false,
+              onPressed: (_) =>
+                  viewModel.onApplyEdit(
+                    Chord(
+                      note!,
+                      TriadType.minor,
+                    ),
+                  ),
+              textStyleOnActivated: TextStyle(
+                fontFamily: AppFontFamilies.pretendard,
+                fontWeight: FontWeight.w400,
+                color: Colors.white,
+                fontSize: 14,
+              ),
+              textStyleOnInActivated: TextStyle(
+                fontFamily: AppFontFamilies.pretendard,
+                fontWeight: FontWeight.w400,
+                color: AppColors.black04,
+                fontSize: 14,
+              ),
+              borderRadius: BorderRadius.circular(23),
+            ),
+          ),
+          SizedBox(
+            width: 8,
+          ),
+          Expanded(
+            flex: 1,
+            child: EllipseToggleButton(
+              text: "${note?.noteNameWithoutOctave} major",
+              initState: false,
+              onPressed: (_) =>
+                  viewModel.onApplyEdit(
+                    Chord(
+                      note!,
+                      TriadType.major,
+                    ),
+                  ),
+              textStyleOnActivated: TextStyle(
+                fontFamily: AppFontFamilies.pretendard,
+                fontWeight: FontWeight.w400,
+                color: Colors.white,
+                fontSize: 14,
+              ),
+              textStyleOnInActivated: TextStyle(
+                fontFamily: AppFontFamilies.pretendard,
+                fontWeight: FontWeight.w400,
+                color: AppColors.black04,
+                fontSize: 14,
+              ),
+              borderRadius: BorderRadius.circular(23),
+            ),
+          ),
         ],
       ),
     );

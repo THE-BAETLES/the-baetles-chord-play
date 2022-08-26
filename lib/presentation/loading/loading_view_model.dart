@@ -69,61 +69,61 @@ class LoadingViewModel extends ChangeNotifier {
 
   void loadSheet(Video video, SheetInfo sheetInfo) async {
     _sheetInfo = sheetInfo;
-    // _sheetData = await _getSheetData(sheetInfo.id);
+    _sheetData = await _getSheetData(sheetInfo.id);
     if (_sheetData == null) {
-      _sheetData = SheetData(id: "1234", bpm: 60, chords: [
-        ChordBlock(
-          Chord.fromString("C3:maj"),
-          3,
-          3,
-          4,
-        ),
-        ChordBlock(
-          Chord.fromString("C3:maj"),
-          4,
-          4,
-          5,
-        ),
-        ChordBlock(
-          Chord.fromString("C3:maj"),
-          5,
-          5,
-          6,
-        ),
-        ChordBlock(
-          Chord.fromString("C3:maj"),
-          6,
-          6,
-          7,
-        ),
-        ChordBlock(
-          Chord.fromString("C3:min"),
-          13,
-          13,
-          14,
-        ),
-        ChordBlock(
-          Chord.fromString("C3:min"),
-          14,
-          14,
-          15,
-        ),
-        ChordBlock(
-          Chord.fromString("C3:min"),
-          15,
-          15,
-          16,
-        ),
-        ChordBlock(
-          Chord.fromString("C3:min"),
-          16,
-          16,
-          17,
-        ),
-      ]);
-      _progress = 100;
-      notifyListeners();
-      // ProgressService().start(video.id, onProgressHandler, sseDoneHandler);
+      // _sheetData = SheetData(id: "1234", bpm: 60, chords: [
+      //   ChordBlock(
+      //     Chord.fromString("C3:maj"),
+      //     3,
+      //     3,
+      //     4,
+      //   ),
+      //   ChordBlock(
+      //     Chord.fromString("C3:maj"),
+      //     4,
+      //     4,
+      //     5,
+      //   ),
+      //   ChordBlock(
+      //     Chord.fromString("C3:maj"),
+      //     5,
+      //     5,
+      //     6,
+      //   ),
+      //   ChordBlock(
+      //     Chord.fromString("C3:maj"),
+      //     6,
+      //     6,
+      //     7,
+      //   ),
+      //   ChordBlock(
+      //     Chord.fromString("C3:min"),
+      //     13,
+      //     13,
+      //     14,
+      //   ),
+      //   ChordBlock(
+      //     Chord.fromString("C3:min"),
+      //     14,
+      //     14,
+      //     15,
+      //   ),
+      //   ChordBlock(
+      //     Chord.fromString("C3:min"),
+      //     15,
+      //     15,
+      //     16,
+      //   ),
+      //   ChordBlock(
+      //     Chord.fromString("C3:min"),
+      //     16,
+      //     16,
+      //     17,
+      //   ),
+      // ]);
+      // _progress = 100;
+      // notifyListeners();
+      ProgressService().start(video.id, onProgressHandler, sseDoneHandler);
     } else {
       _progress = 100;
       notifyListeners();
