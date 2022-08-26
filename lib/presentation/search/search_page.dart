@@ -103,14 +103,11 @@ class _SearchPageState extends State<SearchPage> {
 
     for (Video video in viewModel.searchResult) {
       videoBlocks.add(
-        ClipRRect(
-          borderRadius: BorderRadius.circular(4),
-          child: VideoBlock(
-            video: video,
-            onClick: (Video video) {
-              Navigator.pushNamed(context, "/bridge-page", arguments: video);
-            },
-          ),
+        VideoBlock(
+          video: video,
+          onClick: (Video video) {
+            Navigator.pushNamed(context, "/bridge-page", arguments: video);
+          },
         ),
       );
     }

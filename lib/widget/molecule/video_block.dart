@@ -21,21 +21,24 @@ class VideoBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onClick?.call(video),
+      onTap: (() => onClick?.call(video)),
       child: Container(
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-        height: 82,
+        height: 90,
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints contstraints) {
             return Row(
               children: [
                 Stack(
                   children: [
-                    VideoThumbnail(
-                      thumbnailPath: video.thumbnailPath,
-                      width: 72,
-                      height: 72,
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: VideoThumbnail(
+                        thumbnailPath: video.thumbnailPath,
+                        width: 72,
+                        height: 72,
+                      ),
                     ),
                     Positioned(
                       child: DurationBadge(
