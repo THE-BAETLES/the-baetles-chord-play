@@ -77,7 +77,7 @@ class SheetView extends StatelessWidget {
           child: hasChord
               ? ChordText(
                   root: sheetData.chords[currentChordIndex].chord.root
-                      .noteNameWithoutOctave,
+                      .flatNoteNameWithoutOctave,
                   postfix: sheetData
                       .chords[currentChordIndex].chord.triadType.shortNotation,
                   rootColor: textColor,

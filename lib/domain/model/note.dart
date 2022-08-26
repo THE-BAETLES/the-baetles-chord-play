@@ -22,8 +22,26 @@ class Note {
     return tryConvertKeyNumberToNoteName(keyNumber)!;
   }
 
+  String get flatNoteName {
+    String noteName = this.noteName;
+
+    if (noteName.length >= 3) {
+      int upperPitch = (keyNumber + 9) % 12;
+      String upperPitchName = _pitchNames[upperPitch];
+
+      noteName = "${upperPitchName}♭${noteName[2]}";
+    }
+
+    return noteName;
+  }
+
   String get noteNameWithoutOctave {
     String nameWithOctave = noteName;
+    return nameWithOctave.substring(0, nameWithOctave.length - 1);
+  }
+
+  String get flatNoteNameWithoutOctave {
+    String nameWithOctave = flatNoteName;
     return nameWithOctave.substring(0, nameWithOctave.length - 1);
   }
 
