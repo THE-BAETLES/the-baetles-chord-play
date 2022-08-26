@@ -69,61 +69,181 @@ class LoadingViewModel extends ChangeNotifier {
 
   void loadSheet(Video video, SheetInfo sheetInfo) async {
     _sheetInfo = sheetInfo;
-    _sheetData = await _getSheetData(sheetInfo.id);
+    // _sheetData = await _getSheetData(sheetInfo.id);
     if (_sheetData == null) {
-      // _sheetData = SheetData(id: "1234", bpm: 60, chords: [
-      //   ChordBlock(
-      //     Chord.fromString("C3:maj"),
-      //     3,
-      //     3,
-      //     4,
-      //   ),
-      //   ChordBlock(
-      //     Chord.fromString("C3:maj"),
-      //     4,
-      //     4,
-      //     5,
-      //   ),
-      //   ChordBlock(
-      //     Chord.fromString("C3:maj"),
-      //     5,
-      //     5,
-      //     6,
-      //   ),
-      //   ChordBlock(
-      //     Chord.fromString("C3:maj"),
-      //     6,
-      //     6,
-      //     7,
-      //   ),
-      //   ChordBlock(
-      //     Chord.fromString("C3:min"),
-      //     13,
-      //     13,
-      //     14,
-      //   ),
-      //   ChordBlock(
-      //     Chord.fromString("C3:min"),
-      //     14,
-      //     14,
-      //     15,
-      //   ),
-      //   ChordBlock(
-      //     Chord.fromString("C3:min"),
-      //     15,
-      //     15,
-      //     16,
-      //   ),
-      //   ChordBlock(
-      //     Chord.fromString("C3:min"),
-      //     16,
-      //     16,
-      //     17,
-      //   ),
-      // ]);
-      // _progress = 100;
-      // notifyListeners();
-      ProgressService().start(video.id, onProgressHandler, sseDoneHandler);
+      _sheetData = SheetData(id: "1234", bpm: 117, chords: [
+        ChordBlock(
+          Chord.fromString("E3:maj"),
+          0,
+          0,
+          1,
+        ),
+        ChordBlock(
+          Chord.fromString("A3:maj"),
+          4,
+          4,
+          5,
+        ),
+        ChordBlock(
+          Chord.fromString("B3:maj"),
+          8,
+          8,
+          9,
+        ),
+        ChordBlock(
+          Chord.fromString("A3:maj"),
+          12,
+          12,
+          13,
+        ),
+        ChordBlock(
+          Chord.fromString("E3:maj"),
+          16,
+          16,
+          17,
+        ),
+        ChordBlock(
+          Chord.fromString("A3:maj"),
+          20,
+          20,
+          21,
+        ),
+        ChordBlock(
+          Chord.fromString("E3:maj"),
+          24,
+          24,
+          25,
+        ),
+        ChordBlock(
+          Chord.fromString("B3:maj"),
+          27,
+          27,
+          28,
+        ),
+        ChordBlock(
+          Chord.fromString("A3:maj"),
+          28,
+          28,
+          29,
+        ),
+        ChordBlock(
+          Chord.fromString("E3:maj"),
+          32,
+          32,
+          33,
+        ),
+        ChordBlock(
+          Chord.fromString("A3:maj"),
+          36,
+          36,
+          37,
+        ),
+        ChordBlock(
+          Chord.fromString("B3:maj"),
+          40,
+          40,
+          41,
+        ),
+        ChordBlock(
+          Chord.fromString("A3:maj"),
+          44,
+          44,
+          45,
+        ),
+        ChordBlock(
+          Chord.fromString("E3:maj"),
+          48,
+          48,
+          49,
+        ),
+        ChordBlock(
+          Chord.fromString("A3:maj"),
+          52,
+          52,
+          53,
+        ),
+        ChordBlock(
+          Chord.fromString("E3:maj"),
+          56,
+          56,
+          57,
+        ),
+        ChordBlock(
+          Chord.fromString("B3:maj"),
+          59,
+          59,
+          60,
+        ),
+        ChordBlock(
+          Chord.fromString("A3:maj"),
+          60,
+          60,
+          61,
+        ),
+        ChordBlock(
+          Chord.fromString("E3:maj"),
+          64,
+          64,
+          65,
+        ),
+        ChordBlock(
+          Chord.fromString("G3:maj"),
+          66,
+          66,
+          67,
+        ),
+        ChordBlock(
+          Chord.fromString("A3:maj"),
+          68,
+          68,
+          69,
+        ),
+        ChordBlock(
+          Chord.fromString("C3:maj"),
+          70,
+          70,
+          71,
+        ),
+        ChordBlock(
+          Chord.fromString("D3:maj"),
+          72,
+          72,
+          73,
+        ),
+        ChordBlock(
+          Chord.fromString("A3:maj"),
+          76,
+          76,
+          77,
+        ),
+        ChordBlock(
+          Chord.fromString("E3:maj"),
+          80,
+          80,
+          81,
+        ),
+        ChordBlock(
+          Chord.fromString("A3:maj"),
+          84,
+          84,
+          85,
+        ),
+        ChordBlock(
+          Chord.fromString("B3:maj"),
+          88,
+          88,
+          89,
+        ),
+        ChordBlock(
+          Chord.fromString("E3:maj"),
+          92,
+          92,
+          93,
+        ),
+      ]);
+      _progress = 100;
+      notifyListeners();
+      // ProgressService().start(video.id, onProgressHandler, sseDoneHandler);
     } else {
       _progress = 100;
       notifyListeners();
