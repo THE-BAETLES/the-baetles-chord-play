@@ -1,9 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="site.baetles.chordplay">
-   <application
-        android:label="the_baetles_chord_play"
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <application
+        android:label="Chord Play"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"

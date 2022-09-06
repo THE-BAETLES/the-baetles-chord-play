@@ -20,8 +20,12 @@ class SignInPage extends StatelessWidget {
             height: 80,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                AppLogo(),
+              children: [
+                Container(
+                  width: 100,
+                  height: 100,
+                  child: AppLogo(),
+                )
               ],
             ),
           ),

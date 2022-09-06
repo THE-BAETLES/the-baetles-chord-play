@@ -6,7 +6,9 @@ class AppColors {
   static const blue4E = Color(0xFF4E54FF);
   static const blue9C = Color(0xFF9CA0FF);
   static const blue7F = Color(0xFF7F80B1);
+  static const blue71 = Color(0xFF7176FF);
   static const black04 = Color(0xFF040404);
+  static const black00 = Color(0x80000000);
   static const redFF = Color(0xFFFF6767);
   static const grayD2 = Color(0xFFD2D2D8);
   static const gray80 = Color(0xFF80829A);
@@ -20,5 +22,6 @@ class AppColors {
   static const grayE9 = Color(0xFFE9E9E9);
   static const grayF5 = Color(0xFFF5F5F5);
   static const shadowB5 = Color(0x41B5BF85);
+  static const shadowA1 = Color(0x1AA1A1A1);
   static const shadow94 = Color(0x41949494);
 }

@@ -1,9 +1,8 @@
-import '../../service/conductor/conductor_service.dart';
+import 'package:the_baetles_chord_play/service/conductor/conductor_interface.dart';
 import '../model/loop.dart';
-import '../model/play_state.dart';
 
 class UpdatePlayState {
-  final ConductorService _conductorService;
+  final ConductorInterface _conductorService;
 
   UpdatePlayState(this._conductorService);
 
@@ -15,7 +14,7 @@ class UpdatePlayState {
     Loop? loop,
     int? capo,
   }) async {
-    _conductorService.updatePlayState(
+    _conductorService.syncPlayState(
       isPlaying: isPlaying,
       currentPosition: currentPosition,
       tempo: tempo,

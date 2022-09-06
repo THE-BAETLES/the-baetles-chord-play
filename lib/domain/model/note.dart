@@ -2,12 +2,13 @@ import 'dart:developer';
 
 class Note {
   static final _pitchNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+  // static final _pitchNames = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
 
   final int keyNumber;
 
   // region constructors
   Note(this.keyNumber) {
-    assert(1 <= keyNumber && keyNumber <= 88);
+    assert (1 <= keyNumber || keyNumber <= 88);
   }
 
   Note.fromNoteNumber(int noteNumber) : this(noteNumber - 20);
@@ -19,6 +20,11 @@ class Note {
   // region getters
   String get noteName {
     return tryConvertKeyNumberToNoteName(keyNumber)!;
+  }
+
+  String get noteNameWithoutOctave {
+    String nameWithOctave = noteName;
+    return nameWithOctave.substring(0, nameWithOctave.length - 1);
   }
 
   int get noteNumber {

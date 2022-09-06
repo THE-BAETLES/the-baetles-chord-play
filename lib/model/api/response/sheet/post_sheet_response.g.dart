@@ -10,7 +10,7 @@ PostSheetResponse _$PostSheetResponseFromJson(Map<String, dynamic> json) =>
     PostSheetResponse(
       json['code'] as String,
       json['message'] as String,
-      json['data'] as int,
+      SheetSchema.fromJson(json['data'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PostSheetResponseToJson(PostSheetResponse instance) =>

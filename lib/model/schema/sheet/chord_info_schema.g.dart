@@ -9,8 +9,8 @@ part of 'chord_info_schema.dart';
 ChordInfoSchema _$ChordInfoSchemaFromJson(Map<String, dynamic> json) =>
     ChordInfoSchema(
       chord: json['chord'] as String,
-      start: json['start'] as int,
-      end: json['end'] as int,
+      start: json['start'],
+      end: json['end'],
       position: json['position'] as int,
     );
 

@@ -26,19 +26,18 @@ class AuthRepository {
     required String idToken,
     required String country,
     required PerformerGrade performerGrade,
-    required List<Video> earlyFavoriteSongs,
+    required List<String> earlyFavoriteSongs,
     required String nickname,
     required Gender gender,
 }) async {
-    // return (await _remoteDataSource.signUp(
-    //   idToken: idToken,
-    //   country: country.toUpperCase(),
-    //   performerGrade: performerGrade.name.toUpperCase(),
-    //   earlyFavoriteSongs: earlyFavoriteSongs.map((e) => e.toJson()).toList(),
-    //   nickname: nickname,
-    //   gender: gender.name.toUpperCase(),
-    // ));
-    return true;
+    return (await _remoteDataSource.signUp(
+      idToken: idToken,
+      country: country.toUpperCase(),
+      performerGrade: performerGrade.name.toUpperCase(),
+      earlyFavoriteSongs: earlyFavoriteSongs,
+      nickname: nickname,
+      gender: gender.name.toUpperCase(),
+    ));
   }
 
   Future<String?>? fetchIdToken({bool forceRefresh = false}) async {
@@ -55,8 +54,11 @@ class AuthRepository {
   }
 
   Future<String> getNicknameSuggestion() async {
-    // return await _remoteDataSource
-    //     .getNicknameSuggestion((await fetchIdToken())!);
-    return "";
+    return await _remoteDataSource
+        .getNicknameSuggestion((await fetchIdToken())!);
+  }
+
+  String? getUserNickname() {
+    return FirebaseAuth.instance.currentUser?.displayName;
   }
 }

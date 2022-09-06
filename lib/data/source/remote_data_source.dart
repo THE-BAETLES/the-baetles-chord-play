@@ -9,9 +9,9 @@ class RemoteDataSource {
   // singleton instance
   static final RemoteDataSource _instance = RemoteDataSource._internal();
 
-  static const apiServerHost = "52.78.232.241";
-  static const portNumber = "8080";
-  static const httpUriHead = "http://${apiServerHost}:${portNumber}";
+  static const apiServerHost = "api.baetles.site";
+  static const versionPath = "v1";
+  static const httpUriHead = "https://${apiServerHost}/${versionPath}";
   static const contentType = "content-type";
   static const acceptType = "accept";
   static const jsonType = "application/json";
@@ -45,8 +45,6 @@ class RemoteDataSource {
       },
     );
 
-    print(response.body);
-
     return response.statusCode == ok;
   }
 
@@ -54,7 +52,7 @@ class RemoteDataSource {
     required String idToken,
     required String country,
     required String performerGrade,
-    required List<Map<String, dynamic>> earlyFavoriteSongs,
+    required List<String> earlyFavoriteSongs,
     required String nickname,
     required String gender,
   }) async {
@@ -68,7 +66,7 @@ class RemoteDataSource {
       body: jsonEncode({
         "country": country,
         "performer_grade": performerGrade,
-        "earlyFavoriteSongs": earlyFavoriteSongs,
+        "sign_favorite": earlyFavoriteSongs,
         "nickname": nickname,
         "gender": gender
       }),

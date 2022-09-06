@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 import 'package:the_baetles_chord_play/presentation/loading/loading_view_model.dart';
 
-import '../../domain/model/chord.dart';
-import '../../domain/model/chord_block.dart';
-import '../../domain/model/note.dart';
-import '../../domain/model/sheet_data.dart';
-import '../../domain/model/triad_type.dart';
 import '../../domain/model/video.dart';
 import '../../domain/model/sheet_info.dart';
+import '../../widget/atom/app_colors.dart';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({Key? key}) : super(key: key);
@@ -21,10 +19,17 @@ class LoadingPage extends StatefulWidget {
 class _LoadingPageState extends State<LoadingPage> {
   Video? video;
   SheetInfo? sheetInfo;
+  late LoadingViewModel _viewModel;
 
   @override
   void initState() {
     super.initState();
+
+    // 가로 방향으로 고정함
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Map<String, dynamic> arguments =
@@ -35,6 +40,8 @@ class _LoadingPageState extends State<LoadingPage> {
       LoadingViewModel viewModel = context.read<LoadingViewModel>();
       viewModel.loadSheet(video!, sheetInfo!);
     });
+
+    _viewModel = context.read<LoadingViewModel>();
   }
 
   @override
@@ -46,29 +53,95 @@ class _LoadingPageState extends State<LoadingPage> {
           "/performance-page",
           arguments: {
             "video": video,
-            "sheetInfo": sheetInfo,
-            "sheetData": SheetData(bpm: 30, chords: [
-              ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 25, 12.213696067, 13.560453428),
-              ChordBlock(Chord(Note.fromNoteName('G#3'), TriadType.major), 28, 13.606893337, 14.489251608),
-              ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 30, 14.535691517, 16.997006694),
-              ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 35, 17.043446603, 18.11156451),
-              ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 300, 17.043446603, 18.11156451),
-            ]),
+            "sheetInfo": viewModel.sheetInfo,
+            "sheetData": viewModel.sheetData,
           },
         );
       });
     }
 
     return Scaffold(
-      body: Container(
-        child: Text('로딩 ${video?.title} ${viewModel.progress}%...'),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: IconTheme.of(context).copyWith(
+          color: Colors.black,
+        ),
+      ),
+      body: Stack(
+        children: [
+          Container(
+            child: Positioned(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height -
+                  MediaQuery.of(context).padding.top,
+              left: 0,
+              top: 0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(
+                    "assets/icons/ic_guitar.svg",
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.contain,
+                  ),
+                  Container(
+                    height: 25,
+                  ),
+                  Container(
+                    child: Text(
+                      "배틀즈 봇이 열심히 악보를 분석하는 중...${viewModel.progress}%",
+                    ),
+                  ),
+                  Container(
+                    height: 16,
+                  ),
+                  Container(
+                    width: 340,
+                    padding: EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: AppColors.blue4E,
+                          width: 1,
+                        )),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: LinearProgressIndicator(
+                        value: viewModel.progress / 100.0,
+                        semanticsLabel: 'Linear progress indicator',
+                        color: AppColors.blue4E,
+                        backgroundColor: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _viewModel = context.read<LoadingViewModel>();
+  }
+
+  @override
   void dispose() {
-    context.read<LoadingViewModel>().onDispose();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.portraitUp,
+    ]);
+
     super.dispose();
   }
 }

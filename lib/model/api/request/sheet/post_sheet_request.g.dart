@@ -8,15 +8,13 @@ part of 'post_sheet_request.dart';
 
 PostSheetRequest _$PostSheetRequestFromJson(Map<String, dynamic> json) =>
     PostSheetRequest(
-      sheetData:
-          SheetDataSchema.fromJson(json['sheetData'] as Map<String, dynamic>),
-      sheet: RequestSheetInfo.fromJson(json['sheet'] as Map<String, dynamic>),
+      requestSheetInfo: RequestSheetInfo.fromJson(
+          json['requestSheetInfo'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PostSheetRequestToJson(PostSheetRequest instance) =>
     <String, dynamic>{
-      'sheetData': instance.sheetData,
-      'sheet': instance.sheet,
+      'requestSheetInfo': instance.requestSheetInfo,
     };
 
 RequestSheetInfo _$RequestSheetInfoFromJson(Map<String, dynamic> json) =>

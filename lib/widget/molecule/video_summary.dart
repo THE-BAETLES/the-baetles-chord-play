@@ -8,13 +8,20 @@ import '../atom/app_colors.dart';
 
 class VideoSummary extends StatelessWidget {
   final Video video;
+  final int titleMaxLines;
+  final double width;
 
-  const VideoSummary({Key? key, required this.video}) : super(key: key);
+  const VideoSummary({
+    Key? key,
+    required this.video,
+    required this.titleMaxLines,
+    required this.width,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      width: width,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -30,21 +37,18 @@ class VideoSummary extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                   overflow: TextOverflow.ellipsis,
-                  maxLines: 3,
+                  maxLines: titleMaxLines,
                 ),
               );
             },
           ),
-
-          Container(height: 6),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 "${video.singer} | ${video.genre}",
                 style: const TextStyle(
-                  fontSize: 12,
+                  fontSize: 11,
                   fontFamily: AppFontFamilies.notosanskr,
                   color: AppColors.gray80,
                 ),

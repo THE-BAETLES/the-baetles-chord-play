@@ -27,26 +27,58 @@ class VideoSchema {
   @JsonKey(name: 'length')
   int length;
 
-  @JsonKey(name: 'difficultyAvg')
+  @JsonKey(name: 'difficulty_avg')
   int difficultyAvg;
 
   @JsonKey(name: 'play_count')
   int playCount;
 
-  VideoSchema(
-      {required this.id,
-      required this.thumbnailPath,
-      required this.title,
-      required this.genre,
-      required this.singer,
-      required this.tags,
-      required this.length,
-      required this.difficultyAvg,
-      required this.playCount});
+  // @JsonKey(name: 'sheet_count')
+  // int sheetCount;
+
+  VideoSchema({
+    required this.id,
+    required this.thumbnailPath,
+    required this.title,
+    required this.genre,
+    required this.singer,
+    required this.tags,
+    required this.length,
+    required this.difficultyAvg,
+    required this.playCount,
+  });
 
   factory VideoSchema.fromJson(Map<String, dynamic> json) =>
       _$VideoSchemaFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$VideoSchemaToJson(this);
+
+  factory VideoSchema.fromVideo(Video video) {
+    return VideoSchema(
+      id: video.id,
+      thumbnailPath: video.thumbnailPath,
+      title: video.title,
+      genre: video.genre,
+      singer: video.singer,
+      tags: video.tags,
+      length: video.length,
+      difficultyAvg: video.difficultyAvg,
+      playCount: video.playCount,
+    );
+  }
+
+  Video toVideo() {
+    return Video(
+      id: id,
+      thumbnailPath: thumbnailPath,
+      title: title,
+      genre: genre,
+      singer: singer,
+      tags: tags,
+      length: length,
+      difficultyAvg: difficultyAvg,
+      playCount: playCount,
+    );
+  }
 }

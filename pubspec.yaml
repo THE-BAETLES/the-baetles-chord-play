@@ -26,10 +26,10 @@ environment:
 # dependencies can be manually updated by changing the version numbers below to
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
+
 dependencies:
   flutter:
     sdk: flutter
-
   retrofit: '>=3.0.0 <4.0.0'
   logger: any
 
@@ -39,6 +39,7 @@ dependencies:
   youtube_player_flutter: ^8.1.0
   flutter_svg: ^1.0.3
   flutter_native_splash: ^2.2.4
+  flutter_launcher_icons: ^0.10.0
   shared_preferences: ^2.0.15
   provider: ^6.0.3
   fluttertoast: ^8.0.9
@@ -48,16 +49,22 @@ dependencies:
   country_codes: ^2.2.0
   stop_watch_timer: ^1.5.0
   mutex: ^3.0.0
+  flutter_dotenv: ^5.0.2
+  json_annotation: ^4.6.0
+
+  flutter_client_sse:
+    git:
+      url: https://github.com/pratikbaid3/flutter_client_sse
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   english_words: ^4.0.0
+  permission_handler: ^8.3.0
 
 dev_dependencies:
   test: ^1.21.1
   change_app_package_name: ^1.1.0
-
   flutter_test:
     sdk: flutter
 
@@ -88,6 +95,7 @@ flutter:
     - assets/icons/
     - assets/fonts/
     - assets/images/
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -176,7 +184,7 @@ flutter_native_splash:
 
   # The image parameter allows you to specify an image used in the splash screen.  It must be a
   # png file and should be sized for 4x pixel density.
-  #image: assets/splash.png
+  # image: assets/splash.png
 
   # The branding property allows you to specify an image used as branding in the splash screen.
   # It must be a png file. Currently, it is only supported for Android < v12 and iOS.

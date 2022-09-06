@@ -94,55 +94,67 @@ void main() {
       Chord chord4 = Chord(Note.fromNoteName("A#0"), TriadType.augmented);
       expect(chord4.chordName, "A#aug");
 
+      Chord chord5 = Chord.fromString("D#4:maj");
+      expect(chord1, chord5);
+
+      Chord chord6 = Chord.fromString("C2:min");
+      expect(chord2, chord6);
+
+      Chord chord7 = Chord.fromString("G#3:dim");
+      expect(chord3, chord7);
+
+      Chord chord8 = Chord.fromString("A#0:aug");
+      expect(chord4, chord8);
+
       print("Chord model test complete");
     });
   });
 
-  group('ChordBlock model test', () {
-    test('json to instance', () {
-      String json =
-      """{
-  "bpm": 120,
-  "chord_infos": [
-    {
-      "chord": "F#:maj",
-      "end": 13.560453428,
-      "position": 25,
-      "start": 12.213696067
-    },
-    {
-      "chord": "G#:maj",
-      "end": 14.489251608,
-      "position": 28,
-      "start": 13.606893337
-    },
-    {
-      "chord": "A#:maj",
-      "end": 16.997006694,
-      "position": 30,
-      "start": 14.535691517
-    },
-    {
-      "chord": "F#:maj",
-      "end": 18.11156451,
-      "position": 35,
-      "start": 17.043446603
-    },
-    {
-      "chord": "G#:maj",
-      "end": 18.993922781,
-      "position": 37,
-      "start": 18.158004419
-    },
-    {
-      "chord": "A#:maj",
-      "end": 21.548117776,
-      "position": 39,
-      "start": 19.04036269
-    },
-  ],
-}""";
-
-
-  });
+  // group('ChordBlock model test', () {
+  //   test('json to instance', () {
+//       String json =
+//       """{
+//   "bpm": 120,
+//   "chord_infos": [
+//     {
+//       "chord": "F#:maj",
+//       "end": 13.560453428,
+//       "position": 25,
+//       "start": 12.213696067
+//     },
+//     {
+//       "chord": "G#:maj",
+//       "end": 14.489251608,
+//       "position": 28,
+//       "start": 13.606893337
+//     },
+//     {
+//       "chord": "A#:maj",
+//       "end": 16.997006694,
+//       "position": 30,
+//       "start": 14.535691517
+//     },
+//     {
+//       "chord": "F#:maj",
+//       "end": 18.11156451,
+//       "position": 35,
+//       "start": 17.043446603
+//     },
+//     {
+//       "chord": "G#:maj",
+//       "end": 18.993922781,
+//       "position": 37,
+//       "start": 18.158004419
+//     },
+//     {
+//       "chord": "A#:maj",
+//       "end": 21.548117776,
+//       "position": 39,
+//       "start": 19.04036269
+//     },
+//   ],
+// }""";
+//
+//
+//   });
 }
