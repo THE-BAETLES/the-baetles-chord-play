@@ -59,19 +59,14 @@ Future<void> main() async {
   // Represent splash page
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-
   // Firebase initialize
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
   await dotenv.load(fileName: '.env');
-
   // RestClientFactory initialize
   RestClientFactory();
-
   // ProgressService initialize
   ProgressService();
-
   bool hadSignedIn = FirebaseAuth.instance.currentUser != null &&
       await AuthRepository().login((await AuthRepository().fetchIdToken())!);
 
@@ -80,11 +75,8 @@ Future<void> main() async {
       print("sign up success");
     }
   }
-
   await CountryCodes.init();
-
   FlutterNativeSplash.remove();
-
   runApp(MyApp(hadSignedIn));
 }
 
