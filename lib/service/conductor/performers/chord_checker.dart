@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:the_baetles_chord_play/domain/model/play_state.dart';
+import 'package:the_baetles_chord_play/domain/model/play_option.dart';
 import 'package:the_baetles_chord_play/service/conductor/conductor_interface.dart';
 import 'package:the_baetles_chord_play/service/conductor/performer_interface.dart';
 
@@ -15,10 +15,11 @@ class ChordChecker implements PerformerInterface {
   final SheetData _sheetData;
 
   ConductorInterface? _conductor;
-  PlayState? _playState;
+  PlayOption? _playOption;
   Function(int)? _onCorrectCallback;
   Function(int)? _onWrongCallback;
   int? _listeningPosition;
+  int? _currentPosition;
   bool _isCurrentBeatCorrect = true;
 
   ChordChecker(this._sheetData);
@@ -26,12 +27,12 @@ class ChordChecker implements PerformerInterface {
   @override
   Future<void> onAttachConductor(ConductorInterface conductor) async {
     _conductor = conductor;
-    _conductor!.addCurrentPositionListener(_updatePlayState);
+    _conductor!.addCurrentPositionListener(_updateCurrentPosition);
   }
 
   @override
-  Future<bool> syncPlayStateAndReady(PlayState playState) async {
-    _playState = playState;
+  Future<bool> syncPlayOptionAndReady(PlayOption playState) async {
+    _playOption = playState;
 
     return true;
   }
@@ -47,9 +48,9 @@ class ChordChecker implements PerformerInterface {
       _pitchTracker.detachStreamListener();
     }
 
-    _conductor!.removeCurrentPositionListener(_updatePlayState);
+    _conductor!.removeCurrentPositionListener(_updateCurrentPosition);
     _conductor = null;
-    _playState = null;
+    _playOption = null;
   }
 
   void start() {
@@ -78,7 +79,7 @@ class ChordChecker implements PerformerInterface {
 
   void _streamListenerCallback(List<Note> detectedNotes) {
     int currentPosition =
-        (_playState!.currentPosition / 1000.0) ~/ _playState!.spb;
+        (_currentPosition! / 1000.0) ~/ _playOption!.spb;
 
     if (_listeningPosition != currentPosition &&
         _listeningPosition != null &&
@@ -130,7 +131,7 @@ class ChordChecker implements PerformerInterface {
     }
   }
 
-  void _updatePlayState(PlayState playState) {
-    _playState = playState;
+  void _updateCurrentPosition(int currentPosition) {
+    _currentPosition = currentPosition;
   }
 }

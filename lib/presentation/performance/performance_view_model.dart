@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_baetles_chord_play/controller/pitch_tracker/pitch_tracker.dart';
 import 'package:the_baetles_chord_play/domain/model/chord_block.dart';
-import 'package:the_baetles_chord_play/domain/model/play_state.dart';
+import 'package:the_baetles_chord_play/domain/model/play_option.dart';
 import 'package:the_baetles_chord_play/domain/use_case/add_conductor_position_listener.dart';
 import 'package:the_baetles_chord_play/domain/use_case/remove_conductor_position_listener.dart';
 import 'package:the_baetles_chord_play/domain/use_case/set_youtube_player_controller.dart';
@@ -15,58 +15,62 @@ import '../../domain/model/sheet_data.dart';
 import '../../domain/model/sheet_info.dart';
 import '../../domain/model/video.dart';
 import '../../domain/use_case/add_performer.dart';
-import '../../domain/use_case/update_play_state.dart';
+import '../../domain/use_case/move_play_position.dart';
+import '../../domain/use_case/update_play_option.dart';
 import '../../service/conductor/performers/call_performer.dart';
 import '../../service/conductor/performers/chord_checker.dart';
 
 class PerformanceViewModel with ChangeNotifier {
-  PlayState _playState = PlayState(
+  ValueNotifier<PlayOption> _playOption = ValueNotifier(PlayOption(
     isPlaying: false,
-    currentPosition: 0,
     tempo: 1,
     defaultBpm: 80,
     loop: Loop(0, -1),
     capo: 0,
-  );
+  ));
 
+  final ValueNotifier<int> _currentPosition = ValueNotifier(0);  // millisecond
   SheetState? _sheetState;
-  bool _isPitchBeingChecked = false;
-  bool _isMuted = false;
+  final ValueNotifier<bool> _isPitchBeingChecked = ValueNotifier(false);
+  final ValueNotifier<bool> _isMuted = ValueNotifier(false);
   int? _editingPosition;
 
   YoutubePlayerController? _youtubeController;
 
   final AddPerformer _addPerformer;
-  final UpdatePlayState _updatePlayState;
+  final UpdatePlayOption _updatePlayOption;
+  final MovePlayPosition _movePlayPosition;
   final AddConductorPositionListener _addConductorPositionListener;
   final RemoveConductorPositionListener _removeConductorPositionListener;
   final SetYoutubePlayerController _setYoutubePlayerController;
   final Set<int> correctIndexes = {};
   final Set<int> wrongIndexes = {};
 
-  late final Function(PlayState) _conductorPositionCallback;
+  late final Function(int) _conductorPositionCallback;
 
-  CallPerformer _callPerformer = CallPerformer();
+  PlayOptionCallbackPerformer _callbackPerformer = PlayOptionCallbackPerformer();
   ChordChecker? _chordChecker;
 
-  PlayState get playState => _playState;
+  ValueNotifier<PlayOption> get playOption => _playOption;
+  ValueNotifier<int> get currentPosition => _currentPosition;
   SheetState? get sheetState => _sheetState;
-  bool get isMuted => _isMuted;
-  bool get isPitchBeingChecked => _isPitchBeingChecked;
+  ValueNotifier<bool> get isMuted => _isMuted;
+  ValueNotifier<bool> get isPitchBeingChecked => _isPitchBeingChecked;
   bool get isEditing => _editingPosition != null;
   Note? get editingRoot => (_sheetState?.sheetData.chords.cast<ChordBlock?>())?.firstWhere((element) => element?.position == _editingPosition, orElse: () => null)?.chord.root;
 
   YoutubePlayerController? get youtubePlayerController => _youtubeController;
 
   PerformanceViewModel(
-    this._updatePlayState,
+    this._updatePlayOption,
+    this._movePlayPosition,
     this._addPerformer,
     this._addConductorPositionListener,
     this._removeConductorPositionListener,
     this._setYoutubePlayerController,
   ) {
-    _conductorPositionCallback = ((PlayState playState) {
-      _playState = playState;
+    _conductorPositionCallback = ((int position) {
+      _currentPosition.value = position;
       notifyListeners();
     });
   }
@@ -76,16 +80,15 @@ class PerformanceViewModel with ChangeNotifier {
     required final SheetInfo sheetInfo,
     required final SheetData sheetData,
   }) {
-    print("test1: init model!");
-
-    _playState = PlayState(
+    _playOption.value = PlayOption(
       isPlaying: false,
-      currentPosition: 0,
       tempo: 1.0,
       defaultBpm: sheetData.bpm,
       loop: Loop(0, -1),
       capo: 0,
     );
+
+    _currentPosition.value = 0;
 
     _sheetState = SheetState(
       sheetInfo: sheetInfo,
@@ -98,26 +101,26 @@ class PerformanceViewModel with ChangeNotifier {
         autoPlay: false,
         enableCaption: false,
         hideControls: true,
-        mute: isMuted,
+        mute: isMuted.value,
       ),
     );
 
     _setYoutubePlayerController(_youtubeController!);
 
-    _updatePlayState(
-      isPlaying: false,
-      currentPosition: 0,
-      tempo: 1.0,
-      defaultBpm: sheetData.bpm,
-      loop: Loop(0, -1),
-      capo: 0,
+    _updatePlayOption(
+      isPlaying: _playOption.value.isPlaying,
+      tempo: _playOption.value.tempo,
+      defaultBpm: _playOption.value.defaultBpm,
+      loop: _playOption.value.loop,
+      capo: _playOption.value.capo,
     );
 
-    _callPerformer.setCallback((PlayState playState) {
-      _playState = playState;
+    _callbackPerformer.setCallback((PlayOption playOption) {
+      _playOption.value = playOption;
       notifyListeners();
     });
-    _addPerformer(_callPerformer);
+
+    _addPerformer(_callbackPerformer);
 
     _chordChecker = ChordChecker(sheetData);
     _chordChecker?.setOnCorrectCallback((correctPosition) {
@@ -135,28 +138,28 @@ class PerformanceViewModel with ChangeNotifier {
     _addConductorPositionListener(_conductorPositionCallback);
   }
 
-  void play({int? playAt}) {
-    _updatePlayState(isPlaying: true, currentPosition: playAt);
+  void play() {
+    _updatePlayOption(isPlaying: true);
   }
 
-  void stop({int? stopAt}) {
-    _updatePlayState(isPlaying: false, currentPosition: stopAt);
+  void stop() {
+    _updatePlayOption(isPlaying: false);
   }
 
   void moveCurrentPosition(int amount) {
-    int dest = _playState.currentPosition + amount;
+    int dest = _currentPosition.value + amount;
 
     if (dest < 0) {
       dest = 0;
     }
 
-    _updatePlayState(currentPosition: dest);
+    _movePlayPosition(position: dest);
   }
 
   void onTileClick(int tileIndex) {
-    double bps = _playState.defaultBpm / 60.0;
+    double bps = _playOption.value.defaultBpm / 60.0;
     double spb = 1 / bps;
-    _updatePlayState(currentPosition: (tileIndex * spb).toInt() * 1000);
+    _movePlayPosition(position: (tileIndex * spb).toInt() * 1000);
   }
 
   void onTileLongClick(int tileIndex) {
@@ -169,14 +172,14 @@ class PerformanceViewModel with ChangeNotifier {
     _youtubeController = null;
     _chordChecker?.pause();
 
-    _isPitchBeingChecked = false;
-    _isMuted = false;
+    _isPitchBeingChecked.value = false;
+    _isMuted.value = false;
   }
 
   void onCheckButtonClicked() {
-    _isPitchBeingChecked = !_isPitchBeingChecked;
+    _isPitchBeingChecked.value = !_isPitchBeingChecked.value;
 
-    if (_isPitchBeingChecked) {
+    if (_isPitchBeingChecked.value) {
       _chordChecker?.start();
     } else {
       _chordChecker?.pause();
@@ -186,9 +189,9 @@ class PerformanceViewModel with ChangeNotifier {
   }
 
   void onMuteButtonClicked() {
-    _isMuted = !_isMuted;
+    _isMuted.value = !_isMuted.value;
 
-    if (_isMuted) {
+    if (_isMuted.value) {
       youtubePlayerController?.mute();
     } else {
       youtubePlayerController?.unMute();

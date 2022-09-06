@@ -8,7 +8,7 @@ import 'package:the_baetles_chord_play/service/conductor/conductor_interface.dar
 import 'package:the_baetles_chord_play/service/conductor/performer_interface.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-import '../../domain/model/play_state.dart';
+import '../../domain/model/play_option.dart';
 
 class YoutubeConductorService implements ConductorInterface {
   static const Duration syncPeriod = Duration(milliseconds: 30);
@@ -18,35 +18,34 @@ class YoutubeConductorService implements ConductorInterface {
 
   final Mutex lock = Mutex();
 
-  late PlayState _playState;
+  late PlayOption _playOption;
   final ValueNotifier<int> _currentPosition = ValueNotifier(0); // ms
-  final List<Function(PlayState)> _onPositionChangeCallbacks = [];
+  final List<Function(int)> _onPositionChangeCallbacks = [];
   Timer? _timer;
 
-  YoutubeConductorService({required final PlayState initialPlayState}) {
-    _playState = initialPlayState;
+  YoutubeConductorService({required final PlayOption initialPlayOption}) {
+    _playOption = initialPlayOption;
 
-    syncPlayState();
+    syncPlayOption();
   }
 
   Future<void> setYoutubeController(
     final YoutubePlayerController controller,
   ) async {
     _youtubeController = controller;
-    await syncPlayState();
+    await syncPlayOption();
   }
 
   @override
   Future<void> addPerformer(PerformerInterface performer) async {
     performers.add(performer);
     performer.onAttachConductor(this);
-    await syncPlayState();
+    await syncPlayOption();
   }
 
   @override
-  Future<bool> syncPlayState({
+  Future<bool> syncPlayOption({
     bool? isPlaying,
-    int? currentPosition,
     double? tempo,
     double? defaultBpm,
     Loop? loop,
@@ -59,20 +58,19 @@ class YoutubeConductorService implements ConductorInterface {
     }
 
     try {
-      PlayState newPlayState = _playState.copy(
+      PlayOption newPlayOption = _playOption.copy(
         isPlaying: isPlaying,
-        currentPosition: currentPosition ?? (_currentPosition.value),
         tempo: tempo,
         defaultBpm: defaultBpm,
         loop: loop,
         capo: capo,
       );
 
-      _syncPlayStateWithPerformers(performers, newPlayState);
+      _syncPlayOptionWithPerformers(performers, newPlayOption);
 
-      _syncPlayStateWithYoutubeController(_youtubeController!, newPlayState);
+      _syncYoutubeController(_youtubeController!, newPlayOption, _currentPosition.value);
 
-      _playState = newPlayState;
+      _playOption = newPlayOption;
     } on Exception {
       if (kDebugMode) {
         print("Youtube conductor service: error");
@@ -85,7 +83,24 @@ class YoutubeConductorService implements ConductorInterface {
   }
 
   @override
-  void addCurrentPositionListener(Function(PlayState) callBack) {
+  Future<bool> syncPlayPosition({
+    required int positionInMillis,
+  }) async {
+    await lock.acquire();
+
+    if (_youtubeController == null) {
+      return false;
+    }
+
+    _currentPosition.value = positionInMillis;
+    _syncYoutubeController(_youtubeController!, _playOption, _currentPosition.value);
+
+    lock.release();
+    return true;
+  }
+
+  @override
+  void addCurrentPositionListener(Function(int) callBack) {
     _onPositionChangeCallbacks.add(callBack);
 
     if (_onPositionChangeCallbacks.length == 1) {
@@ -95,10 +110,8 @@ class YoutubeConductorService implements ConductorInterface {
           _currentPosition.value =
               _youtubeController!.value.position.inMilliseconds;
 
-          _playState.setCurrentPosition(_currentPosition.value);
-
           for (Function callback in _onPositionChangeCallbacks) {
-            callback(_playState);
+            callback(_currentPosition.value);
           }
         }
       });
@@ -106,7 +119,7 @@ class YoutubeConductorService implements ConductorInterface {
   }
 
   @override
-  void removeCurrentPositionListener(Function(PlayState) callBack) {
+  void removeCurrentPositionListener(Function(int) callBack) {
     bool isRemoved = _onPositionChangeCallbacks.remove(callBack);
 
     if (isRemoved && _onPositionChangeCallbacks.isEmpty) {
@@ -115,16 +128,16 @@ class YoutubeConductorService implements ConductorInterface {
   }
 
   @override
-  PlayState getPlayState() {
-    return _playState;
+  PlayOption getPlayOption() {
+    return _playOption;
   }
 
-  Future<bool> _syncPlayStateWithPerformers(List<PerformerInterface> performers, PlayState playState) async {
+  Future<bool> _syncPlayOptionWithPerformers(List<PerformerInterface> performers, PlayOption playOption) async {
     final List<Future<bool>> syncTasks = [];
 
     // play state 전파
     for (PerformerInterface performer in performers) {
-      syncTasks.add(performer.syncPlayStateAndReady(playState));
+      syncTasks.add(performer.syncPlayOptionAndReady(playOption));
     }
 
     // performer 적용 완료 대기
@@ -140,22 +153,22 @@ class YoutubeConductorService implements ConductorInterface {
     return true;
   }
 
-  Future<void> _syncPlayStateWithYoutubeController(YoutubePlayerController controller, PlayState playState) async {
+  Future<void> _syncYoutubeController(YoutubePlayerController controller, PlayOption playOption, int playPosition) async {
     // youtube controller play state 적용
     if (!(_youtubeController!.value.isReady)) {
       _youtubeController!.reload();
     }
 
-    _youtubeController!.setPlaybackRate(playState.tempo);
+    _youtubeController!.setPlaybackRate(playOption.tempo);
 
-    if (playState.isPlaying) {
+    if (playOption.isPlaying) {
       _youtubeController!.load(
         _youtubeController!.initialVideoId,
-        startAt: playState.currentPosition ~/ 1000,
+        startAt: playPosition ~/ 1000,
       );
     } else {
       _youtubeController!.seekTo(
-        Duration(milliseconds: playState.currentPosition),
+        Duration(milliseconds: playPosition),
       );
       _youtubeController!.pause();
     }

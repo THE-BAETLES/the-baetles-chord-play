@@ -44,14 +44,15 @@ import 'package:the_baetles_chord_play/service/google_auth_service.dart';
 import 'package:the_baetles_chord_play/service/progress_service.dart';
 
 import 'domain/model/loop.dart';
-import 'domain/model/play_state.dart';
+import 'domain/model/play_option.dart';
 import 'domain/use_case/create_sheet.dart';
 import 'domain/use_case/generate_video.dart';
 import 'domain/use_case/get_my_sheets_of_video.dart';
 import 'domain/use_case/get_nickname_suggestion.dart';
 import 'domain/use_case/get_user_id_token.dart';
+import 'domain/use_case/move_play_position.dart';
 import 'domain/use_case/search_video.dart';
-import 'domain/use_case/update_play_state.dart';
+import 'domain/use_case/update_play_option.dart';
 import 'domain/use_case/sign_up.dart';
 import 'utility/navigate.dart';
 
@@ -136,16 +137,16 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) {
             YoutubeConductorService conductor = YoutubeConductorService(
-                initialPlayState: PlayState(
+                initialPlayOption: PlayOption(
               isPlaying: false,
-              currentPosition: 0,
               tempo: 1.0,
               defaultBpm: 60,
               loop: Loop(0, -1),
               capo: 0,
             ));
             return PerformanceViewModel(
-              UpdatePlayState(conductor),
+              UpdatePlayOption(conductor),
+              MovePlayPosition(conductor),
               AddPerformer(conductor),
               AddConductorPositionListener(conductor),
               RemoveConductorPositionListener(conductor),

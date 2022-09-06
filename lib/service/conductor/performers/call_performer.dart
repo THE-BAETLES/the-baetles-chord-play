@@ -1,11 +1,11 @@
-import 'package:the_baetles_chord_play/domain/model/play_state.dart';
+import 'package:the_baetles_chord_play/domain/model/play_option.dart';
 import 'package:the_baetles_chord_play/service/conductor/conductor_interface.dart';
 import 'package:the_baetles_chord_play/service/conductor/performer_interface.dart';
 
-class CallPerformer implements PerformerInterface{
-  Function(PlayState)? callback;
+class PlayOptionCallbackPerformer implements PerformerInterface {
+  Function(PlayOption)? callback;
 
-  void setCallback(Function(PlayState) callback) {
+  void setCallback(Function(PlayOption) callback) {
     this.callback = callback;
   }
 
@@ -28,8 +28,8 @@ class CallPerformer implements PerformerInterface{
   }
 
   @override
-  Future<bool> syncPlayStateAndReady(PlayState playState) async {
-    callback?.call(playState);
+  Future<bool> syncPlayOptionAndReady(PlayOption playOption) async {
+    callback?.call(playOption);
     return true;
   }
   

@@ -4,8 +4,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:the_baetles_chord_play/domain/model/triad_type.dart';
 import 'package:the_baetles_chord_play/presentation/performance/component/toggle_button.dart';
+import 'package:the_baetles_chord_play/presentation/performance/control_bar.dart';
 import 'package:the_baetles_chord_play/presentation/performance/performance_view_model.dart';
-import 'package:the_baetles_chord_play/domain/model/play_state.dart';
+import 'package:the_baetles_chord_play/domain/model/play_option.dart';
 import 'package:the_baetles_chord_play/widget/atom/youtube_video_player.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -29,9 +30,6 @@ class PerformancePage extends StatefulWidget {
 }
 
 class _PerformancePageState extends State<PerformancePage> {
-  late Video video;
-  late SheetInfo sheetInfo;
-  late SheetData sheetData;
   late PerformanceViewModel _viewModel;
 
   @override
@@ -49,9 +47,9 @@ class _PerformancePageState extends State<PerformancePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Map<String, dynamic> arguments =
           ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-      video = arguments['video'] as Video;
-      sheetInfo = arguments["sheetInfo"] as SheetInfo;
-      sheetData = arguments['sheetData'] as SheetData;
+      Video video = arguments['video'] as Video;
+      SheetInfo sheetInfo = arguments["sheetInfo"] as SheetInfo;
+      SheetData sheetData = arguments['sheetData'] as SheetData;
 
       PerformanceViewModel viewModel = context.read<PerformanceViewModel>();
 
@@ -67,7 +65,8 @@ class _PerformancePageState extends State<PerformancePage> {
 
   @override
   Widget build(BuildContext context) {
-    PerformanceViewModel viewModel = context.watch<PerformanceViewModel>();
+    PerformanceViewModel viewModel = context.read<PerformanceViewModel>();
+    print("build!");
 
     return Scaffold(
       appBar: AppBar(
@@ -80,7 +79,7 @@ class _PerformancePageState extends State<PerformancePage> {
         ),
         elevation: 0,
         title: Text(
-          sheetInfo.title,
+          viewModel.sheetState?.sheetInfo.title ?? "",
           style: TextStyle(
             color: AppColors.black04,
             fontFamily: AppFontFamilies.notosanskr,
@@ -124,31 +123,28 @@ class _PerformancePageState extends State<PerformancePage> {
             child: Container(
               height: MediaQuery.of(context).size.height - 130,
               width: MediaQuery.of(context).size.width,
-              child: SheetView(
-                currentPosition: viewModel.playState.currentPosition,
-                sheetData: (viewModel.sheetState?.sheetData)!,
-                correctIndexes: viewModel.correctIndexes.toList(),
-                wrongIndexes: viewModel.wrongIndexes.toList(),
-                onClick: (int tileIndex) {
-                  viewModel.onTileClick(tileIndex);
-                },
-                onLongClick: (tileIndex) {
-                  viewModel.onTileLongClick(tileIndex);
+              child: ValueListenableBuilder(
+                valueListenable: viewModel.currentPosition,
+                builder: (context, value, _) {
+                  return SheetView(
+                    currentPosition: viewModel.currentPosition.value,
+                    sheetData: (viewModel.sheetState?.sheetData)!,
+                    correctIndexes: viewModel.correctIndexes.toList(),
+                    wrongIndexes: viewModel.wrongIndexes.toList(),
+                    onClick: (int tileIndex) {
+                      viewModel.onTileClick(tileIndex);
+                    },
+                    onLongClick: (tileIndex) {
+                      viewModel.onTileLongClick(tileIndex);
+                    },
+                  );
                 },
               ),
             ),
           ),
           Positioned(
             bottom: 0,
-            child: _controlBar(
-              context,
-              viewModel.play,
-              viewModel.stop,
-              viewModel.moveCurrentPosition,
-              context.read<PerformanceViewModel>().playState,
-              viewModel.youtubePlayerController,
-              viewModel,
-            ),
+            child: ControlBar(),
           ),
           Visibility(
             visible: viewModel.isEditing,
@@ -180,153 +176,6 @@ class _PerformancePageState extends State<PerformancePage> {
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _controlBar(
-      BuildContext context,
-      void Function() play,
-      void Function() stop,
-      void Function(int) move,
-      PlayState playState,
-      final YoutubePlayerController? controller,
-      final PerformanceViewModel viewModel) {
-    return Container(
-      height: 62,
-      width: MediaQuery.of(context).size.width,
-      color: AppColors.gray34,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(width: 13),
-          Expanded(
-            flex: 1,
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                  child: SvgToggleButton(
-                    isToggled: viewModel.isMuted,
-                    iconPath: 'assets/icons/ic_mute.svg',
-                    text: 'Mute',
-                    onClick: viewModel.onMuteButtonClicked,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                  child: SvgToggleButton(
-                    isToggled: false,
-                    iconPath: 'assets/icons/ic_repeat.svg',
-                    text: 'Repeat',
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                  child: ToggleButton(
-                    isToggled: false,
-                    text: "tempo",
-                    icon: Text(
-                      "X 1.0",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: AppFontFamilies.montserrat,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                  child: TranspositionButton(),
-                ),
-              ],
-            ),
-          ),
-          _controlButtons(context, play, stop, move, playState),
-          Expanded(
-            flex: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                  child: Container(
-                    width: 62,
-                    height: 44,
-                    color: Colors.black,
-                    child: controller == null
-                        ? null
-                        : YoutubeVideoPlayer(controller: controller),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                  child: SvgToggleButton(
-                    isToggled: viewModel.isPitchBeingChecked,
-                    iconPath: 'assets/icons/ic_check2.svg',
-                    text: 'Check On',
-                    onClick: viewModel.onCheckButtonClicked,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                  child: SvgToggleButton(
-                    isToggled: false,
-                    iconPath: 'assets/icons/ic_record2.svg',
-                    text: 'Rec.',
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(width: 13),
-        ],
-      ),
-    );
-  }
-
-  Widget _controlButtons(BuildContext context, void Function() play,
-      void Function() stop, void Function(int) move, PlayState playState) {
-    return Container(
-      width: 130,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          GestureDetector(
-            onTap: () {
-              double secondPerBeat = 1 / (playState.defaultBpm / 60.0);
-              int changeAmount = (8 * secondPerBeat * 1000).toInt();
-              move(-changeAmount);
-            },
-            child: SvgPicture.asset("assets/icons/ic_prev_2.svg",
-                width: 26, height: 30),
-          ),
-          GestureDetector(
-            onTap: () {
-              if (playState.isPlaying) {
-                stop();
-              } else {
-                play();
-              }
-            },
-            child: playState.isPlaying
-                ? SvgPicture.asset("assets/icons/ic_pause.svg",
-                    width: 22, height: 22)
-                : SvgPicture.asset("assets/icons/ic_play2.svg",
-                    width: 22, height: 22),
-          ),
-          GestureDetector(
-            onTap: () {
-              double secondPerBeat = 1 / (playState.defaultBpm / 60.0);
-              int changeAmount = (8 * secondPerBeat * 1000).toInt();
-              move(changeAmount);
-            },
-            child: SvgPicture.asset("assets/icons/ic_next_2.svg",
-                width: 26, height: 30),
-          )
         ],
       ),
     );

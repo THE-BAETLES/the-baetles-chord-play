@@ -1,22 +1,20 @@
 import 'package:the_baetles_chord_play/service/conductor/conductor_interface.dart';
 import '../model/loop.dart';
 
-class UpdatePlayState {
-  final ConductorInterface _conductorService;
+class UpdatePlayOption {
+  final ConductorInterface _conductor;
 
-  UpdatePlayState(this._conductorService);
+  UpdatePlayOption(this._conductor);
 
   Future<void> call({
     bool? isPlaying,
-    int? currentPosition,
     double? tempo,
     double? defaultBpm,
     Loop? loop,
     int? capo,
   }) async {
-    _conductorService.syncPlayState(
+    _conductor.syncPlayOption(
       isPlaying: isPlaying,
-      currentPosition: currentPosition,
       tempo: tempo,
       defaultBpm: defaultBpm,
       loop: loop,
