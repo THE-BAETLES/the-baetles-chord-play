@@ -51,3 +51,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Android app bundle build password
+/android/keystore/key.password
+/android/keystore/store.password
