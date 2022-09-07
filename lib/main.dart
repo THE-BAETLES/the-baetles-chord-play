@@ -56,9 +56,6 @@ import 'domain/use_case/sign_up.dart';
 import 'utility/navigate.dart';
 
 Future<void> main() async {
-  // Represent splash page
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   // Firebase initialize
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -76,7 +73,6 @@ Future<void> main() async {
     }
   }
   await CountryCodes.init();
-  FlutterNativeSplash.remove();
   runApp(MyApp(hadSignedIn));
 }
 
