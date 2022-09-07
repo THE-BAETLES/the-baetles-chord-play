@@ -1,15 +1,9 @@
-// Copyright 2018 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-import 'dart:developer';
-
 import 'package:country_codes/country_codes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:the_baetles_chord_play/data/repository/auth_repository.dart';
 import 'package:the_baetles_chord_play/data/repository/country_repository.dart';
@@ -56,23 +50,21 @@ import 'domain/use_case/sign_up.dart';
 import 'utility/navigate.dart';
 
 Future<void> main() async {
-  // Firebase initialize
+  // Initialize firebase
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   await dotenv.load(fileName: '.env');
-  // RestClientFactory initialize
-  RestClientFactory();
-  // ProgressService initialize
-  ProgressService();
+
+  RestClientFactory();  // Initialize restClientFactory
+
+  ProgressService();  // Initialize progressService
+
+  await CountryCodes.init();  // Initialize country code module
+
   bool hadSignedIn = FirebaseAuth.instance.currentUser != null &&
       await AuthRepository().login((await AuthRepository().fetchIdToken())!);
 
-  if (kDebugMode) {
-    if (hadSignedIn) {
-      print("sign up success");
-    }
-  }
-  await CountryCodes.init();
   runApp(MyApp(hadSignedIn));
 }
 
@@ -170,66 +162,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-//
-// =======
-// MyApp({super.key});
-//
-// @override
-// Widget build(BuildContext context) {
-//
-//   return MaterialApp(
-//       title: 'Startup Name Generator',
-//       home: Scaffold(
-//       appBar: AppBar(
-//       title: const Text("Chord Play"),
-//   backgroundColor: Color.fromARGB(255, 28, 28, 30),
-//   ),
-//   body: Column(
-//   children: [
-//   VideoThumbnail(),
-//   ChordDetectionTest(),
-//   ]
-//   >>>>>>> pitch-tracking
-//
-//
-// class ChordDetectionTest extends StatefulWidget {
-//   const ChordDetectionTest({Key? key}) : super(key: key);
-//
-//   @override
-//   State<StatefulWidget> createState() => _ChordDetectionTestState();
-// }
-//
-// class _ChordDetectionTestState extends State<ChordDetectionTest> {
-//   static const platform = MethodChannel('com.example.baetles/chord-detection');
-//
-//   String _lastPlayedChord = "Unknown chord.";
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//         children: [ElevatedButton(
-//             onPressed: _startDetectingChord,
-//             child: Text("음 판별 시작")
-//         ),
-//         Text(_lastPlayedChord),
-//       ]
-//     );
-//   }
-//
-//   Future<void> _startDetectingChord() async {
-//     String chord;
-//
-//     try {
-//       final int result = await platform.invokeMethod('startDetectingChord');
-//       chord = 'Played chord is $result';
-//     } on PlatformException catch (e) {
-//       chord = "Failed to get played chord: '${e.message}'.";
-//     }
-//
-//     setState(() {
-//       // 결과 저장
-//       _lastPlayedChord = chord;
-//     });
-//   }
-// }
