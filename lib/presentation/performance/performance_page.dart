@@ -1,14 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:the_baetles_chord_play/domain/model/triad_type.dart';
-import 'package:the_baetles_chord_play/presentation/performance/component/toggle_button.dart';
 import 'package:the_baetles_chord_play/presentation/performance/control_bar.dart';
 import 'package:the_baetles_chord_play/presentation/performance/performance_view_model.dart';
-import 'package:the_baetles_chord_play/domain/model/play_option.dart';
-import 'package:the_baetles_chord_play/widget/atom/youtube_video_player.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../domain/model/chord.dart';
 import '../../domain/model/note.dart';
@@ -19,8 +17,6 @@ import '../../widget/atom/app_colors.dart';
 import '../../widget/atom/app_font_families.dart';
 import '../../widget/molecule/EllipseToggleButton.dart';
 import '../../widget/organism/sheet_view.dart';
-import 'component/svg_toggle_button.dart';
-import 'component/transposition_button.dart';
 
 class PerformancePage extends StatefulWidget {
   const PerformancePage({Key? key}) : super(key: key);
@@ -30,17 +26,11 @@ class PerformancePage extends StatefulWidget {
 }
 
 class _PerformancePageState extends State<PerformancePage> {
-  late PerformanceViewModel _viewModel;
+  late PerformanceViewModel _performanceViewModel;
 
   @override
   void initState() {
     super.initState();
-
-    // 가로 방향으로 고정함
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ]);
 
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
@@ -58,9 +48,9 @@ class _PerformancePageState extends State<PerformancePage> {
         sheetInfo: sheetInfo,
         sheetData: sheetData,
       );
-
-      _viewModel = viewModel;
     });
+
+    _performanceViewModel = context.read<PerformanceViewModel>();
   }
 
   @override
@@ -254,25 +244,11 @@ class _PerformancePageState extends State<PerformancePage> {
 
   @override
   void didChangeDependencies() {
-    super.didChangeDependencies();
-    _viewModel = context.read<PerformanceViewModel>();
+    _performanceViewModel = context.read<PerformanceViewModel>();
   }
 
   @override
   void dispose() {
-    // Set portrait orientation
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
-    ]);
-
-    SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.manual,
-      overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],
-    );
-
-    _viewModel.reset();
-    super.dispose();
+    _performanceViewModel.reset();
   }
 }

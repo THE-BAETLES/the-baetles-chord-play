@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:mutex/mutex.dart';
@@ -110,6 +111,8 @@ class YoutubeConductorService implements ConductorInterface {
           _currentPosition.value =
               _youtubeController!.value.position.inMilliseconds;
 
+          log("current position : ${_youtubeController!.value.position.inMilliseconds}");
+
           for (Function callback in _onPositionChangeCallbacks) {
             callback(_currentPosition.value);
           }
@@ -153,10 +156,10 @@ class YoutubeConductorService implements ConductorInterface {
     return true;
   }
 
-  Future<void> _syncYoutubeController(YoutubePlayerController controller, PlayOption playOption, int playPosition) async {
+  Future<bool> _syncYoutubeController(YoutubePlayerController controller, PlayOption playOption, int playPosition) async {
     // youtube controller play state 적용
     if (!(_youtubeController!.value.isReady)) {
-      _youtubeController!.reload();
+      return false;
     }
 
     _youtubeController!.setPlaybackRate(playOption.tempo);
@@ -166,11 +169,15 @@ class YoutubeConductorService implements ConductorInterface {
         _youtubeController!.initialVideoId,
         startAt: playPosition ~/ 1000,
       );
+      log("youtube player start playing");
     } else {
       _youtubeController!.seekTo(
         Duration(milliseconds: playPosition),
       );
       _youtubeController!.pause();
+      log("youtube player stop playing");
     }
+
+    return true;
   }
 }

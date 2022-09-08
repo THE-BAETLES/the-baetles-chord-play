@@ -25,12 +25,6 @@ class _LoadingPageState extends State<LoadingPage> {
   void initState() {
     super.initState();
 
-    // 가로 방향으로 고정함
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ]);
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Map<String, dynamic> arguments =
           ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
@@ -49,7 +43,7 @@ class _LoadingPageState extends State<LoadingPage> {
     LoadingViewModel viewModel = context.watch<LoadingViewModel>();
     if (viewModel.isLoaded) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.of(context).popAndPushNamed(
+        Navigator.of(context).pushReplacementNamed(
           "/performance-page",
           arguments: {
             "video": video,
@@ -125,23 +119,5 @@ class _LoadingPageState extends State<LoadingPage> {
         ],
       ),
     );
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    _viewModel = context.read<LoadingViewModel>();
-  }
-
-  @override
-  void dispose() {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.portraitUp,
-    ]);
-
-    super.dispose();
   }
 }

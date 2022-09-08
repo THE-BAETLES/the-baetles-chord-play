@@ -1,9 +1,9 @@
 import 'package:the_baetles_chord_play/service/conductor/conductor_interface.dart';
 
-class MovePlayPosition {
+class SetPlayPosition {
   final ConductorInterface _conductor;
 
-  MovePlayPosition(this._conductor);
+  SetPlayPosition(this._conductor);
 
   Future<void> call({
     required int position,
