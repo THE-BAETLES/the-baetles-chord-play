@@ -51,6 +51,7 @@ class _LoadingPageState extends State<LoadingPage> {
             "sheetData": viewModel.sheetData,
           },
         );
+        viewModel.reset();
       });
     }
 

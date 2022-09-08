@@ -17,7 +17,6 @@ class ControlBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     PerformanceViewModel viewModel = context.read<PerformanceViewModel>();
-    print("build control bar!");
 
     return Container(
       height: 62,
@@ -98,10 +97,17 @@ class ControlBar extends StatelessWidget {
                     width: 62,
                     height: 44,
                     color: Colors.black,
-                    child: viewModel.youtubePlayerController == null
-                        ? null
-                        : YoutubeVideoPlayer(
-                            controller: viewModel.youtubePlayerController!),
+                    child: ValueListenableBuilder(
+                        valueListenable: viewModel.youtubePlayerController,
+                        builder: (context, value, _) {
+                          if (viewModel.youtubePlayerController.value == null) {
+                            return Text("동영상을 불러올 수 없습니다.");
+                          } else {
+                            return YoutubeVideoPlayer(
+                              controller: viewModel.youtubePlayerController.value!,
+                            );
+                          }
+                        }),
                   ),
                 ),
                 Padding(

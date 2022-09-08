@@ -26,6 +26,7 @@ class PerformancePage extends StatefulWidget {
 }
 
 class _PerformancePageState extends State<PerformancePage> {
+
   late PerformanceViewModel _performanceViewModel;
 
   @override
@@ -56,7 +57,6 @@ class _PerformancePageState extends State<PerformancePage> {
   @override
   Widget build(BuildContext context) {
     PerformanceViewModel viewModel = context.read<PerformanceViewModel>();
-    print("build!");
 
     return Scaffold(
       appBar: AppBar(
@@ -250,5 +250,6 @@ class _PerformancePageState extends State<PerformancePage> {
   @override
   void dispose() {
     _performanceViewModel.reset();
+    super.dispose();
   }
 }

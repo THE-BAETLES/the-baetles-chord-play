@@ -36,7 +36,7 @@ class PerformanceViewModel with ChangeNotifier {
   final Set<int> wrongIndexes = {};
   SheetState? _sheetState;
   int? _editingPosition;
-  YoutubePlayerController? _youtubeController;
+  final ValueNotifier<YoutubePlayerController?> _youtubeController = ValueNotifier(null);
   late final Function(int) _conductorPositionCallback;
 
   final AddPerformer _addPerformer;
@@ -57,7 +57,7 @@ class PerformanceViewModel with ChangeNotifier {
   SheetState? get sheetState => _sheetState;
   bool get isEditing => _editingPosition != null;
   Note? get editingRoot => (_sheetState?.sheetData.chords.cast<ChordBlock?>())?.firstWhere((element) => element?.position == _editingPosition, orElse: () => null)?.chord.root;
-  YoutubePlayerController? get youtubePlayerController => _youtubeController;
+  ValueNotifier<YoutubePlayerController?> get youtubePlayerController => _youtubeController;
 
   PerformanceViewModel(
     this._updatePlayOption,
@@ -93,7 +93,7 @@ class PerformanceViewModel with ChangeNotifier {
       sheetData: sheetData,
     );
 
-    _youtubeController = YoutubePlayerController(
+    _youtubeController.value = YoutubePlayerController(
       initialVideoId: video.id,
       flags: YoutubePlayerFlags(
         autoPlay: false,
@@ -103,7 +103,7 @@ class PerformanceViewModel with ChangeNotifier {
       ),
     );
 
-    _setYoutubePlayerController(_youtubeController!);
+    _setYoutubePlayerController(_youtubeController.value!);
 
     _setPlayPosition(position: 0);
 
@@ -179,7 +179,7 @@ class PerformanceViewModel with ChangeNotifier {
       loop: initPlayOption.loop,
       capo: initPlayOption.capo,
     );
-    _youtubeController = null;
+    _youtubeController.value = null;
     _chordChecker?.pause();
     _isPitchBeingChecked.value = false;
     _isMuted.value = false;
@@ -201,9 +201,9 @@ class PerformanceViewModel with ChangeNotifier {
     _isMuted.value = !_isMuted.value;
 
     if (_isMuted.value) {
-      youtubePlayerController?.mute();
+      youtubePlayerController.value?.mute();
     } else {
-      youtubePlayerController?.unMute();
+      youtubePlayerController.value?.unMute();
     }
 
     notifyListeners();

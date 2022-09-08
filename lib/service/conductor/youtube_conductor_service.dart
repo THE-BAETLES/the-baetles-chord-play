@@ -35,6 +35,7 @@ class YoutubeConductorService implements ConductorInterface {
   ) async {
     _youtubeController = controller;
     await syncPlayOption();
+    await syncPlayPosition(positionInMillis: _currentPosition.value);
   }
 
   @override
@@ -111,8 +112,6 @@ class YoutubeConductorService implements ConductorInterface {
           _currentPosition.value =
               _youtubeController!.value.position.inMilliseconds;
 
-          log("current position : ${_youtubeController!.value.position.inMilliseconds}");
-
           for (Function callback in _onPositionChangeCallbacks) {
             callback(_currentPosition.value);
           }
@@ -159,6 +158,7 @@ class YoutubeConductorService implements ConductorInterface {
   Future<bool> _syncYoutubeController(YoutubePlayerController controller, PlayOption playOption, int playPosition) async {
     // youtube controller play state 적용
     if (!(_youtubeController!.value.isReady)) {
+      log("youtube player is not ready (error code ${_youtubeController!.value.errorCode})");
       return false;
     }
 
@@ -169,13 +169,13 @@ class YoutubeConductorService implements ConductorInterface {
         _youtubeController!.initialVideoId,
         startAt: playPosition ~/ 1000,
       );
-      log("youtube player start playing");
+      log("youtube controller start playing");
     } else {
       _youtubeController!.seekTo(
         Duration(milliseconds: playPosition),
       );
       _youtubeController!.pause();
-      log("youtube player stop playing");
+      log("youtube controller stop playing");
     }
 
     return true;
