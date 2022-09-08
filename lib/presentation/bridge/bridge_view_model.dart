@@ -4,26 +4,28 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_my_sheets_of_video.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_shared_sheets_of_video.dart';
-import 'package:the_baetles_chord_play/domain/use_case/get_sheets_of_video.dart';
 import 'package:the_baetles_chord_play/presentation/bridge/sheet_creation_dialog_view_model.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../domain/model/chord_block.dart';
 import '../../domain/model/instrument.dart';
-import '../../domain/model/sheet_data.dart';
 import '../../domain/model/sheet_info.dart';
 import '../../domain/model/video.dart';
 import '../../domain/use_case/create_sheet.dart';
 import '../../domain/use_case/generate_video.dart';
 import '../../domain/use_case/get_liked_sheets_of_video.dart';
-import '../../domain/use_case/get_user_id_token.dart';
 
 class BridgeViewModel with ChangeNotifier {
   Video? _video;
   Instrument? _selectedInstrument = Instrument.guitar;
   int _tabBarOffset = 0;
-  SheetInfo? _selectedSheet = null;
-  YoutubePlayerController? youtubePlayerController;
+  SheetInfo? _selectedSheet;
+  YoutubePlayerController? _youtubePlayerController;
+  List<ChordBlock>? chordBlocksToDuplicate; // 나중에 SheetBuilder로 분리
+
+  UnmodifiableListView<SheetInfo>? _mySheets;
+  UnmodifiableListView<SheetInfo>? _likedSheets;
+  UnmodifiableListView<SheetInfo>? _sharedSheets;
 
   // use cases
   final GenerateVideo _generateVideo;
@@ -32,25 +34,14 @@ class BridgeViewModel with ChangeNotifier {
   final GetSharedSheetsOfVideo _getSharedSheetsOfVideo;
   final CreateSheet _createSheet;
 
-  UnmodifiableListView<SheetInfo>? _mySheets;
-  UnmodifiableListView<SheetInfo>? _likedSheets;
-  UnmodifiableListView<SheetInfo>? _sharedSheets;
-
   UnmodifiableListView<SheetInfo>? get mySheets => _mySheets;
-
   UnmodifiableListView<SheetInfo>? get likedSheets => _likedSheets;
-
   UnmodifiableListView<SheetInfo>? get sharedSheets => _sharedSheets;
-
-  List<ChordBlock>? chordBlocksToDuplicate = null; // 나중에 SheetBuilder로 분리
-
   Video? get video => _video;
-
   SheetInfo? get selectedSheet => _selectedSheet;
-
   bool get isStartButtonActivated => _selectedSheet != null;
-
   bool get isInputSheetDetailPopupVisible => chordBlocksToDuplicate != null;
+  YoutubePlayerController? get youtubePlayerController => _youtubePlayerController;
 
   int get sheetCount {
     switch (_tabBarOffset) {
@@ -78,17 +69,18 @@ class BridgeViewModel with ChangeNotifier {
   );
 
   Future<void> onPageBuild(BuildContext context, Video video) async {
-    if (this._video != video) {
-      this._video = video;
+    if (_video != video) {
+      _video = video;
       _tabBarOffset = 0;
 
-      youtubePlayerController = YoutubePlayerController(
+      _youtubePlayerController = YoutubePlayerController(
         initialVideoId: video.id,
-        flags: YoutubePlayerFlags(
+        flags: const YoutubePlayerFlags(
           autoPlay: true,
           enableCaption: false,
         ),
       );
+
 
       SheetCreationDialogViewModel viewModel =
           context.read<SheetCreationDialogViewModel>();
@@ -97,6 +89,9 @@ class BridgeViewModel with ChangeNotifier {
 
       await _generateVideo(video);
       await _loadSheets(video);
+
+      _tabBarOffset = _findNotEmptyTabIndex();
+      notifyListeners();
     }
   }
 
@@ -109,8 +104,16 @@ class BridgeViewModel with ChangeNotifier {
     _likedSheets = UnmodifiableListView(await _getLikedSheetsOfVideo(video.id));
     _sharedSheets =
         UnmodifiableListView(await _getSharedSheetsOfVideo(video.id));
+  }
 
-    notifyListeners();
+  int _findNotEmptyTabIndex() {
+    if (_mySheets != null && _mySheets!.isNotEmpty) {
+      return 0;
+    } else if (_likedSheets != null && _likedSheets!.isNotEmpty) {
+      return 1;
+    } else {
+      return 2;
+    }
   }
 
   void onChangeTabIndex(int tabIndex) {
@@ -132,7 +135,7 @@ class BridgeViewModel with ChangeNotifier {
       return;
     }
 
-    youtubePlayerController?.pause();
+    _youtubePlayerController?.pause();
 
     Navigator.of(context).pushNamed(
       '/loading-page',
@@ -184,6 +187,6 @@ class BridgeViewModel with ChangeNotifier {
     _selectedInstrument = Instrument.guitar;
     _tabBarOffset = 0;
     _selectedSheet = null;
-    youtubePlayerController = null;
+    _youtubePlayerController = null;
   }
 }
