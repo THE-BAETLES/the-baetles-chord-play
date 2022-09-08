@@ -51,6 +51,7 @@ dependencies:
   mutex: ^3.0.0
   flutter_dotenv: ^5.0.2
   json_annotation: ^4.6.0
+  flutter_animation_progress_bar: ^2.2.1
 
   flutter_client_sse:
     git:
