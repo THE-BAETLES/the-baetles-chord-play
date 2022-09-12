@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:developer';
 
 import "package:http/http.dart" as http;
 
@@ -75,15 +76,15 @@ class RemoteDataSource {
     return response.statusCode == ok;
   }
 
-  Future<String> getNicknameSuggestion(String idToken) async {
-    http.Response response = await http.get(
+  Future<String> getNicknameSuggestion(String idToken, {http.Client? client}) async {
+    client ??= http.Client();
+
+    http.Response response = await client.get(
       Uri.parse('$httpUriHead/user/nickname'),
       headers: {idTokenKey: '${bearer} ${idToken}'},
     );
 
-    print(response.body);
-
-    return jsonDecode(response.body)['nickname'];
+    return jsonDecode(response.body)['data']['nickname'];
   }
 
   Future<bool> checkNicknameValid(String idToken, String nickname) async {

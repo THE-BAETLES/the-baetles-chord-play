@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:country_codes/country_codes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
@@ -66,6 +69,13 @@ Future<void> main() async {
 
   bool hadSignedIn = FirebaseAuth.instance.currentUser != null &&
       await AuthRepository().login((await AuthRepository().fetchIdToken())!);
+
+  if (hadSignedIn) {
+    // 백엔드 협업용 id 토큰 받아오는 코드
+    if (kDebugMode) {
+      log("${await AuthRepository().fetchIdToken()}");
+    }
+  }
 
   runApp(MyApp(hadSignedIn));
 }
