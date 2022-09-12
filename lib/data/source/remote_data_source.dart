@@ -76,7 +76,7 @@ class RemoteDataSource {
     return response.statusCode == ok;
   }
 
-  Future<String> getNicknameSuggestion(String idToken, {http.Client? client}) async {
+  Future<String?> getNicknameSuggestion(String idToken, {http.Client? client}) async {
     client ??= http.Client();
 
     http.Response response = await client.get(
@@ -84,7 +84,12 @@ class RemoteDataSource {
       headers: {idTokenKey: '${bearer} ${idToken}'},
     );
 
-    return jsonDecode(response.body)['data']['nickname'];
+    final body = jsonDecode(response.body) as Map<String, dynamic>;
+    if (body.containsKey('data')) {
+      return body['data']['nickname'];
+    } else {
+      return null;
+    }
   }
 
   Future<bool> checkNicknameValid(String idToken, String nickname) async {

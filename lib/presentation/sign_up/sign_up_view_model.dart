@@ -77,7 +77,7 @@ class SignUpViewModel with ChangeNotifier {
     _preferredSongs.clear();
     _currentPage = _nicknamePage;
     _isNicknameValid = false;
-    _inputNickname = await getNicknameSuggestion();
+    _inputNickname = (await getNicknameSuggestion()) ?? "";
     _confirmedNickname = null;
     _selectedGender = null;
     _selectedGrade = null;

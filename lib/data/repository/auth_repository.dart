@@ -53,7 +53,7 @@ class AuthRepository {
         (await fetchIdToken())!, nickname); // dummy data
   }
 
-  Future<String> getNicknameSuggestion() async {
+  Future<String?> getNicknameSuggestion() async {
     return await _remoteDataSource
         .getNicknameSuggestion((await fetchIdToken())!);
   }

@@ -8,39 +8,71 @@ import 'user_api_test.mocks.dart';
 
 @GenerateMocks([http.Client])
 void main() async {
-
-  test("/v1/user/nickname", () async {
-    String fakeToken = "tokennn";
-    String fakeJson = """
+  group("추천 닉네임 api", () {
+    test("추천 닉네임 받아오기", () async {
+      String fakeToken = "tokennn";
+      String fakeJson = """
 {
     "code": "200",
     "message": "success",
     "data": {
-        "nickname": "chj7239"
+        "nickname": "abc111"
     }
 }
 """;
 
-    final client = MockClient();
+      final client = MockClient();
 
-    when(client.get(
-      Uri.parse('${RemoteDataSource.httpUriHead}/user/nickname'),
-      headers: {RemoteDataSource.idTokenKey: '${RemoteDataSource.bearer} ${fakeToken}'}
-    ))
-    .thenAnswer((_) async => http.Response(fakeJson, 200));
+      when(client.get(
+          Uri.parse('${RemoteDataSource.httpUriHead}/user/nickname'),
+          headers: {
+            RemoteDataSource.idTokenKey:
+                '${RemoteDataSource.bearer} ${fakeToken}'
+          })).thenAnswer((_) async => http.Response(fakeJson, 200));
 
-    final source = RemoteDataSource();
-    final result = await source.getNicknameSuggestion(fakeToken, client: client);
+      final source = RemoteDataSource();
+      final result =
+          await source.getNicknameSuggestion(fakeToken, client: client);
 
-    expect(result, "chj7239");
+      expect(result, "abc111");
 
-    verify(
-        client.get(
-            Uri.parse('${RemoteDataSource.httpUriHead}/user/nickname'),
-            headers: {RemoteDataSource.idTokenKey: '${RemoteDataSource.bearer} ${fakeToken}'}
-        )
-    );
-  });
-  
+      verify(client.get(
+          Uri.parse('${RemoteDataSource.httpUriHead}/user/nickname'),
+          headers: {
+            RemoteDataSource.idTokenKey:
+                '${RemoteDataSource.bearer} ${fakeToken}'
+          }));
+    });
+
+    test("닉네임 추천 실패", () async {
+      String fakeToken = "invalidToken";
+      String fakeJson = """
+{
+    "message": "INVALID_HEADER"
 }
+""";
 
+      final client = MockClient();
+
+      when(client.get(
+          Uri.parse('${RemoteDataSource.httpUriHead}/user/nickname'),
+          headers: {
+            RemoteDataSource.idTokenKey:
+                '${RemoteDataSource.bearer} ${fakeToken}'
+          })).thenAnswer((_) async => http.Response(fakeJson, 200));
+
+      final source = RemoteDataSource();
+      final result =
+          await source.getNicknameSuggestion(fakeToken, client: client);
+
+      expect(result, isNull);
+
+      verify(client.get(
+          Uri.parse('${RemoteDataSource.httpUriHead}/user/nickname'),
+          headers: {
+            RemoteDataSource.idTokenKey:
+                '${RemoteDataSource.bearer} ${fakeToken}'
+          }));
+    });
+  });
+}
