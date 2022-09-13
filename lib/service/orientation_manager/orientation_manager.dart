@@ -27,7 +27,7 @@ class OrientationManager extends NavigatorObserver {
     } else if (_landscapeOnlyPage.contains(route.settings.name)) {
       _setOrientation(ScreenOrientation.landscapeOnly);
     } else {
-      assert(false);
+      assert(false);  // todo: exception throw
     }
   }
 
@@ -42,7 +42,7 @@ class OrientationManager extends NavigatorObserver {
     } else if (_landscapeOnlyPage.contains(previousRoute.settings.name)) {
       _setOrientation(ScreenOrientation.landscapeOnly);
     } else {
-      assert(false);
+      assert(false);  // todo: exception throw
     }
   }
 

@@ -8,8 +8,8 @@ import 'user_api_test.mocks.dart';
 
 @GenerateMocks([http.Client])
 void main() async {
-  group("추천 닉네임 api", () {
-    test("추천 닉네임 받아오기", () async {
+  group("닉네임 추천 api", () {
+    test("getNicknameSuggestion_validToken_returnsSuggestedNickname", () async {
       String fakeToken = "tokennn";
       String fakeJson = """
 {
@@ -44,7 +44,7 @@ void main() async {
           }));
     });
 
-    test("닉네임 추천 실패", () async {
+    test("getNicknameSuggestion_invalidToken_returnNull", () async {
       String fakeToken = "invalidToken";
       String fakeJson = """
 {
@@ -59,7 +59,7 @@ void main() async {
           headers: {
             RemoteDataSource.idTokenKey:
                 '${RemoteDataSource.bearer} ${fakeToken}'
-          })).thenAnswer((_) async => http.Response(fakeJson, 200));
+          })).thenAnswer((_) async => http.Response(fakeJson, 400));
 
       final source = RemoteDataSource();
       final result =
