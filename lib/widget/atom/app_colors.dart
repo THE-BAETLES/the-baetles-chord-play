@@ -24,4 +24,6 @@ class AppColors {
   static const shadowB5 = Color(0x41B5BF85);
   static const shadowA1 = Color(0x1AA1A1A1);
   static const shadow94 = Color(0x41949494);
+  static const shadow00 = Color(0x99000000);
+  static const transparentF4 = Color(0x20CBCBFF);
 }

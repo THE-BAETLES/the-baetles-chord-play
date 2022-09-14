@@ -1,5 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:the_baetles_chord_play/controller/pitch_tracker/pitch_tracker.dart';
+import 'package:the_baetles_chord_play/controller/chord_picker_view_model.dart';
 import 'package:the_baetles_chord_play/domain/model/chord_block.dart';
 import 'package:the_baetles_chord_play/domain/model/play_option.dart';
 import 'package:the_baetles_chord_play/domain/use_case/add_conductor_position_listener.dart';
@@ -29,14 +31,17 @@ class PerformanceViewModel with ChangeNotifier {
     capo: 0,
   );
   late final ValueNotifier<PlayOption> _playOption;
-  final ValueNotifier<int> _currentPosition = ValueNotifier(0);  // in millisecond
+  final ValueNotifier<int> _currentPosition =
+      ValueNotifier(0); // in millisecond
   final ValueNotifier<bool> _isPitchBeingChecked = ValueNotifier(false);
   final ValueNotifier<bool> _isMuted = ValueNotifier(false);
   final Set<int> correctIndexes = {};
   final Set<int> wrongIndexes = {};
-  SheetState? _sheetState;
-  int? _editingPosition;
-  final ValueNotifier<YoutubePlayerController?> _youtubeController = ValueNotifier(null);
+  final ValueNotifier<SheetState?> _sheetState = ValueNotifier(null);
+  final ValueNotifier<int?> _editingPosition = ValueNotifier(null);
+  final ValueNotifier<Chord?> _selectedChord = ValueNotifier(null);
+  final ValueNotifier<YoutubePlayerController?> _youtubeController =
+      ValueNotifier(null);
   late final Function(int) _conductorPositionCallback;
 
   final AddPerformer _addPerformer;
@@ -45,19 +50,36 @@ class PerformanceViewModel with ChangeNotifier {
   final AddConductorPositionListener _addConductorPositionListener;
   final RemoveConductorPositionListener _removeConductorPositionListener;
   final SetYoutubePlayerController _setYoutubePlayerController;
+  late final ChordPickerViewModel _chordPickerViewModel;
 
-
-  PlayOptionCallbackPerformer _callbackPerformer = PlayOptionCallbackPerformer();
+  PlayOptionCallbackPerformer _callbackPerformer =
+      PlayOptionCallbackPerformer();
   ChordChecker? _chordChecker;
 
   ValueNotifier<PlayOption> get playOption => _playOption;
+
   ValueNotifier<int> get currentPosition => _currentPosition;
+
   ValueNotifier<bool> get isMuted => _isMuted;
+
   ValueNotifier<bool> get isPitchBeingChecked => _isPitchBeingChecked;
-  SheetState? get sheetState => _sheetState;
-  bool get isEditing => _editingPosition != null;
-  Note? get editingRoot => (_sheetState?.sheetData.chords.cast<ChordBlock?>())?.firstWhere((element) => element?.position == _editingPosition, orElse: () => null)?.chord.root;
-  ValueNotifier<YoutubePlayerController?> get youtubePlayerController => _youtubeController;
+
+  ValueNotifier<int?> get editingPosition => _editingPosition;
+
+  ValueNotifier<SheetState?> get sheetState => _sheetState;
+
+  bool get isEditing => _editingPosition.value != null;
+
+  Chord? get editedChord => (_sheetState.value?.sheetData.chords
+          .cast<ChordBlock?>())
+      ?.firstWhere((element) => element?.position == _editingPosition,
+          orElse: () => null)
+      ?.chord;
+
+  ValueNotifier<YoutubePlayerController?> get youtubePlayerController =>
+      _youtubeController;
+
+  ChordPickerViewModel get chordPickerViewModel => _chordPickerViewModel;
 
   PerformanceViewModel(
     this._updatePlayOption,
@@ -73,6 +95,9 @@ class PerformanceViewModel with ChangeNotifier {
     });
 
     _playOption = ValueNotifier(initPlayOption);
+
+    _chordPickerViewModel =
+        ChordPickerViewModel(onChangeChord: onChangeChord);
   }
 
   void initViewModel({
@@ -88,7 +113,7 @@ class PerformanceViewModel with ChangeNotifier {
       capo: 0,
     );
 
-    _sheetState = SheetState(
+    _sheetState.value = SheetState(
       sheetInfo: sheetInfo,
       sheetData: sheetData,
     );
@@ -166,7 +191,20 @@ class PerformanceViewModel with ChangeNotifier {
   }
 
   void onTileLongClick(int tileIndex) {
-    _editingPosition = tileIndex;
+    log("long click detected (tile index: ${tileIndex})");
+    _editingPosition.value = tileIndex;
+
+    List<ChordBlock>? chords = _sheetState.value?.sheetData.chords;
+    int index = chords == null
+        ? -1
+        : chords.indexWhere((element) => element.position == tileIndex);
+
+    if (index == -1) {
+      _selectedChord.value = null;
+    } else {
+      _selectedChord.value = chords![index].chord;
+    }
+
     notifyListeners();
   }
 
@@ -183,6 +221,7 @@ class PerformanceViewModel with ChangeNotifier {
     _chordChecker?.pause();
     _isPitchBeingChecked.value = false;
     _isMuted.value = false;
+    _editingPosition.value = null;
   }
 
   void onCheckButtonClicked() {
@@ -209,24 +248,35 @@ class PerformanceViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void onCancelEdit() {
-    _editingPosition = null;
+  void onCancleEdit() {
+    _editingPosition.value = null;
+    _selectedChord.value = null;
   }
 
-  void onApplyEdit(Chord chord) {
-    int? index = _sheetState!.sheetData.chords.indexWhere((element) => element.position >= _editingPosition!);
+  void onChangeChord(Chord? chord) {
+    _selectedChord.value = chord;
+  }
 
-    double spb = 1 / (_sheetState!.sheetData.bpm / 60.0);
-    ChordBlock newChord = ChordBlock(chord, _editingPosition!, _editingPosition! * spb, (_editingPosition! + 1) * spb);
+  void onApplyEdit() {
+    Chord? chord = _selectedChord.value;
+
+    int? index = _sheetState.value!.sheetData.chords
+        .indexWhere((element) => element.position >= _editingPosition.value!);
+
+    double spb = 1 / (_sheetState.value!.sheetData.bpm / 60.0);
+    ChordBlock newChord = ChordBlock(chord!, _editingPosition.value!,
+        _editingPosition.value! * spb, (_editingPosition.value! + 1) * spb);
 
     if (index == -1) {
-      _sheetState?.sheetData.chords.add(newChord);
-    } else if (_sheetState!.sheetData.chords[index].position == _editingPosition) {
-      _sheetState?.sheetData.chords[index] = newChord;
+      _sheetState.value?.sheetData.chords.add(newChord);
+    } else if (_sheetState.value!.sheetData.chords[index].position ==
+        _editingPosition.value) {
+      _sheetState.value?.sheetData.chords[index] = newChord;
     } else {
-      _sheetState?.sheetData.chords.insert(index, newChord);
+      _sheetState.value?.sheetData.chords.insert(index, newChord);
     }
 
-    _editingPosition = null;
+    _editingPosition.value = null;
+    _selectedChord.value = null;
   }
 }
