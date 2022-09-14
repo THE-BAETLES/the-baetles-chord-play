@@ -101,6 +101,8 @@ class _BridgePageState extends State<BridgePage> {
           viewModel.onChangeTabIndex(tabController.index);
         });
 
+        tabController.animateTo(viewModel.tabBarOffset);
+
         return Wrap(
           children: [
             const TabBar(
