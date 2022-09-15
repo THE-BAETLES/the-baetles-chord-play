@@ -111,7 +111,7 @@ class SheetView extends StatelessWidget {
       ));
     }
 
-    return Container(
+    return SafeArea(
       child: ListView(
         children: tileRows,
       ),

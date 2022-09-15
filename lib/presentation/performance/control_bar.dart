@@ -25,121 +25,123 @@ class ControlBar extends StatelessWidget {
       height: 62,
       width: MediaQuery.of(context).size.width,
       color: AppColors.gray34,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(width: 13),
-          Expanded(
-            flex: 1,
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                  child: ValueListenableBuilder(
-                    valueListenable: viewModel.isMuted,
-                    builder: (context, value, _) {
-                      return SvgToggleButton(
-                        isToggled: viewModel.isMuted.value,
-                        iconPath: 'assets/icons/ic_mute.svg',
-                        text: 'Mute',
-                        onClick: viewModel.onMuteButtonClicked,
-                      );
-                    },
+      child: SafeArea(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(width: 13),
+            Expanded(
+              flex: 1,
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                    child: ValueListenableBuilder(
+                      valueListenable: viewModel.isMuted,
+                      builder: (context, value, _) {
+                        return SvgToggleButton(
+                          isToggled: viewModel.isMuted.value,
+                          iconPath: 'assets/icons/ic_mute.svg',
+                          text: 'Mute',
+                          onClick: viewModel.onMuteButtonClicked,
+                        );
+                      },
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                  child: SvgToggleButton(
-                    isToggled: false,
-                    iconPath: 'assets/icons/ic_repeat.svg',
-                    text: 'Repeat',
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                    child: SvgToggleButton(
+                      isToggled: false,
+                      iconPath: 'assets/icons/ic_repeat.svg',
+                      text: 'Repeat',
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                  child: ToggleButton(
-                    isToggled: false,
-                    text: "tempo",
-                    icon: Text(
-                      "X 1.0",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: AppFontFamilies.montserrat,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                    child: ToggleButton(
+                      isToggled: false,
+                      text: "tempo",
+                      icon: Text(
+                        "X 1.0",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: AppFontFamilies.montserrat,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                  child: TranspositionButton(),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                    child: TranspositionButton(),
+                  ),
+                ],
+              ),
             ),
-          ),
-          ValueListenableBuilder(
-              valueListenable: viewModel.playOption,
-              builder: (context, value, _) {
-                return _controlButtons(
-                  context,
-                  viewModel.play,
-                  viewModel.stop,
-                  viewModel.moveCurrentPosition,
-                  viewModel.playOption.value,
-                );
-              }),
-          Expanded(
-            flex: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                  child: Container(
-                    width: 62,
-                    height: 44,
-                    color: Colors.black,
+            ValueListenableBuilder(
+                valueListenable: viewModel.playOption,
+                builder: (context, value, _) {
+                  return _controlButtons(
+                    context,
+                    viewModel.play,
+                    viewModel.stop,
+                    viewModel.moveCurrentPosition,
+                    viewModel.playOption.value,
+                  );
+                }),
+            Expanded(
+              flex: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                    child: Container(
+                      width: 62,
+                      height: 44,
+                      color: Colors.black,
+                      child: ValueListenableBuilder(
+                          valueListenable: viewModel.youtubePlayerController,
+                          builder: (context, value, _) {
+                            if (viewModel.youtubePlayerController.value == null) {
+                              return Text("동영상을 불러올 수 없습니다.");
+                            } else {
+                              return YoutubeVideoPlayer(
+                                controller: viewModel.youtubePlayerController.value!,
+                              );
+                            }
+                          }),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
                     child: ValueListenableBuilder(
-                        valueListenable: viewModel.youtubePlayerController,
-                        builder: (context, value, _) {
-                          if (viewModel.youtubePlayerController.value == null) {
-                            return Text("동영상을 불러올 수 없습니다.");
-                          } else {
-                            return YoutubeVideoPlayer(
-                              controller: viewModel.youtubePlayerController.value!,
-                            );
-                          }
-                        }),
+                      valueListenable: viewModel.isPitchBeingChecked,
+                      builder: (context, value, _) {
+                        return SvgToggleButton(
+                          isToggled: viewModel.isPitchBeingChecked.value,
+                          iconPath: 'assets/icons/ic_check2.svg',
+                          text: 'Check On',
+                          onClick: viewModel.onCheckButtonClicked,
+                        );
+                      },
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                  child: ValueListenableBuilder(
-                    valueListenable: viewModel.isPitchBeingChecked,
-                    builder: (context, value, _) {
-                      return SvgToggleButton(
-                        isToggled: viewModel.isPitchBeingChecked.value,
-                        iconPath: 'assets/icons/ic_check2.svg',
-                        text: 'Check On',
-                        onClick: viewModel.onCheckButtonClicked,
-                      );
-                    },
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                    child: SvgToggleButton(
+                      isToggled: false,
+                      iconPath: 'assets/icons/ic_record2.svg',
+                      text: 'Rec.',
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                  child: SvgToggleButton(
-                    isToggled: false,
-                    iconPath: 'assets/icons/ic_record2.svg',
-                    text: 'Rec.',
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          SizedBox(width: 13),
-        ],
+            SizedBox(width: 13),
+          ],
+        ),
       ),
     );
   }
