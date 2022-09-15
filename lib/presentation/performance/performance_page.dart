@@ -17,7 +17,7 @@ import '../../widget/atom/app_colors.dart';
 import '../../widget/atom/app_font_families.dart';
 import '../../widget/molecule/EllipseToggleButton.dart';
 import '../../widget/molecule/chord_picker.dart';
-import '../../widget/organism/sheet_view.dart';
+import 'fragment/sheet_view.dart';
 
 class PerformancePage extends StatefulWidget {
   const PerformancePage({Key? key}) : super(key: key);
@@ -125,8 +125,8 @@ class _PerformancePageState extends State<PerformancePage> {
                     return SheetView(
                       currentPosition: viewModel.currentPosition.value,
                       sheetData: (viewModel.sheetState.value?.sheetData)!,
-                      correctIndexes: viewModel.correctIndexes.toList(),
-                      wrongIndexes: viewModel.wrongIndexes.toList(),
+                      correctIndexes: viewModel.feedbackState.correctIndexes.toList(),
+                      wrongIndexes: viewModel.feedbackState.wrongIndexes.toList(),
                       onClick: (int tileIndex) {
                         viewModel.onTileClick(tileIndex);
                       },

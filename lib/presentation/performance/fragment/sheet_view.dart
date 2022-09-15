@@ -4,9 +4,9 @@ import 'package:flutter/rendering.dart';
 import 'package:the_baetles_chord_play/widget/molecule/beat_tile.dart';
 import 'package:the_baetles_chord_play/widget/atom/marker_stick.dart';
 
-import '../../domain/model/sheet_data.dart';
-import '../atom/app_colors.dart';
-import '../atom/chord_text.dart';
+import '../../../domain/model/sheet_data.dart';
+import '../../../widget/atom/app_colors.dart';
+import '../../../widget/atom/chord_text.dart';
 
 class SheetView extends StatelessWidget {
   static const int beatPerWord = 4;

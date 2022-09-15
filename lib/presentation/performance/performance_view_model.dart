@@ -21,6 +21,7 @@ import '../../domain/use_case/move_play_position.dart';
 import '../../domain/use_case/update_play_option.dart';
 import '../../service/conductor/performers/call_performer.dart';
 import '../../service/conductor/performers/chord_checker.dart';
+import 'feedback_state.dart';
 
 class PerformanceViewModel with ChangeNotifier {
   final PlayOption initPlayOption = PlayOption(
@@ -35,8 +36,7 @@ class PerformanceViewModel with ChangeNotifier {
       ValueNotifier(0); // in millisecond
   final ValueNotifier<bool> _isPitchBeingChecked = ValueNotifier(false);
   final ValueNotifier<bool> _isMuted = ValueNotifier(false);
-  final Set<int> correctIndexes = {};
-  final Set<int> wrongIndexes = {};
+  final ValueNotifier<FeedbackState> _feedbackState = ValueNotifier(FeedbackState());
   final ValueNotifier<SheetState?> _sheetState = ValueNotifier(null);
   final ValueNotifier<int?> _editingPosition = ValueNotifier(null);
   final ValueNotifier<Chord?> _selectedChord = ValueNotifier(null);
@@ -82,6 +82,8 @@ class PerformanceViewModel with ChangeNotifier {
 
   ChordPickerViewModel get chordPickerViewModel => _chordPickerViewModel;
 
+  FeedbackState get feedbackState => _feedbackState.value;
+
   double? get currentPositionInPercentage {
     if (_video == null) {
       return null;
@@ -115,6 +117,8 @@ class PerformanceViewModel with ChangeNotifier {
     required final SheetData sheetData,
   }) {
     _video = video;
+
+    _feedbackState.value = FeedbackState();
 
     _playOption.value = PlayOption(
       isPlaying: false,
@@ -161,14 +165,12 @@ class PerformanceViewModel with ChangeNotifier {
     _chordChecker = ChordChecker(sheetData);
 
     _chordChecker?.setOnCorrectCallback((correctPosition) {
-      correctIndexes.add(correctPosition);
-      wrongIndexes.remove(correctPosition);
+      _feedbackState.value.addMarkedIndex(correctPosition, true);
       notifyListeners();
     });
 
     _chordChecker?.setOnWrongCallback((wrongPosition) {
-      wrongIndexes.add(wrongPosition);
-      correctIndexes.remove(wrongPosition);
+      _feedbackState.value.addMarkedIndex(wrongPosition, false);
       notifyListeners();
     });
 
