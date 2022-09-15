@@ -55,6 +55,7 @@ class PerformanceViewModel with ChangeNotifier {
   PlayOptionCallbackPerformer _callbackPerformer =
       PlayOptionCallbackPerformer();
   ChordChecker? _chordChecker;
+  Video? _video;
 
   ValueNotifier<PlayOption> get playOption => _playOption;
 
@@ -81,6 +82,14 @@ class PerformanceViewModel with ChangeNotifier {
 
   ChordPickerViewModel get chordPickerViewModel => _chordPickerViewModel;
 
+  double? get currentPositionInPercentage {
+    if (_video == null) {
+      return null;
+    }
+
+    return currentPosition.value.toDouble() / (_video!.length * 1000).toDouble() * 100.0;
+  }
+
   PerformanceViewModel(
     this._updatePlayOption,
     this._setPlayPosition,
@@ -105,6 +114,8 @@ class PerformanceViewModel with ChangeNotifier {
     required final SheetInfo sheetInfo,
     required final SheetData sheetData,
   }) {
+    _video = video;
+
     _playOption.value = PlayOption(
       isPlaying: false,
       tempo: 1.0,

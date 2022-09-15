@@ -141,7 +141,28 @@ class _PerformancePageState extends State<PerformancePage> {
           ),
           Positioned(
             bottom: 0,
-            child: ControlBar(),
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 65,
+              child: Column(
+                children: [
+                  ValueListenableBuilder(
+                    valueListenable: viewModel.currentPosition,
+                    builder: (context, value, _) {
+                      log("${viewModel.currentPositionInPercentage ?? 0}");
+                      return LinearProgressIndicator(
+                        value: (viewModel.currentPositionInPercentage ?? 0) / 100.0,
+                        color: AppColors.blue4E,
+                        backgroundColor: Colors.transparent,
+                        minHeight: 3,
+                      );
+                    },
+                  ),
+                  ControlBar(),
+                ],
+              ),
+            ),
           ),
           Positioned.fill(
             left: 0,
