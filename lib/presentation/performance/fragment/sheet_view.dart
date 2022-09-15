@@ -12,6 +12,8 @@ class SheetView extends StatelessWidget {
   static const int beatPerWord = 4;
   static const int wordPerRow = 4;
   static const int beatPerRow = beatPerWord * wordPerRow;
+  static const double topMargin = 10.0;
+  static const double bottomMargin = 105.0;
 
   final SheetData sheetData;
   final List<int> correctIndexes;
@@ -44,77 +46,114 @@ class SheetView extends StatelessWidget {
         : 0;
 
     for (int rowIndex = 0; rowIndex < rowCount; ++rowIndex) {
-      final List<Widget> rowChildren = [];
+      tileRows.add(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: _tileRow(
+            beatPerWord,
+            beatPerRow,
+            rowIndex,
+            highlightedTileIndex,
+            currentChordIndex,
+            sheetData,
+          ),
+        ),
+      );
 
-      for (int tileIndex = 0; tileIndex < beatPerRow; ++tileIndex) {
-        if (tileIndex % (beatPerWord) == 0) {
-          // 마디의 시작 부분
-          // TODO : 마커에 색 추가
-          rowChildren.add(const MarkerStick());
-        }
-
-        int tileIndexOfSheet = rowIndex * beatPerRow + tileIndex;
-
-        Color borderColor = Colors.transparent;
-        Color textColor = AppColors.black04;
-
-        if (correctIndexes.contains(tileIndexOfSheet)) {
-          borderColor = AppColors.blue71;
-          textColor = AppColors.blue71;
-        } else if (wrongIndexes.contains(tileIndexOfSheet)) {
-          borderColor = AppColors.redFF;
-          textColor = AppColors.redFF;
-        }
-
-        if (highlightedTileIndex == tileIndexOfSheet) {
-          textColor = Colors.white;
-        }
-
-        bool hasChord = currentChordIndex < sheetData.chords.length &&
-            tileIndexOfSheet == sheetData.chords[currentChordIndex].position;
-
-        rowChildren.add(BeatTile(
-          child: hasChord
-              ? ChordText(
-                  root: sheetData.chords[currentChordIndex].chord.root
-                      .noteNameWithoutOctave,
-                  postfix: sheetData
-                      .chords[currentChordIndex].chord.triadType.shortNotation,
-                  rootColor: textColor,
-                  postfixColor: textColor,
-                )
-              : null,
-          isHighlighted: highlightedTileIndex == tileIndexOfSheet,
-          borderColor: borderColor,
-          onClick: () {
-            onClick?.call(tileIndexOfSheet);
-          },
-          onLongClick: () {
-            onLongClick?.call(tileIndexOfSheet);
-          },
-        ));
-
-        while (currentChordIndex < sheetData.chords.length &&
-            tileIndexOfSheet == sheetData.chords[currentChordIndex].position) {
-          // 같은 포지션에 코드가 두 개 이상 있으면 두번째부터 무시함.
-          currentChordIndex++;
-        }
-      }
-
-      tileRows.add(Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: rowChildren,
-      ));
-
+      // vertical spacer
       tileRows.add(Container(
         height: 20,
       ));
+
+      while (currentChordIndex < sheetData.chords.length &&
+          _calcTileIndex(rowIndex + 1, beatPerRow, 0) > sheetData.chords[currentChordIndex].position) {
+        currentChordIndex++;
+      }
     }
 
     return SafeArea(
       child: ListView(
-        children: tileRows,
+        children: [
+          SizedBox(height: topMargin),
+         ...tileRows,
+          SizedBox(height: bottomMargin),
+        ]
       ),
     );
+  }
+
+  List<Widget> _tileRow(
+    int beatPerWord,
+    int beatPerRow,
+    int rowIndex,
+    int highlightedTileIndex,
+    int startChordIndex,
+    SheetData sheetData,
+  ) {
+    final List<Widget> rowChildren = [];
+    int currentChordIndex = startChordIndex;
+
+    for (int tileIndex = 0; tileIndex < beatPerRow; ++tileIndex) {
+      if (tileIndex % (beatPerWord) == 0) {
+        // 마디의 시작 부분
+        // TODO : 마커에 색 추가
+        rowChildren.add(const MarkerStick());
+      }
+
+      int tileIndexOfSheet = _calcTileIndex(rowIndex, beatPerRow, tileIndex);
+
+      Color borderColor = Colors.transparent;
+      Color textColor = AppColors.black04;
+
+      if (correctIndexes.contains(tileIndexOfSheet)) {
+        borderColor = AppColors.blue71;
+        textColor = AppColors.blue71;
+      } else if (wrongIndexes.contains(tileIndexOfSheet)) {
+        borderColor = AppColors.redFF;
+        textColor = AppColors.redFF;
+      }
+
+      if (highlightedTileIndex == tileIndexOfSheet) {
+        textColor = Colors.white;
+      }
+
+      bool hasChord = currentChordIndex < sheetData.chords.length &&
+          tileIndexOfSheet == sheetData.chords[currentChordIndex].position;
+
+      rowChildren.add(BeatTile(
+        height: 40.0,
+        width: 40.0,
+        child: hasChord
+            ? ChordText(
+                root: sheetData
+                    .chords[currentChordIndex].chord.root.noteNameWithoutOctave,
+                postfix: sheetData
+                    .chords[currentChordIndex].chord.triadType.shortNotation,
+                rootColor: textColor,
+                postfixColor: textColor,
+              )
+            : null,
+        isHighlighted: highlightedTileIndex == tileIndexOfSheet,
+        borderColor: borderColor,
+        onClick: () {
+          onClick?.call(tileIndexOfSheet);
+        },
+        onLongClick: () {
+          onLongClick?.call(tileIndexOfSheet);
+        },
+      ));
+
+      while (currentChordIndex < sheetData.chords.length &&
+          tileIndexOfSheet == sheetData.chords[currentChordIndex].position) {
+        // 같은 포지션에 코드가 두 개 이상 있으면 두번째부터 무시함.
+        currentChordIndex++;
+      }
+    }
+
+    return rowChildren;
+  }
+
+  int _calcTileIndex(int rowIndex, int beatPerRow, int tileIndex) {
+    return rowIndex * beatPerRow + tileIndex;
   }
 }
