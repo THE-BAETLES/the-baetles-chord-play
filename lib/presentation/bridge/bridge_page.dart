@@ -39,31 +39,33 @@ class _BridgePageState extends State<BridgePage> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Column(
-            children: [
-              YoutubeVideoPlayer(
-                controller: viewModel.youtubePlayerController!,
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Wrap(
-                    children: [
-                      VideoInfoCard(
-                        video: video,
-                        onChangeInstrument: (Instrument? instrument) {
-                          viewModel.onChangeInstrument(instrument);
-                        },
-                      ),
-                      const Divider(
-                        color: AppColors.grayF8,
-                        thickness: 8,
-                      ),
-                      _tabController(context, viewModel),
-                    ],
+          Positioned.fill(
+            child: Column(
+              children: [
+                YoutubeVideoPlayer(
+                  controller: viewModel.youtubePlayerController!,
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Wrap(
+                      children: [
+                        VideoInfoCard(
+                          video: video,
+                          onChangeInstrument: (Instrument? instrument) {
+                            viewModel.onChangeInstrument(instrument);
+                          },
+                        ),
+                        const Divider(
+                          color: AppColors.grayF8,
+                          thickness: 8,
+                        ),
+                        _tabController(context, viewModel),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           const Visibility(
             visible: true,

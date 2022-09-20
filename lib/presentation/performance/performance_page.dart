@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:the_baetles_chord_play/domain/model/sheet_element_size.dart';
 import 'package:the_baetles_chord_play/domain/model/triad_type.dart';
 import 'package:the_baetles_chord_play/presentation/performance/control_bar.dart';
 import 'package:the_baetles_chord_play/presentation/performance/performance_view_model.dart';
@@ -112,31 +113,59 @@ class _PerformancePageState extends State<PerformancePage> {
             left: 0,
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            child: ValueListenableBuilder(
-              valueListenable: viewModel.currentPosition,
-              builder: (context, value, _) {
-                return ValueListenableBuilder(
-                  valueListenable: viewModel.sheetState,
-                  builder: (context, value, _) {
-                    if (viewModel.sheetState.value?.sheetData == null) {
-                      return Container();
-                    }
-
-                    return SheetView(
-                      currentPosition: viewModel.currentPosition.value,
-                      sheetData: (viewModel.sheetState.value?.sheetData)!,
-                      correctIndexes: viewModel.feedbackState.correctIndexes.toList(),
-                      wrongIndexes: viewModel.feedbackState.wrongIndexes.toList(),
-                      onClick: (int tileIndex) {
-                        viewModel.onTileClick(tileIndex);
-                      },
-                      onLongClick: (tileIndex) {
-                        viewModel.onTileLongClick(tileIndex);
-                      },
-                    );
-                  },
-                );
-              },
+            child: Row(
+              children: [
+                Expanded(
+                  child: ValueListenableBuilder(
+                    valueListenable: viewModel.currentPosition,
+                    builder: (context, value, _) {
+                      return ValueListenableBuilder(
+                        valueListenable: viewModel.sheetState,
+                        builder: (context, value, _) {
+                          if (viewModel.sheetState.value?.sheetData == null) {
+                            return Container();
+                          }
+                          return LayoutBuilder(builder: (BuildContext context,
+                              BoxConstraints constraints) {
+                            return SheetView(
+                              currentPosition: viewModel.currentPosition.value,
+                              sheetData:
+                                  (viewModel.sheetState.value?.sheetData)!,
+                              correctIndexes: viewModel
+                                  .feedbackState.correctIndexes
+                                  .toList(),
+                              wrongIndexes:
+                                  viewModel.feedbackState.wrongIndexes.toList(),
+                              onClick: (int tileIndex) {
+                                viewModel.onTileClick(tileIndex);
+                              },
+                              onLongClick: (tileIndex) {
+                                viewModel.onTileLongClick(tileIndex);
+                              },
+                              sheetElementSize: SheetElementSize.expand(
+                                sheetHeight: constraints.maxHeight,
+                                sheetWidth: constraints.maxWidth,
+                                measureCount: 3,
+                                spaceWidth: 4,
+                                barWidth: 2,
+                              ),
+                            );
+                          });
+                        },
+                      );
+                    },
+                  ),
+                ),
+                LayoutBuilder(builder:
+                    (BuildContext context, BoxConstraints constraints) {
+                  return Container(
+                    color: Colors.white,
+                    width: 250,
+                    height: constraints.maxHeight,
+                    child: Text("hello side bar!"),
+                  );
+                })
+              ],
             ),
           ),
           Positioned(
@@ -152,7 +181,8 @@ class _PerformancePageState extends State<PerformancePage> {
                     builder: (context, value, _) {
                       log("${viewModel.currentPositionInPercentage ?? 0}");
                       return LinearProgressIndicator(
-                        value: (viewModel.currentPositionInPercentage ?? 0) / 100.0,
+                        value: (viewModel.currentPositionInPercentage ?? 0) /
+                            100.0,
                         color: AppColors.blue4E,
                         backgroundColor: Colors.transparent,
                         minHeight: 3,

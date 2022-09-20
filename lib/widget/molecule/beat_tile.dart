@@ -27,7 +27,6 @@ class BeatTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 2),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(6),
         border: Border.all(

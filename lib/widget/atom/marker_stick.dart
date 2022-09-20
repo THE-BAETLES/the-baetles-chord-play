@@ -4,14 +4,21 @@ import 'app_colors.dart';
 
 class MarkerStick extends StatelessWidget {
   final Color color;
+  final double width;
+  final double height;
 
-  const MarkerStick({Key? key, this.color = AppColors.grayD2}) : super(key: key);
+  const MarkerStick({
+    Key? key,
+    this.color = AppColors.grayD2,
+    required this.width,
+    required this.height,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 1,
-      height: 26,
+      width: width,
+      height: height,
       color: color,
     );
   }

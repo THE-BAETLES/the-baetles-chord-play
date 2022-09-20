@@ -5,13 +5,12 @@ import 'package:the_baetles_chord_play/widget/molecule/beat_tile.dart';
 import 'package:the_baetles_chord_play/widget/atom/marker_stick.dart';
 
 import '../../../domain/model/sheet_data.dart';
+import '../../../domain/model/sheet_element_size.dart';
 import '../../../widget/atom/app_colors.dart';
 import '../../../widget/atom/chord_text.dart';
 
 class SheetView extends StatelessWidget {
-  static const int beatPerWord = 4;
-  static const int wordPerRow = 4;
-  static const int beatPerRow = beatPerWord * wordPerRow;
+  static const int beatPerMeasure = 4;
   static const double topMargin = 10.0;
   static const double bottomMargin = 105.0;
 
@@ -19,6 +18,7 @@ class SheetView extends StatelessWidget {
   final List<int> correctIndexes;
   final List<int> wrongIndexes;
   final int currentPosition;
+  final SheetElementSize sheetElementSize;
 
   final Function(int)? onClick;
   final Function(int)? onLongClick;
@@ -29,6 +29,7 @@ class SheetView extends StatelessWidget {
     required this.currentPosition,
     required this.correctIndexes,
     required this.wrongIndexes,
+    required this.sheetElementSize,
     this.onClick,
     this.onLongClick,
   }) : super(key: key);
@@ -42,7 +43,7 @@ class SheetView extends StatelessWidget {
     int highlightedTileIndex = bps * currentPosition ~/ 1000;
     int currentChordIndex = 0;
     int rowCount = sheetData.chords.isNotEmpty
-        ? sheetData.chords.last.position ~/ beatPerRow + 1
+        ? sheetData.chords.last.position ~/ (beatPerMeasure * sheetElementSize.measureCount) + 1
         : 0;
 
     for (int rowIndex = 0; rowIndex < rowCount; ++rowIndex) {
@@ -50,8 +51,8 @@ class SheetView extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: _tileRow(
-            beatPerWord,
-            beatPerRow,
+            beatPerMeasure,
+            (beatPerMeasure * sheetElementSize.measureCount),
             rowIndex,
             highlightedTileIndex,
             currentChordIndex,
@@ -65,19 +66,23 @@ class SheetView extends StatelessWidget {
         height: 20,
       ));
 
+      int nextRowFirstTileIndex = _calcTileIndex(rowIndex + 1, (beatPerMeasure * sheetElementSize.measureCount), 0);
       while (currentChordIndex < sheetData.chords.length &&
-          _calcTileIndex(rowIndex + 1, beatPerRow, 0) > sheetData.chords[currentChordIndex].position) {
+          nextRowFirstTileIndex >
+              sheetData.chords[currentChordIndex].position) {
         currentChordIndex++;
       }
     }
 
     return SafeArea(
-      child: ListView(
-        children: [
+      child: Container(
+        width: sheetElementSize.sheetWidth,
+        height: sheetElementSize.sheetHeight,
+        child: ListView(children: [
           SizedBox(height: topMargin),
-         ...tileRows,
+          ...tileRows,
           SizedBox(height: bottomMargin),
-        ]
+        ]),
       ),
     );
   }
@@ -97,7 +102,16 @@ class SheetView extends StatelessWidget {
       if (tileIndex % (beatPerWord) == 0) {
         // 마디의 시작 부분
         // TODO : 마커에 색 추가
-        rowChildren.add(const MarkerStick());
+        rowChildren.add(MarkerStick(
+          width: sheetElementSize.barWidth,
+          height: sheetElementSize.barHeight,
+        ));
+
+        rowChildren.add(
+          Container(
+            width: sheetElementSize.spaceWidth,
+          ),
+        );
       }
 
       int tileIndexOfSheet = _calcTileIndex(rowIndex, beatPerRow, tileIndex);
@@ -121,8 +135,8 @@ class SheetView extends StatelessWidget {
           tileIndexOfSheet == sheetData.chords[currentChordIndex].position;
 
       rowChildren.add(BeatTile(
-        height: 40.0,
-        width: 40.0,
+        height: sheetElementSize.tileHeight,
+        width: sheetElementSize.tileWidth,
         child: hasChord
             ? ChordText(
                 root: sheetData
@@ -142,6 +156,12 @@ class SheetView extends StatelessWidget {
           onLongClick?.call(tileIndexOfSheet);
         },
       ));
+
+      rowChildren.add(
+        Container(
+          width: sheetElementSize.spaceWidth,
+        ),
+      );
 
       while (currentChordIndex < sheetData.chords.length &&
           tileIndexOfSheet == sheetData.chords[currentChordIndex].position) {
