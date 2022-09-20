@@ -32,6 +32,7 @@ class GuitarTabView extends StatelessWidget {
           _tabView(root: "D", postfix: "m", tab: 'x 0 0 2 3 1', size: 5),
           const SizedBox(height: bottomMargin),
         ],
+        physics: BouncingScrollPhysics(),
       ),
     );
   }

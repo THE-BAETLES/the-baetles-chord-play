@@ -43,7 +43,9 @@ class SheetView extends StatelessWidget {
     int highlightedTileIndex = bps * currentPosition ~/ 1000;
     int currentChordIndex = 0;
     int rowCount = sheetData.chords.isNotEmpty
-        ? sheetData.chords.last.position ~/ (beatPerMeasure * sheetElementSize.measureCount) + 1
+        ? sheetData.chords.last.position ~/
+                (beatPerMeasure * sheetElementSize.measureCount) +
+            1
         : 0;
 
     for (int rowIndex = 0; rowIndex < rowCount; ++rowIndex) {
@@ -66,7 +68,8 @@ class SheetView extends StatelessWidget {
         height: 20,
       ));
 
-      int nextRowFirstTileIndex = _calcTileIndex(rowIndex + 1, (beatPerMeasure * sheetElementSize.measureCount), 0);
+      int nextRowFirstTileIndex = _calcTileIndex(
+          rowIndex + 1, (beatPerMeasure * sheetElementSize.measureCount), 0);
       while (currentChordIndex < sheetData.chords.length &&
           nextRowFirstTileIndex >
               sheetData.chords[currentChordIndex].position) {
@@ -78,11 +81,14 @@ class SheetView extends StatelessWidget {
       child: Container(
         width: sheetElementSize.sheetWidth,
         height: sheetElementSize.sheetHeight,
-        child: ListView(children: [
-          SizedBox(height: topMargin),
-          ...tileRows,
-          SizedBox(height: bottomMargin),
-        ]),
+        child: ListView(
+          children: [
+            SizedBox(height: topMargin),
+            ...tileRows,
+            SizedBox(height: bottomMargin),
+          ],
+          physics: BouncingScrollPhysics(),
+        ),
       ),
     );
   }
