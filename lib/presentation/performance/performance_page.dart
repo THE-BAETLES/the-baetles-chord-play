@@ -23,6 +23,9 @@ import 'fragment/guitar_tab_view.dart';
 import 'fragment/sheet_view.dart';
 
 class PerformancePage extends StatefulWidget {
+  static const visible = 0.0;
+  static const hidden = 1.0;
+
   const PerformancePage({Key? key}) : super(key: key);
 
   @override
@@ -132,8 +135,9 @@ class _PerformancePageState extends State<PerformancePage> {
             child: ValueListenableBuilder(
               valueListenable: viewModel.playOption,
               builder: (context, value, _) {
-                return Visibility(
-                  visible: !viewModel.playOption.value.isPlaying,
+                return AnimatedOpacity(
+                  opacity: !viewModel.playOption.value.isPlaying ? PerformancePage.hidden : PerformancePage.visible,
+                  duration: Duration(milliseconds: 300),
                   child: PerformanceAppBar(
                     viewModel: viewModel,
                   ),
