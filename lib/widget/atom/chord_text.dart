@@ -6,13 +6,17 @@ import 'app_colors.dart';
 class ChordText extends StatelessWidget {
   final String root;
   final String postfix;
+  final double rootSize;
   final Color rootColor;
+  final double postfixSize;
   final Color postfixColor;
 
   const ChordText({
     Key? key,
     required this.root,
     required this.postfix,
+    this.rootSize = 20,
+    this.postfixSize = 9,
     this.rootColor = AppColors.black04,
     this.postfixColor = AppColors.black04,
   }) : super(key: key);
@@ -27,7 +31,7 @@ class ChordText extends StatelessWidget {
             text: root,
             style: TextStyle(
               color: rootColor,
-              fontSize: 20,
+              fontSize: rootSize,
               fontWeight: FontWeight.w400,
               fontFamily: AppFontFamilies.pretendard,
             ),
@@ -36,7 +40,7 @@ class ChordText extends StatelessWidget {
             text: postfix,
             style: TextStyle(
               color: postfixColor,
-              fontSize: 9,
+              fontSize: postfixSize,
               fontWeight: FontWeight.w500,
               fontFamily: AppFontFamilies.pretendard,
             ),

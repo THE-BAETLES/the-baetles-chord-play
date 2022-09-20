@@ -137,16 +137,6 @@ class SheetView extends StatelessWidget {
       rowChildren.add(BeatTile(
         height: sheetElementSize.tileHeight,
         width: sheetElementSize.tileWidth,
-        child: hasChord
-            ? ChordText(
-                root: sheetData
-                    .chords[currentChordIndex].chord.root.noteNameWithoutOctave,
-                postfix: sheetData
-                    .chords[currentChordIndex].chord.triadType.shortNotation,
-                rootColor: textColor,
-                postfixColor: textColor,
-              )
-            : null,
         isHighlighted: highlightedTileIndex == tileIndexOfSheet,
         borderColor: borderColor,
         onClick: () {
@@ -155,6 +145,18 @@ class SheetView extends StatelessWidget {
         onLongClick: () {
           onLongClick?.call(tileIndexOfSheet);
         },
+        child: hasChord
+            ? ChordText(
+                root: sheetData
+                    .chords[currentChordIndex].chord.root.noteNameWithoutOctave,
+                postfix: sheetData
+                    .chords[currentChordIndex].chord.triadType.shortNotation,
+                rootSize: sheetElementSize.chordRootTextSize,
+                postfixSize: sheetElementSize.chordPostfixTextSize,
+                rootColor: textColor,
+                postfixColor: textColor,
+              )
+            : null,
       ));
 
       rowChildren.add(

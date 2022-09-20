@@ -148,7 +148,7 @@ class _PerformancePageState extends State<PerformancePage> {
                                 sheetHeight: constraints.maxHeight,
                                 sheetWidth: constraints.maxWidth,
                                 measureCount: 3,
-                                spaceWidth: 4,
+                                spaceWidth: 3,
                                 barWidth: 2,
                               ),
                             );

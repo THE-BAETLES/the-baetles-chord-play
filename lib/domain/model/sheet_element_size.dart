@@ -10,6 +10,8 @@ class SheetElementSize {
   late final double spaceHeight;
   late final double barWidth;
   late final double barHeight;
+  late final double chordRootTextSize;
+  late final double chordPostfixTextSize;
 
   SheetElementSize({
     required this.sheetHeight,
@@ -21,6 +23,8 @@ class SheetElementSize {
     required this.spaceHeight,
     required this.barWidth,
     required this.barHeight,
+    required this.chordRootTextSize,
+    required this.chordPostfixTextSize,
   });
 
   SheetElementSize.expand({
@@ -37,5 +41,8 @@ class SheetElementSize {
 
     this.spaceHeight = spaceHeight ?? this.tileHeight;
     this.barHeight = barHeight ?? this.tileHeight;
+
+    this.chordRootTextSize = tileHeight / 2;
+    this.chordPostfixTextSize = tileHeight / 4;
   }
 }
