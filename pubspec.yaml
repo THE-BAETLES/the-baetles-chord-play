@@ -52,6 +52,7 @@ dependencies:
   flutter_dotenv: ^5.0.2
   json_annotation: ^4.6.0
   flutter_animation_progress_bar: ^2.2.1
+  flutter_guitar_tabs: ^0.0.8
 
   flutter_client_sse:
     git:

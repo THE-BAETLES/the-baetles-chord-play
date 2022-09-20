@@ -18,6 +18,7 @@ import '../../widget/atom/app_colors.dart';
 import '../../widget/atom/app_font_families.dart';
 import '../../widget/molecule/EllipseToggleButton.dart';
 import '../../widget/molecule/chord_picker.dart';
+import 'fragment/guitar_tab_view.dart';
 import 'fragment/sheet_view.dart';
 
 class PerformancePage extends StatefulWidget {
@@ -161,9 +162,7 @@ class _PerformancePageState extends State<PerformancePage> {
                     (BuildContext context, BoxConstraints constraints) {
                   return Container(
                     color: Colors.white,
-                    width: 250,
-                    height: constraints.maxHeight,
-                    child: Text("hello side bar!"),
+                    child: GuitarTabView(width: 230, height: constraints.maxHeight),
                   );
                 })
               ],

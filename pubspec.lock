@@ -316,6 +316,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.2"
+  flutter_guitar_tabs:
+    dependency: "direct main"
+    description:
+      name: flutter_guitar_tabs
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.8"
   flutter_inappwebview:
     dependency: transitive
     description:
