@@ -12,9 +12,11 @@ class BridgeSheetListView extends StatefulWidget {
   final UnmodifiableListView<SheetInfo>? sheets;
   final String videoTitle;
 
-  BridgeSheetListView(
-      {Key? key, required this.sheets, required this.videoTitle})
-      : super(key: key);
+  BridgeSheetListView({
+    Key? key,
+    required this.sheets,
+    required this.videoTitle,
+  }) : super(key: key);
 
   @override
   State<BridgeSheetListView> createState() => _BridgeSheetListViewState();
@@ -23,7 +25,6 @@ class BridgeSheetListView extends StatefulWidget {
 class _BridgeSheetListViewState extends State<BridgeSheetListView> {
   @override
   Widget build(BuildContext context) {
-
     return ListView.builder(
       padding: EdgeInsets.zero,
       itemCount: widget.sheets?.length ?? 0,

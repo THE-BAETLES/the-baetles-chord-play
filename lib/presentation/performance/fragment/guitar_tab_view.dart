@@ -5,6 +5,9 @@ import '../../../widget/atom/app_colors.dart';
 import '../../../widget/atom/chord_text.dart';
 
 class GuitarTabView extends StatelessWidget {
+  static const double topMargin = 62.0;
+  static const double bottomMargin = 105.0;
+
   final double width;
   final double height;
 
@@ -21,11 +24,13 @@ class GuitarTabView extends StatelessWidget {
       height: height,
       child: ListView(
         children: [
+          const SizedBox(height: topMargin),
           _tabView(root: "D", postfix: "m", tab: 'x 0 0 2 3 1', size: 8),
           _tabView(root: "D", postfix: "m", tab: 'x 0 0 2 3 1', size: 5),
           _tabView(root: "D", postfix: "m", tab: 'x 0 0 2 3 1', size: 5),
           _tabView(root: "D", postfix: "m", tab: 'x 0 0 2 3 1', size: 5),
           _tabView(root: "D", postfix: "m", tab: 'x 0 0 2 3 1', size: 5),
+          const SizedBox(height: bottomMargin),
         ],
       ),
     );

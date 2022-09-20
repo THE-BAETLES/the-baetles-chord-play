@@ -11,7 +11,7 @@ import '../../../widget/atom/chord_text.dart';
 
 class SheetView extends StatelessWidget {
   static const int beatPerMeasure = 4;
-  static const double topMargin = 10.0;
+  static const double topMargin = 62.0;
   static const double bottomMargin = 105.0;
 
   final SheetData sheetData;

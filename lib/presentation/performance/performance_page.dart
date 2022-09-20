@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:the_baetles_chord_play/domain/model/sheet_element_size.dart';
 import 'package:the_baetles_chord_play/domain/model/triad_type.dart';
 import 'package:the_baetles_chord_play/presentation/performance/control_bar.dart';
+import 'package:the_baetles_chord_play/presentation/performance/performance_app_bar.dart';
 import 'package:the_baetles_chord_play/presentation/performance/performance_view_model.dart';
 
 import '../../domain/model/chord.dart';
@@ -61,51 +62,6 @@ class _PerformancePageState extends State<PerformancePage> {
     PerformanceViewModel viewModel = context.read<PerformanceViewModel>();
 
     return Scaffold(
-      appBar: AppBar(
-        systemOverlayStyle:
-            const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
-        toolbarHeight: 52,
-        backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(
-          color: AppColors.black04,
-        ),
-        elevation: 0,
-        centerTitle: true,
-        title: Text(
-          viewModel.sheetState.value?.sheetInfo.title ?? "",
-          style: TextStyle(
-            color: AppColors.black04,
-            fontFamily: AppFontFamilies.notosanskr,
-            fontWeight: FontWeight.w500,
-            fontSize: 14,
-          ),
-          textAlign: TextAlign.center,
-        ),
-        actions: [
-          Container(
-            width: 22,
-            height: 20.52,
-            child: SvgPicture.asset(
-              "assets/icons/ic_empty_heart.svg",
-              fit: BoxFit.contain,
-            ),
-          ),
-          Container(
-            width: 16,
-          ),
-          Container(
-            width: 28,
-            height: 29,
-            child: SvgPicture.asset(
-              "assets/icons/ic_expansion.svg",
-              fit: BoxFit.contain,
-            ),
-          ),
-          Container(
-            width: 16,
-          ),
-        ],
-      ),
       backgroundColor: AppColors.grayF5,
       body: Stack(
         fit: StackFit.expand,
@@ -162,10 +118,27 @@ class _PerformancePageState extends State<PerformancePage> {
                     (BuildContext context, BoxConstraints constraints) {
                   return Container(
                     color: Colors.white,
-                    child: GuitarTabView(width: 230, height: constraints.maxHeight),
+                    child: GuitarTabView(
+                        width: 230, height: constraints.maxHeight),
                   );
                 })
               ],
+            ),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: ValueListenableBuilder(
+              valueListenable: viewModel.playOption,
+              builder: (context, value, _) {
+                return Visibility(
+                  visible: !viewModel.playOption.value.isPlaying,
+                  child: PerformanceAppBar(
+                    viewModel: viewModel,
+                  ),
+                );
+              },
             ),
           ),
           Positioned(
