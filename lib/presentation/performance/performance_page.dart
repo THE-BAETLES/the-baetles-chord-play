@@ -69,6 +69,7 @@ class _PerformancePageState extends State<PerformancePage> {
           color: AppColors.black04,
         ),
         elevation: 0,
+        centerTitle: true,
         title: Text(
           viewModel.sheetState.value?.sheetInfo.title ?? "",
           style: TextStyle(
