@@ -2,16 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:the_baetles_chord_play/domain/model/sheet_element_size.dart';
-import 'package:the_baetles_chord_play/domain/model/triad_type.dart';
 import 'package:the_baetles_chord_play/presentation/performance/control_bar.dart';
 import 'package:the_baetles_chord_play/presentation/performance/performance_app_bar.dart';
 import 'package:the_baetles_chord_play/presentation/performance/performance_view_model.dart';
 
-import '../../domain/model/chord.dart';
-import '../../domain/model/note.dart';
 import '../../domain/model/sheet_data.dart';
 import '../../domain/model/sheet_info.dart';
 import '../../domain/model/video.dart';
@@ -81,37 +77,48 @@ class _PerformancePageState extends State<PerformancePage> {
                     valueListenable: viewModel.currentPosition,
                     builder: (context, value, _) {
                       return ValueListenableBuilder(
-                        valueListenable: viewModel.sheetState,
+                        valueListenable: viewModel.measureCount,
                         builder: (context, value, _) {
-                          if (viewModel.sheetState.value?.sheetData == null) {
-                            return Container();
-                          }
-                          return LayoutBuilder(builder: (BuildContext context,
-                              BoxConstraints constraints) {
-                            return SheetView(
-                              currentPosition: viewModel.currentPosition.value,
-                              sheetData:
-                                  (viewModel.sheetState.value?.sheetData)!,
-                              correctIndexes: viewModel
-                                  .feedbackState.correctIndexes
-                                  .toList(),
-                              wrongIndexes:
-                                  viewModel.feedbackState.wrongIndexes.toList(),
-                              onClick: (int tileIndex) {
-                                viewModel.onTileClick(tileIndex);
-                              },
-                              onLongClick: (tileIndex) {
-                                viewModel.onTileLongClick(tileIndex);
-                              },
-                              sheetElementSize: SheetElementSize.expand(
-                                sheetHeight: constraints.maxHeight,
-                                sheetWidth: constraints.maxWidth,
-                                measureCount: 3,
-                                spaceWidth: 3,
-                                barWidth: 2,
-                              ),
-                            );
-                          });
+                          return ValueListenableBuilder(
+                            valueListenable: viewModel.sheetState,
+                            builder: (context, value, _) {
+                              if (viewModel.sheetState.value?.sheetData ==
+                                  null) {
+                                return Container();
+                              }
+                              return LayoutBuilder(
+                                  builder: (BuildContext context,
+                                      BoxConstraints constraints) {
+                                    return SheetView(
+                                      currentPosition: viewModel.currentPosition
+                                          .value,
+                                      sheetData:
+                                      (viewModel.sheetState.value?.sheetData)!,
+                                      correctIndexes: viewModel
+                                          .feedbackState.correctIndexes
+                                          .toList(),
+                                      wrongIndexes:
+                                      viewModel.feedbackState.wrongIndexes
+                                          .toList(),
+                                      onClick: (int tileIndex) {
+                                        viewModel.onTileClick(tileIndex);
+                                      },
+                                      onLongClick: (tileIndex) {
+                                        viewModel.onTileLongClick(tileIndex);
+                                      },
+                                      scaleAdapter: viewModel.scaleAdapter,
+                                      sheetElementSize: SheetElementSize.expand(
+                                        sheetHeight: constraints.maxHeight,
+                                        sheetWidth: constraints.maxWidth,
+                                        measureCount: viewModel.measureCount
+                                            .value,
+                                        spaceWidth: 3,
+                                        barWidth: 2,
+                                      ),
+                                    );
+                                  });
+                            },
+                          );
                         },
                       );
                     },

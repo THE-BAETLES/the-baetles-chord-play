@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:the_baetles_chord_play/widget/molecule/beat_tile.dart';
 import 'package:the_baetles_chord_play/widget/atom/marker_stick.dart';
 
@@ -8,6 +6,7 @@ import '../../../domain/model/sheet_data.dart';
 import '../../../domain/model/sheet_element_size.dart';
 import '../../../widget/atom/app_colors.dart';
 import '../../../widget/atom/chord_text.dart';
+import '../adapter/scale_adapter.dart';
 
 class SheetView extends StatelessWidget {
   static const int beatPerMeasure = 4;
@@ -22,6 +21,7 @@ class SheetView extends StatelessWidget {
 
   final Function(int)? onClick;
   final Function(int)? onLongClick;
+  final ScaleAdapter? scaleAdapter;
 
   const SheetView({
     Key? key,
@@ -32,6 +32,7 @@ class SheetView extends StatelessWidget {
     required this.sheetElementSize,
     this.onClick,
     this.onLongClick,
+    this.scaleAdapter,
   }) : super(key: key);
 
   @override
@@ -77,17 +78,23 @@ class SheetView extends StatelessWidget {
       }
     }
 
-    return SafeArea(
-      child: Container(
-        width: sheetElementSize.sheetWidth,
-        height: sheetElementSize.sheetHeight,
-        child: ListView(
-          children: [
-            SizedBox(height: topMargin),
-            ...tileRows,
-            SizedBox(height: bottomMargin),
-          ],
-          physics: BouncingScrollPhysics(),
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onScaleStart: scaleAdapter?.onScaleStart,
+      onScaleUpdate: scaleAdapter?.onScaleUpdate,
+      onScaleEnd: scaleAdapter?.onScaleEnd,
+      child: SafeArea(
+        child: SizedBox(
+          width: sheetElementSize.sheetWidth,
+          height: sheetElementSize.sheetHeight,
+          child: ListView(
+            physics: const BouncingScrollPhysics(),
+            children: [
+              const SizedBox(height: topMargin),
+              ...tileRows,
+              const SizedBox(height: bottomMargin),
+            ],
+          ),
         ),
       ),
     );

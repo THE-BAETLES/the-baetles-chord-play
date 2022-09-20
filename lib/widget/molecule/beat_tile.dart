@@ -34,17 +34,22 @@ class BeatTile extends StatelessWidget {
           width: 1,
         ),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(6),
-        child: GestureDetector(
-          onTap: onClick,
-          onLongPress: onLongClick,
-          child: Container(
-            width: width,
-            height: height,
-            color: isHighlighted ? AppColors.blue7F : Colors.white,
-            child: Center(
-              child: child,
+      child: GestureDetector(
+        onTap: () {
+          print("tappp!!!");
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(6),
+          child: GestureDetector(
+            onTap: onClick,
+            onLongPress: onLongClick,
+            child: Container(
+              width: width,
+              height: height,
+              color: isHighlighted ? AppColors.blue7F : Colors.white,
+              child: Center(
+                child: child,
+              ),
             ),
           ),
         ),

@@ -12,7 +12,6 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../domain/model/chord.dart';
 import '../../domain/model/loop.dart';
-import '../../domain/model/note.dart';
 import '../../domain/model/sheet_data.dart';
 import '../../domain/model/sheet_info.dart';
 import '../../domain/model/video.dart';
@@ -21,6 +20,8 @@ import '../../domain/use_case/move_play_position.dart';
 import '../../domain/use_case/update_play_option.dart';
 import '../../service/conductor/performers/call_performer.dart';
 import '../../service/conductor/performers/chord_checker.dart';
+import 'adapter/measure_scale_adapter.dart';
+import 'adapter/scale_adapter.dart';
 import 'feedback_state.dart';
 
 class PerformanceViewModel with ChangeNotifier {
@@ -32,16 +33,16 @@ class PerformanceViewModel with ChangeNotifier {
     capo: 0,
   );
   late final ValueNotifier<PlayOption> _playOption;
-  final ValueNotifier<int> _currentPosition =
-      ValueNotifier(0); // in millisecond
+  final ValueNotifier<int> _currentPosition = ValueNotifier(0); // in mSec
   final ValueNotifier<bool> _isPitchBeingChecked = ValueNotifier(false);
   final ValueNotifier<bool> _isMuted = ValueNotifier(false);
   final ValueNotifier<FeedbackState> _feedbackState = ValueNotifier(FeedbackState());
   final ValueNotifier<SheetState?> _sheetState = ValueNotifier(null);
   final ValueNotifier<int?> _editingPosition = ValueNotifier(null);
   final ValueNotifier<Chord?> _selectedChord = ValueNotifier(null);
-  final ValueNotifier<YoutubePlayerController?> _youtubeController =
-      ValueNotifier(null);
+  final ValueNotifier<YoutubePlayerController?> _youtubeController = ValueNotifier(null);
+  final ValueNotifier<int> _measureCount = ValueNotifier(4);
+
   late final Function(int) _conductorPositionCallback;
 
   final AddPerformer _addPerformer;
@@ -50,10 +51,11 @@ class PerformanceViewModel with ChangeNotifier {
   final AddConductorPositionListener _addConductorPositionListener;
   final RemoveConductorPositionListener _removeConductorPositionListener;
   final SetYoutubePlayerController _setYoutubePlayerController;
+
+  late final MeasureScaleAdapter _scaleAdapter;
   late final ChordPickerViewModel _chordPickerViewModel;
 
-  PlayOptionCallbackPerformer _callbackPerformer =
-      PlayOptionCallbackPerformer();
+  PlayOptionCallbackPerformer _callbackPerformer = PlayOptionCallbackPerformer();
   ChordChecker? _chordChecker;
   Video? _video;
 
@@ -68,6 +70,8 @@ class PerformanceViewModel with ChangeNotifier {
   ValueNotifier<int?> get editingPosition => _editingPosition;
 
   ValueNotifier<SheetState?> get sheetState => _sheetState;
+
+  ValueNotifier<int> get measureCount => _measureCount;
 
   bool get isEditing => _editingPosition.value != null;
 
@@ -92,6 +96,8 @@ class PerformanceViewModel with ChangeNotifier {
     return currentPosition.value.toDouble() / (_video!.length * 1000).toDouble() * 100.0;
   }
 
+  ScaleAdapter get scaleAdapter => _scaleAdapter;
+
   PerformanceViewModel(
     this._updatePlayOption,
     this._setPlayPosition,
@@ -109,6 +115,11 @@ class PerformanceViewModel with ChangeNotifier {
 
     _chordPickerViewModel =
         ChordPickerViewModel(onChangeChord: onChangeChord);
+
+    _scaleAdapter = MeasureScaleAdapter(
+    getCurrentMeasureCount: () => _measureCount.value,
+    onChangeMeasureCount: onChangeMeasureCount,
+    );
   }
 
   void initViewModel({
@@ -119,6 +130,7 @@ class PerformanceViewModel with ChangeNotifier {
     _video = video;
 
     _feedbackState.value = FeedbackState();
+    _measureCount.value = 4;
 
     _playOption.value = PlayOption(
       isPlaying: false,
@@ -291,5 +303,9 @@ class PerformanceViewModel with ChangeNotifier {
 
     _editingPosition.value = null;
     _selectedChord.value = null;
+  }
+
+  void onChangeMeasureCount(int measureCount) {
+    this.measureCount.value = measureCount;
   }
 }
