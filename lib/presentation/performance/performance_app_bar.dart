@@ -8,16 +8,19 @@ import '../../widget/atom/app_font_families.dart';
 
 class PerformanceAppBar extends StatelessWidget {
   final PerformanceViewModel viewModel;
+  final double height;
 
   const PerformanceAppBar({
     Key? key,
     required this.viewModel,
+    this.height = 52,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return _appBar(
       viewModel: viewModel,
+      height: height,
     );
   }
 
@@ -32,14 +35,11 @@ class PerformanceAppBar extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: SvgPicture.asset(
-                  "assets/icons/ic_back_arrow.svg",
-                  width: 21,
-                  height: 15,
-                  fit: BoxFit.contain,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: const [
+                  BackButton(),
+                ],
               ),
             ),
             Text(

@@ -92,7 +92,7 @@ class PerformanceViewModel with ChangeNotifier {
     if (_video == null) {
       return null;
     }
-    
+
     return currentPosition.value.toDouble() / _video!.length.toDouble() * 100.0;
   }
 

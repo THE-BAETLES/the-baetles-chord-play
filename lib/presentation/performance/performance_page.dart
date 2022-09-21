@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -19,16 +17,13 @@ import 'fragment/guitar_tab_view.dart';
 import 'fragment/sheet_view.dart';
 
 class PerformancePage extends StatefulWidget {
-  static const visible = 0.0;
-  static const hidden = 1.0;
-
   const PerformancePage({Key? key}) : super(key: key);
 
   @override
   State<PerformancePage> createState() => _PerformancePageState();
 }
 
-class _PerformancePageState extends State<PerformancePage> {
+class _PerformancePageState extends State<PerformancePage> with TickerProviderStateMixin {
   late PerformanceViewModel _performanceViewModel;
 
   @override
@@ -86,37 +81,36 @@ class _PerformancePageState extends State<PerformancePage> {
                                   null) {
                                 return Container();
                               }
-                              return LayoutBuilder(
-                                  builder: (BuildContext context,
+                              return LayoutBuilder(builder:
+                                  (BuildContext context,
                                       BoxConstraints constraints) {
-                                    return SheetView(
-                                      currentPosition: viewModel.currentPosition
-                                          .value,
-                                      sheetData:
+                                return SheetView(
+                                  currentPosition:
+                                      viewModel.currentPosition.value,
+                                  sheetData:
                                       (viewModel.sheetState.value?.sheetData)!,
-                                      correctIndexes: viewModel
-                                          .feedbackState.correctIndexes
-                                          .toList(),
-                                      wrongIndexes:
-                                      viewModel.feedbackState.wrongIndexes
-                                          .toList(),
-                                      onClick: (int tileIndex) {
-                                        viewModel.onTileClick(tileIndex);
-                                      },
-                                      onLongClick: (tileIndex) {
-                                        viewModel.onTileLongClick(tileIndex);
-                                      },
-                                      scaleAdapter: viewModel.scaleAdapter,
-                                      sheetElementSize: SheetElementSize.expand(
-                                        sheetHeight: constraints.maxHeight,
-                                        sheetWidth: constraints.maxWidth,
-                                        measureCount: viewModel.measureCount
-                                            .value,
-                                        spaceWidth: 3,
-                                        barWidth: 2,
-                                      ),
-                                    );
-                                  });
+                                  correctIndexes: viewModel
+                                      .feedbackState.correctIndexes
+                                      .toList(),
+                                  wrongIndexes: viewModel
+                                      .feedbackState.wrongIndexes
+                                      .toList(),
+                                  onClick: (int tileIndex) {
+                                    viewModel.onTileClick(tileIndex);
+                                  },
+                                  onLongClick: (tileIndex) {
+                                    viewModel.onTileLongClick(tileIndex);
+                                  },
+                                  scaleAdapter: viewModel.scaleAdapter,
+                                  sheetElementSize: SheetElementSize.expand(
+                                    sheetHeight: constraints.maxHeight,
+                                    sheetWidth: constraints.maxWidth,
+                                    measureCount: viewModel.measureCount.value,
+                                    spaceWidth: 3,
+                                    barWidth: 2,
+                                  ),
+                                );
+                              });
                             },
                           );
                         },
@@ -142,11 +136,30 @@ class _PerformancePageState extends State<PerformancePage> {
             child: ValueListenableBuilder(
               valueListenable: viewModel.playOption,
               builder: (context, value, _) {
-                return AnimatedOpacity(
-                  opacity: !viewModel.playOption.value.isPlaying ? PerformancePage.hidden : PerformancePage.visible,
-                  duration: Duration(milliseconds: 300),
+
+                AnimationController _controller = AnimationController(
+                  duration: const Duration(milliseconds: 200),
+                  vsync: this,
+                );
+
+                if (viewModel.playOption.value.isPlaying) {
+                  _controller.animateTo(1.0);
+                } else {
+                  _controller.reverse(from: 1.0);
+                }
+
+                return SlideTransition(
+                  transformHitTests: true,
+                  position: Tween<Offset>(
+                    begin: Offset.zero,
+                    end: const Offset(0, -1),
+                  ).animate(CurvedAnimation(
+                    parent: _controller,
+                    curve: Curves.ease,
+                  )),
                   child: PerformanceAppBar(
                     viewModel: viewModel,
+                    // height: !viewModel.playOption.value.isPlaying ? 52 : 0,
                   ),
                 );
               },
@@ -164,7 +177,9 @@ class _PerformancePageState extends State<PerformancePage> {
                     valueListenable: viewModel.currentPosition,
                     builder: (context, value, _) {
                       return LinearProgressIndicator(
-                        value: (viewModel.currentPositionInPercentage ?? 0) / 100.0,
+                        value: ((viewModel.currentPositionInPercentage ?? 0) /
+                                100.0)
+                            .clamp(0, 1),
                         color: AppColors.blue4E,
                         backgroundColor: Colors.transparent,
                         minHeight: 3,
