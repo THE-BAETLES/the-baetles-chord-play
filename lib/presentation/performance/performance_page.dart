@@ -163,10 +163,8 @@ class _PerformancePageState extends State<PerformancePage> {
                   ValueListenableBuilder(
                     valueListenable: viewModel.currentPosition,
                     builder: (context, value, _) {
-                      log("${viewModel.currentPositionInPercentage ?? 0}");
                       return LinearProgressIndicator(
-                        value: (viewModel.currentPositionInPercentage ?? 0) /
-                            100.0,
+                        value: (viewModel.currentPositionInPercentage ?? 0) / 100.0,
                         color: AppColors.blue4E,
                         backgroundColor: Colors.transparent,
                         minHeight: 3,

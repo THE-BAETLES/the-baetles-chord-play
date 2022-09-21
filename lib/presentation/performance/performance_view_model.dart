@@ -92,8 +92,8 @@ class PerformanceViewModel with ChangeNotifier {
     if (_video == null) {
       return null;
     }
-
-    return currentPosition.value.toDouble() / (_video!.length * 1000).toDouble() * 100.0;
+    
+    return currentPosition.value.toDouble() / _video!.length.toDouble() * 100.0;
   }
 
   ScaleAdapter get scaleAdapter => _scaleAdapter;
