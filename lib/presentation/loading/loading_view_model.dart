@@ -73,7 +73,8 @@ class LoadingViewModel extends ChangeNotifier {
     _setAndNotifyProgressValue(1);
 
     _sheetInfo = sheetInfo;
-    // data for test below (to be deleted later)
+
+    // region data for test below (to be deleted later)
     _sheetData = SheetData(id: 'imdummy', bpm: 60, chords: [
       ChordBlock(Chord(Note.fromNoteName('C3'), TriadType.major), 12, 12, 13),
       ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 25, 12.213696067, 13.560453428),
@@ -85,8 +86,8 @@ class LoadingViewModel extends ChangeNotifier {
       ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 70, 17.043446603, 18.11156451),
     ]);
     _setAndNotifyProgressValue(100);
-
     return;
+    // endregion
 
 
     _sheetData = await _getSheetData(sheetInfo.id);

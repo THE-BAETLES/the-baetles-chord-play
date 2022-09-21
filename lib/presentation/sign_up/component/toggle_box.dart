@@ -42,10 +42,10 @@ class _ToggleBoxState extends State<ToggleBox> {
           },
           style: ElevatedButton.styleFrom(
             primary: Colors.white,
-            surfaceTintColor: AppColors.whiteEF,
+            surfaceTintColor: AppColors.servePointColor1,
             side: const BorderSide(
               width: 2,
-              color: AppColors.blue4E,
+              color: AppColors.mainPointColor,
             ),
             shadowColor: AppColors.shadowB5,
           ),
@@ -57,7 +57,7 @@ class _ToggleBoxState extends State<ToggleBox> {
                   child: Text(
                     widget._text,
                     style: const TextStyle(
-                      color: AppColors.blue4E,
+                      color: AppColors.mainPointColor,
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
                       fontFamily: AppFontFamilies.pretendard,

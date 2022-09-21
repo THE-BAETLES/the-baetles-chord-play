@@ -122,7 +122,7 @@ class _BridgePageState extends State<BridgePage> {
                   child: Text("공유된 악보"),
                 ),
               ],
-              labelColor: AppColors.blue4E,
+              labelColor: AppColors.mainPointColor,
               labelStyle: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
@@ -134,7 +134,7 @@ class _BridgePageState extends State<BridgePage> {
                 fontWeight: FontWeight.w400,
                 fontFamily: AppFontFamilies.pretendard,
               ),
-              indicatorColor: AppColors.blue4E,
+              indicatorColor: AppColors.mainPointColor,
               indicatorSize: TabBarIndicatorSize.label,
             ),
             const Divider(

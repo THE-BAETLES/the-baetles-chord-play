@@ -94,7 +94,7 @@ class ChordPicker extends StatelessWidget {
           item,
           style: isHighlighted
               ? const TextStyle(
-                  color: AppColors.blue4E,
+                  color: AppColors.mainPointColor,
                   fontWeight: FontWeight.w400,
                   fontFamily: AppFontFamilies.pretendard,
                   fontSize: 17,

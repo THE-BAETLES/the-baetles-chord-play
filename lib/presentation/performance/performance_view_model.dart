@@ -36,12 +36,15 @@ class PerformanceViewModel with ChangeNotifier {
   final ValueNotifier<int> _currentPosition = ValueNotifier(0); // in mSec
   final ValueNotifier<bool> _isPitchBeingChecked = ValueNotifier(false);
   final ValueNotifier<bool> _isMuted = ValueNotifier(false);
-  final ValueNotifier<FeedbackState> _feedbackState = ValueNotifier(FeedbackState());
+  final ValueNotifier<FeedbackState> _feedbackState =
+      ValueNotifier(FeedbackState());
   final ValueNotifier<SheetState?> _sheetState = ValueNotifier(null);
   final ValueNotifier<int?> _editingPosition = ValueNotifier(null);
   final ValueNotifier<Chord?> _selectedChord = ValueNotifier(null);
-  final ValueNotifier<YoutubePlayerController?> _youtubeController = ValueNotifier(null);
+  final ValueNotifier<YoutubePlayerController?> _youtubeController =
+      ValueNotifier(null);
   final ValueNotifier<int> _measureCount = ValueNotifier(4);
+  final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
   late final Function(int) _conductorPositionCallback;
 
@@ -55,7 +58,8 @@ class PerformanceViewModel with ChangeNotifier {
   late final MeasureScaleAdapter _scaleAdapter;
   late final ChordPickerViewModel _chordPickerViewModel;
 
-  PlayOptionCallbackPerformer _callbackPerformer = PlayOptionCallbackPerformer();
+  PlayOptionCallbackPerformer _callbackPerformer =
+      PlayOptionCallbackPerformer();
   ChordChecker? _chordChecker;
   Video? _video;
 
@@ -73,13 +77,15 @@ class PerformanceViewModel with ChangeNotifier {
 
   ValueNotifier<int> get measureCount => _measureCount;
 
+  ValueNotifier<bool> get isLoading => _isLoading;
+
   bool get isEditing => _editingPosition.value != null;
 
-  Chord? get editedChord => (_sheetState.value?.sheetData.chords
-          .cast<ChordBlock?>())
-      ?.firstWhere((element) => element?.position == _editingPosition,
-          orElse: () => null)
-      ?.chord;
+  Chord? get editedChord =>
+      (_sheetState.value?.sheetData.chords.cast<ChordBlock?>())
+          ?.firstWhere((element) => element?.position == _editingPosition,
+              orElse: () => null)
+          ?.chord;
 
   ValueNotifier<YoutubePlayerController?> get youtubePlayerController =>
       _youtubeController;
@@ -113,12 +119,11 @@ class PerformanceViewModel with ChangeNotifier {
 
     _playOption = ValueNotifier(initPlayOption);
 
-    _chordPickerViewModel =
-        ChordPickerViewModel(onChangeChord: onChangeChord);
+    _chordPickerViewModel = ChordPickerViewModel(onChangeChord: onChangeChord);
 
     _scaleAdapter = MeasureScaleAdapter(
-    getCurrentMeasureCount: () => _measureCount.value,
-    onChangeMeasureCount: onChangeMeasureCount,
+      getCurrentMeasureCount: () => _measureCount.value,
+      onChangeMeasureCount: onChangeMeasureCount,
     );
   }
 
@@ -189,6 +194,8 @@ class PerformanceViewModel with ChangeNotifier {
     _addPerformer(_chordChecker!);
 
     _addConductorPositionListener(_conductorPositionCallback);
+
+    _initLoadingNotifier();
   }
 
   void play() {
@@ -307,5 +314,21 @@ class PerformanceViewModel with ChangeNotifier {
 
   void onChangeMeasureCount(int measureCount) {
     this.measureCount.value = measureCount;
+  }
+
+  void _initLoadingNotifier() {
+    _playOption.addListener(() {
+      _updateIsLoading();
+    });
+
+    _youtubeController.value!.addListener(() {
+      _updateIsLoading();
+    });
+  }
+
+  void _updateIsLoading() {
+    _isLoading.value = _playOption.value.isPlaying &&
+        (_youtubeController.value != null) &&
+        !(_youtubeController.value!.value.isPlaying);
   }
 }

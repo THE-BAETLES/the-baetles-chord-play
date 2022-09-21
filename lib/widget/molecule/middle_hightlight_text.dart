@@ -31,7 +31,7 @@ class MiddleHighlightText extends StatelessWidget {
           TextSpan(
               text: middleText,
               style: TextStyle(
-                color: AppColors.blue4E,
+                color: AppColors.mainPointColor,
                 fontSize: 14,
                 fontFamily: AppFontFamilies.pretendard,
                 fontWeight: FontWeight.w400,

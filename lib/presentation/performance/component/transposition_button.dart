@@ -30,7 +30,7 @@ class TranspositionButton extends StatelessWidget {
                   children: [
                     SvgPicture.asset(
                       "assets/icons/ic_minus.svg",
-                      color: AppColors.blue9C,
+                      color: AppColors.servePointColor2,
                     ),
                     Container(
                       width: 43,
@@ -46,7 +46,7 @@ class TranspositionButton extends StatelessWidget {
                     ),
                     SvgPicture.asset(
                       "assets/icons/ic_plus.svg",
-                      color: AppColors.blue9C,
+                      color: AppColors.servePointColor2,
                     ),
                   ],
                 ),

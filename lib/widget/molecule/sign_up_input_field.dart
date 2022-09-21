@@ -28,7 +28,7 @@ class SignUpInputField extends StatelessWidget {
       style: viewModel.isNicknameValid ? SignUpTextStyle.inputText : SignUpTextStyle.wrongInputText,
       initialValue: _initText,
       maxLength: _maxLength,
-      cursorColor: viewModel.isNicknameValid ? AppColors.blue4E : AppColors.redFF,
+      cursorColor: viewModel.isNicknameValid ? AppColors.mainPointColor : AppColors.redFF,
       enableInteractiveSelection: false,
       onChanged: (nickname) {
         viewModel.onChangeNickname(nickname);

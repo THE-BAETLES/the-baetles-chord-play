@@ -101,13 +101,13 @@ class _LoadingPageState extends State<LoadingPage> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                        color: AppColors.blue4E,
+                        color: AppColors.mainPointColor,
                         width: 1,
                       ),
                     ),
                     child: FAProgressBar(
                       currentValue: viewModel.progress,
-                      progressColor: AppColors.blue4E,
+                      progressColor: AppColors.mainPointColor,
                       backgroundColor: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                       animatedDuration: Duration(milliseconds: 200),

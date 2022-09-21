@@ -41,7 +41,7 @@ class _VideoRadioButtonState extends State<VideoRadioButton> {
                   height: 90,
                   padding: EdgeInsets.all(2),
                   decoration: BoxDecoration(
-                    color: _isActivated ? AppColors.blue4E : Colors.transparent,
+                    color: _isActivated ? AppColors.mainPointColor : Colors.transparent,
                     shape: BoxShape.circle,
                   ),
                   child: ClipOval(

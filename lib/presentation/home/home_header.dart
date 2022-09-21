@@ -22,7 +22,7 @@ class HomeHeader extends StatelessWidget {
         Container(
           width: MediaQuery.of(context).size.width,
           height: 134 + statusBarHeight,
-          color: AppColors.blue4E,
+          color: AppColors.mainPointColor,
         ),
         Positioned(
           left: 18,

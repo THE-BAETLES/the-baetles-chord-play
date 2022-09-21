@@ -32,7 +32,7 @@ class ToggleButton extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.gray3E,
               borderRadius: BorderRadius.circular(3),
-              border: isToggled ? Border.all(color: AppColors.blue9C) : null,
+              border: isToggled ? Border.all(color: AppColors.servePointColor2) : null,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -44,7 +44,7 @@ class ToggleButton extends StatelessWidget {
                 Text(
                   text,
                   style: AppTextStyles.controlButtonTextStyle.copyWith(
-                    color: isToggled ? AppColors.blue9C : AppColors.gray9B,
+                    color: isToggled ? AppColors.servePointColor2 : AppColors.gray9B,
                   ),
                 ),
               ],

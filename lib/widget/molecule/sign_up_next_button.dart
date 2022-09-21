@@ -15,7 +15,7 @@ class SignUpNextButton extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           shape: const ContinuousRectangleBorder(borderRadius: BorderRadius.zero),
-          primary: AppColors.blue4E,
+          primary: AppColors.mainPointColor,
         ),
         child: const Text(
           '다음',

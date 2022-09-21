@@ -23,7 +23,7 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         systemOverlayStyle:
             SystemUiOverlayStyle(statusBarColor: Colors.transparent),
-        backgroundColor: AppColors.blue4E,
+        backgroundColor: AppColors.mainPointColor,
         elevation: 0,
         toolbarHeight: 0,
       ),
@@ -83,7 +83,7 @@ class HomePage extends StatelessWidget {
             currentIndex: 0,
             selectedLabelStyle: const TextStyle(
               fontSize: 9,
-              color: AppColors.blue4E,
+              color: AppColors.mainPointColor,
               fontWeight: FontWeight.w600,
               fontFamily: AppFontFamilies.pretendard,
             ),
@@ -93,7 +93,7 @@ class HomePage extends StatelessWidget {
               fontWeight: FontWeight.w400,
               fontFamily: AppFontFamilies.pretendard,
             ),
-            selectedItemColor: AppColors.blue4E,
+            selectedItemColor: AppColors.mainPointColor,
             unselectedItemColor: AppColors.gray9D,
             items: [
               BottomNavigationBarItem(
@@ -112,7 +112,7 @@ class HomePage extends StatelessWidget {
                   padding: EdgeInsets.all(5),
                   child: SvgPicture.asset(
                     "assets/icons/ic_home.svg",
-                    color: AppColors.blue4E,
+                    color: AppColors.mainPointColor,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -134,7 +134,7 @@ class HomePage extends StatelessWidget {
                   padding: EdgeInsets.all(5),
                   child: SvgPicture.asset(
                     "assets/icons/ic_folder2.svg",
-                    color: AppColors.blue4E,
+                    color: AppColors.mainPointColor,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -156,7 +156,7 @@ class HomePage extends StatelessWidget {
                   padding: EdgeInsets.all(5),
                   child: SvgPicture.asset(
                     "assets/icons/ic_music_file.svg",
-                    color: AppColors.blue4E,
+                    color: AppColors.mainPointColor,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -178,7 +178,7 @@ class HomePage extends StatelessWidget {
                   padding: EdgeInsets.all(5),
                   child: SvgPicture.asset(
                     "assets/icons/ic_record1.svg",
-                    color: AppColors.blue4E,
+                    color: AppColors.mainPointColor,
                     fit: BoxFit.cover,
                   ),
                 ),
