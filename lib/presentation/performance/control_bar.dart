@@ -153,55 +153,69 @@ class ControlBar extends StatelessWidget {
     void Function(int) move,
     PlayOption playOption,
   ) {
-    return Container(
-      width: 130,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return SizedBox(
+      width: 136,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          GestureDetector(
-            onTap: () {
-              double secondPerBeat = 1 / (playOption.defaultBpm / 60.0);
-              int changeAmount = (8 * secondPerBeat * 1000).toInt();
-              move(-changeAmount);
-            },
-            child: SvgPicture.asset(
-              "assets/icons/ic_prev_2.svg",
-              width: 26,
-              height: 30,
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              if (playOption.isPlaying) {
-                stop();
-              } else {
-                play();
-              }
-            },
-            child: playOption.isPlaying
-                ? SvgPicture.asset(
-                    "assets/icons/ic_pause.svg",
-                    width: 22,
-                    height: 22,
-                  )
-                : SvgPicture.asset(
-                    "assets/icons/ic_play2.svg",
-                    width: 22,
-                    height: 22,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  double secondPerBeat = 1 / (playOption.defaultBpm / 60.0);
+                  int changeAmount = (8 * secondPerBeat * 1000).toInt();
+                  move(-changeAmount);
+                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  child: SvgPicture.asset(
+                    "assets/icons/ic_prev_2.svg",
+                    width: 26,
+                    height: 30,
                   ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  if (playOption.isPlaying) {
+                    stop();
+                  } else {
+                    play();
+                  }
+                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  child: playOption.isPlaying
+                      ? SvgPicture.asset(
+                          "assets/icons/ic_pause.svg",
+                          width: 22,
+                          height: 22,
+                        )
+                      : SvgPicture.asset(
+                          "assets/icons/ic_play2.svg",
+                          width: 22,
+                          height: 22,
+                        ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  double secondPerBeat = 1 / (playOption.defaultBpm / 60.0);
+                  int changeAmount = (8 * secondPerBeat * 1000).toInt();
+                  move(changeAmount);
+                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  child: SvgPicture.asset(
+                    "assets/icons/ic_next_2.svg",
+                    width: 26,
+                    height: 30,
+                  ),
+                ),
+              ),
+            ],
           ),
-          GestureDetector(
-            onTap: () {
-              double secondPerBeat = 1 / (playOption.defaultBpm / 60.0);
-              int changeAmount = (8 * secondPerBeat * 1000).toInt();
-              move(changeAmount);
-            },
-            child: SvgPicture.asset(
-              "assets/icons/ic_next_2.svg",
-              width: 26,
-              height: 30,
-            ),
-          )
         ],
       ),
     );
