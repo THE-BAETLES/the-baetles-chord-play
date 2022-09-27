@@ -3,7 +3,7 @@ import 'package:the_baetles_chord_play/widget/molecule/beat_tile.dart';
 import 'package:the_baetles_chord_play/widget/atom/marker_stick.dart';
 
 import '../../../domain/model/sheet_data.dart';
-import '../../../domain/model/sheet_element_size.dart';
+import 'sheet_element_size.dart';
 import '../../../widget/atom/app_colors.dart';
 import '../../../widget/atom/chord_text.dart';
 import '../adapter/scale_adapter.dart';
@@ -12,12 +12,14 @@ class SheetView extends StatelessWidget {
   static const int beatPerMeasure = 4;
   static const double topMargin = 62.0;
   static const double bottomMargin = 105.0;
+  static const double spaceBetweenRow = 20.0;
 
   final SheetData sheetData;
   final List<int> correctIndexes;
   final List<int> wrongIndexes;
   final int currentPosition;
   final SheetElementSize sheetElementSize;
+  final ScrollController? scrollController;
 
   final Function(int)? onClick;
   final Function(int)? onLongClick;
@@ -30,6 +32,7 @@ class SheetView extends StatelessWidget {
     required this.correctIndexes,
     required this.wrongIndexes,
     required this.sheetElementSize,
+    this.scrollController,
     this.onClick,
     this.onLongClick,
     this.scaleAdapter,
@@ -45,8 +48,7 @@ class SheetView extends StatelessWidget {
     int currentChordIndex = 0;
     int rowCount = sheetData.chords.isNotEmpty
         ? sheetData.chords.last.position ~/
-                (beatPerMeasure * sheetElementSize.measureCount) +
-            1
+                (beatPerMeasure * sheetElementSize.measureCount) + 1
         : 0;
 
     for (int rowIndex = 0; rowIndex < rowCount; ++rowIndex) {
@@ -66,7 +68,7 @@ class SheetView extends StatelessWidget {
 
       // vertical spacer
       tileRows.add(Container(
-        height: 20,
+        height: spaceBetweenRow,
       ));
 
       int nextRowFirstTileIndex = _calcTileIndex(
@@ -88,6 +90,7 @@ class SheetView extends StatelessWidget {
           width: sheetElementSize.sheetWidth,
           height: sheetElementSize.sheetHeight,
           child: ListView(
+            controller: scrollController,
             physics: const BouncingScrollPhysics(),
             children: [
               const SizedBox(height: topMargin),

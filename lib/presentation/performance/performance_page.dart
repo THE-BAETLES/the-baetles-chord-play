@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:the_baetles_chord_play/domain/model/sheet_element_size.dart';
+import 'package:the_baetles_chord_play/presentation/performance/fragment/sheet_element_size.dart';
 import 'package:the_baetles_chord_play/presentation/performance/control_bar.dart';
 import 'package:the_baetles_chord_play/presentation/performance/performance_app_bar.dart';
 import 'package:the_baetles_chord_play/presentation/performance/performance_view_model.dart';
@@ -15,6 +15,7 @@ import '../../widget/atom/app_font_families.dart';
 import '../../widget/molecule/EllipseToggleButton.dart';
 import '../../widget/molecule/chord_picker.dart';
 import 'fragment/guitar_tab_view.dart';
+import 'fragment/sheet_auto_scroll_controller.dart';
 import 'fragment/sheet_view.dart';
 
 class PerformancePage extends StatefulWidget {
@@ -92,6 +93,7 @@ class _PerformancePageState extends State<PerformancePage>
   @override
   void didChangeDependencies() {
     _performanceViewModel = context.read<PerformanceViewModel>();
+    super.didChangeDependencies();
   }
 
   @override
@@ -102,7 +104,7 @@ class _PerformancePageState extends State<PerformancePage>
 
   void _initViewModel() {
     Map<String, dynamic> arguments =
-    ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     Video video = arguments['video'] as Video;
     SheetInfo sheetInfo = arguments["sheetInfo"] as SheetInfo;
     SheetData sheetData = arguments['sheetData'] as SheetData;
@@ -134,6 +136,14 @@ class _PerformancePageState extends State<PerformancePage>
                     BuildContext context,
                     BoxConstraints constraints,
                   ) {
+                    final sheetElementSize = SheetElementSize.resize(
+                      sheetHeight: constraints.maxHeight,
+                      sheetWidth: constraints.maxWidth,
+                      measureCount: viewModel.measureCount.value,
+                      spaceWidth: 3,
+                      barWidth: 2,
+                    );
+
                     return SheetView(
                       currentPosition: viewModel.currentPosition.value,
                       sheetData: (viewModel.sheetState.value?.sheetData)!,
@@ -141,6 +151,11 @@ class _PerformancePageState extends State<PerformancePage>
                           viewModel.feedbackState.correctIndexes.toList(),
                       wrongIndexes:
                           viewModel.feedbackState.wrongIndexes.toList(),
+                      scrollController: SheetAutoScrollController(
+                        startPosition: SheetView.topMargin,
+                        lineHeight: sheetElementSize.tileHeight + SheetView.spaceBetweenRow,
+                        positionInMs: viewModel.currentPosition,
+                      ),
                       onClick: (int tileIndex) {
                         viewModel.onTileClick(tileIndex);
                       },
@@ -148,13 +163,7 @@ class _PerformancePageState extends State<PerformancePage>
                         viewModel.onTileLongClick(tileIndex);
                       },
                       scaleAdapter: viewModel.scaleAdapter,
-                      sheetElementSize: SheetElementSize.expand(
-                        sheetHeight: constraints.maxHeight,
-                        sheetWidth: constraints.maxWidth,
-                        measureCount: viewModel.measureCount.value,
-                        spaceWidth: 3,
-                        barWidth: 2,
-                      ),
+                      sheetElementSize: sheetElementSize,
                     );
                   });
                 },
@@ -182,15 +191,15 @@ class _PerformancePageState extends State<PerformancePage>
     return ValueListenableBuilder(
       valueListenable: viewModel.playOption,
       builder: (context, value, _) {
-        AnimationController _controller = AnimationController(
+        final AnimationController controller = AnimationController(
           duration: const Duration(milliseconds: 200),
           vsync: this,
         );
 
         if (viewModel.playOption.value.isPlaying) {
-          _controller.animateTo(1.0);
+          controller.animateTo(1.0);
         } else {
-          _controller.reverse(from: 1.0);
+          controller.reverse(from: 1.0);
         }
 
         return SlideTransition(
@@ -199,7 +208,7 @@ class _PerformancePageState extends State<PerformancePage>
             begin: Offset.zero,
             end: const Offset(0, -1),
           ).animate(CurvedAnimation(
-            parent: _controller,
+            parent: controller,
             curve: Curves.ease,
           )),
           child: PerformanceAppBar(
@@ -212,7 +221,7 @@ class _PerformancePageState extends State<PerformancePage>
   }
 
   Widget _controlBar(PerformanceViewModel viewModel) {
-    return Container(
+    return SizedBox(
       height: 65,
       child: Column(
         children: [
@@ -220,8 +229,7 @@ class _PerformancePageState extends State<PerformancePage>
             valueListenable: viewModel.currentPosition,
             builder: (context, value, _) {
               return LinearProgressIndicator(
-                value: ((viewModel.currentPositionInPercentage ?? 0) /
-                    100.0)
+                value: ((viewModel.currentPositionInPercentage ?? 0) / 100.0)
                     .clamp(0, 1),
                 color: AppColors.mainPointColor,
                 backgroundColor: Colors.transparent,
@@ -229,7 +237,7 @@ class _PerformancePageState extends State<PerformancePage>
               );
             },
           ),
-          ControlBar(),
+          const ControlBar(),
         ],
       ),
     );
@@ -249,7 +257,7 @@ class _PerformancePageState extends State<PerformancePage>
                   Visibility(
                     visible: _performanceViewModel.isLoading.value,
                     child: Container(
-                      padding: EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(40),
                         color: AppColors.mainPointColor.withAlpha(150),
@@ -289,49 +297,44 @@ class _PerformancePageState extends State<PerformancePage>
                 child: Container(
                   width: 270,
                   height: 280,
-                  padding: EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                     vertical: 15,
                     horizontal: 20,
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
+                      SizedBox(
                         height: 190,
                         child: ChordPicker(
                           onChangeChord: viewModel.onChangeChord,
                           initRoot: viewModel.editedChord?.root,
-                          initTriadType:
-                          viewModel.editedChord?.triadType,
+                          initTriadType: viewModel.editedChord?.triadType,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 15,
                       ),
-                      Container(
+                      SizedBox(
                         width: 280,
                         height: 44,
                         child: Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
                               flex: 1,
                               child: EllipseToggleButton(
                                 text: "취소",
                                 initState: false,
-                                onPressed: (_) =>
-                                    viewModel.onCancleEdit(),
-                                textStyleOnActivated: TextStyle(
-                                  fontFamily:
-                                  AppFontFamilies.pretendard,
+                                onPressed: (_) => viewModel.onCancleEdit(),
+                                textStyleOnActivated: const TextStyle(
+                                  fontFamily: AppFontFamilies.pretendard,
                                   fontWeight: FontWeight.w400,
                                   color: Colors.white,
                                   fontSize: 14,
                                 ),
-                                textStyleOnInActivated: TextStyle(
-                                  fontFamily:
-                                  AppFontFamilies.pretendard,
+                                textStyleOnInActivated: const TextStyle(
+                                  fontFamily: AppFontFamilies.pretendard,
                                   fontWeight: FontWeight.w400,
                                   color: AppColors.black04,
                                   fontSize: 14,
@@ -339,7 +342,7 @@ class _PerformancePageState extends State<PerformancePage>
                                 borderRadius: BorderRadius.circular(23),
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 8,
                             ),
                             Expanded(
@@ -347,18 +350,15 @@ class _PerformancePageState extends State<PerformancePage>
                               child: EllipseToggleButton(
                                 text: "확인",
                                 initState: true,
-                                onPressed: (_) =>
-                                    viewModel.onApplyEdit(),
-                                textStyleOnActivated: TextStyle(
-                                  fontFamily:
-                                  AppFontFamilies.pretendard,
+                                onPressed: (_) => viewModel.onApplyEdit(),
+                                textStyleOnActivated: const TextStyle(
+                                  fontFamily: AppFontFamilies.pretendard,
                                   fontWeight: FontWeight.w400,
                                   color: Colors.white,
                                   fontSize: 14,
                                 ),
-                                textStyleOnInActivated: TextStyle(
-                                  fontFamily:
-                                  AppFontFamilies.pretendard,
+                                textStyleOnInActivated: const TextStyle(
+                                  fontFamily: AppFontFamilies.pretendard,
                                   fontWeight: FontWeight.w400,
                                   color: AppColors.black04,
                                   fontSize: 14,

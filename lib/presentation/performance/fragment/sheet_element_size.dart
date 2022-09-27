@@ -27,7 +27,7 @@ class SheetElementSize {
     required this.chordPostfixTextSize,
   });
 
-  SheetElementSize.expand({
+  SheetElementSize.resize({
     required this.sheetHeight,
     required this.sheetWidth,
     required this.measureCount,
