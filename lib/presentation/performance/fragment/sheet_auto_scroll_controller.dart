@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class SheetAutoScrollController extends ScrollController {
   static const animationDuration = Duration(milliseconds: 200);
   static const none = -1;
-  static const defaultTopMargin = 20;
+  static const defaultTopMargin = 30;
   static const beatPerMeasure = 4;
 
   int _priorLineIdx = none;
