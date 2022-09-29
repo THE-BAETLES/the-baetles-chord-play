@@ -141,7 +141,7 @@ class _PerformancePageState extends State<PerformancePage>
                         sheetHeight: constraints.maxHeight,
                         sheetWidth: constraints.maxWidth,
                         measureCount: viewModel.measureCount.value,
-                        spaceWidth: 4,
+                        spaceWidth: 5,
                         barWidth: 2,
                       );
 

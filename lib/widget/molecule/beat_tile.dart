@@ -31,25 +31,20 @@ class BeatTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(6),
         border: Border.all(
           color: borderColor ?? Colors.transparent,
-          width: 0,
+          width: 1,
         ),
       ),
-      child: GestureDetector(
-        onTap: () {
-          print("tappp!!!");
-        },
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(6),
-          child: GestureDetector(
-            onTap: onClick,
-            onLongPress: onLongClick,
-            child: Container(
-              width: width,
-              height: height,
-              color: isHighlighted ? AppColors.blue7F : Colors.white,
-              child: Center(
-                child: child,
-              ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(6),
+        child: GestureDetector(
+          onTap: onClick,
+          onLongPress: onLongClick,
+          child: Container(
+            width: width - 2,
+            height: height - 2,
+            color: isHighlighted ? AppColors.blue7F : Colors.white,
+            child: Center(
+              child: child,
             ),
           ),
         ),
