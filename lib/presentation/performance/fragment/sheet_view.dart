@@ -92,14 +92,16 @@ class SheetView extends StatelessWidget {
       child: SizedBox(
         width: sheetElementSize.sheetWidth,
         height: sheetElementSize.sheetHeight,
-        child: ListView(
-          controller: scrollController,
-          physics: const BouncingScrollPhysics(),
-          children: [
-            const SizedBox(height: topMargin),
-            ...tileRows,
-            const SizedBox(height: bottomMargin),
-          ],
+        child: Scrollbar(
+          child: ListView(
+            controller: scrollController,
+            physics: const BouncingScrollPhysics(),
+            children: [
+              const SizedBox(height: topMargin),
+              ...tileRows,
+              const SizedBox(height: bottomMargin),
+            ],
+          ),
         ),
       ),
     );
