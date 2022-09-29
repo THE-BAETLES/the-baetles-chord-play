@@ -1,5 +1,5 @@
-import '../../domain/model/sheet_data.dart';
-import '../../domain/model/sheet_info.dart';
+import '../../../domain/model/sheet_data.dart';
+import '../../../domain/model/sheet_info.dart';
 
 class SheetState {
   final SheetInfo sheetInfo;

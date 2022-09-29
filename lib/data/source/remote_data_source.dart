@@ -83,7 +83,7 @@ class RemoteDataSource {
 
     print(response.body);
 
-    return jsonDecode(response.body)['nickname'];
+    return jsonDecode(response.body)['data']['nickname'];
   }
 
   Future<bool> checkNicknameValid(String idToken, String nickname) async {

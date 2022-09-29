@@ -30,7 +30,17 @@ class PerformanceAppBar extends StatelessWidget {
   }) {
     return Container(
       height: height,
-      color: Colors.white,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: Offset(0, 0), // changes position of shadow
+          ),
+        ],
+      ),
       child: SafeArea(
         child: Row(
           children: [

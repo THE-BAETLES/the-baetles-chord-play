@@ -84,6 +84,13 @@ class LoadingViewModel extends ChangeNotifier {
 
       ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 50, 14.535691517, 16.997006694),
       ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 70, 17.043446603, 18.11156451),
+      ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 90, 14.535691517, 16.997006694),
+      ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 100, 17.043446603, 18.11156451),
+      ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 110, 14.535691517, 16.997006694),
+      ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 120, 17.043446603, 18.11156451),
+
+      ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 200, 14.535691517, 16.997006694),
+      ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 250, 17.043446603, 18.11156451),
     ]);
     _setAndNotifyProgressValue(100);
     return;

@@ -31,7 +31,7 @@ class BeatTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(6),
         border: Border.all(
           color: borderColor ?? Colors.transparent,
-          width: 1,
+          width: 0,
         ),
       ),
       child: GestureDetector(

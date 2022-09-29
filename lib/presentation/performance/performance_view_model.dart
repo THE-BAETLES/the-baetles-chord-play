@@ -7,7 +7,9 @@ import 'package:the_baetles_chord_play/domain/model/play_option.dart';
 import 'package:the_baetles_chord_play/domain/use_case/add_conductor_position_listener.dart';
 import 'package:the_baetles_chord_play/domain/use_case/remove_conductor_position_listener.dart';
 import 'package:the_baetles_chord_play/domain/use_case/set_youtube_player_controller.dart';
-import 'package:the_baetles_chord_play/presentation/performance/sheet_state.dart';
+import 'package:the_baetles_chord_play/presentation/performance/state/beat_state.dart';
+import 'package:the_baetles_chord_play/presentation/performance/state/beat_states.dart';
+import 'package:the_baetles_chord_play/presentation/performance/state/sheet_state.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../domain/model/chord.dart';
@@ -22,7 +24,7 @@ import '../../service/conductor/performers/call_performer.dart';
 import '../../service/conductor/performers/chord_checker.dart';
 import 'adapter/measure_scale_adapter.dart';
 import 'adapter/scale_adapter.dart';
-import 'feedback_state.dart';
+import 'state/feedback_state.dart';
 
 class PerformanceViewModel with ChangeNotifier {
   final PlayOption initPlayOption = PlayOption(
@@ -45,6 +47,7 @@ class PerformanceViewModel with ChangeNotifier {
       ValueNotifier(null);
   final ValueNotifier<int> _measureCount = ValueNotifier(4);
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
+  final ValueNotifier<BeatStates> _beatStates = ValueNotifier(BeatStates([]));
 
   late final Function(int) _conductorPositionCallback;
 
@@ -58,8 +61,7 @@ class PerformanceViewModel with ChangeNotifier {
   late final MeasureScaleAdapter _scaleAdapter;
   late final ChordPickerViewModel _chordPickerViewModel;
 
-  PlayOptionCallbackPerformer _callbackPerformer =
-      PlayOptionCallbackPerformer();
+  PlayOptionCallbackPerformer _callbackPerformer = PlayOptionCallbackPerformer();
   ChordChecker? _chordChecker;
   Video? _video;
 
@@ -78,6 +80,8 @@ class PerformanceViewModel with ChangeNotifier {
   ValueNotifier<int> get measureCount => _measureCount;
 
   ValueNotifier<bool> get isLoading => _isLoading;
+
+  ValueNotifier<BeatStates> get beatStates => _beatStates;
 
   bool get isEditing => _editingPosition.value != null;
 
@@ -114,6 +118,8 @@ class PerformanceViewModel with ChangeNotifier {
   ) {
     _conductorPositionCallback = ((int position) {
       _currentPosition.value = position;
+      _beatStates.value.setPlayingPosition((position / 1000 * (_sheetState.value?.sheetData.bps ?? position)).toInt());
+
       notifyListeners();
     });
 
@@ -149,6 +155,8 @@ class PerformanceViewModel with ChangeNotifier {
       sheetInfo: sheetInfo,
       sheetData: sheetData,
     );
+
+    _beatStates.value = _sheetStateToBeatStates(sheetState.value!);
 
     _youtubeController.value = YoutubePlayerController(
       initialVideoId: video.id,
@@ -330,5 +338,32 @@ class PerformanceViewModel with ChangeNotifier {
     _isLoading.value = _playOption.value.isPlaying &&
         (_youtubeController.value != null) &&
         !(_youtubeController.value!.value.isPlaying);
+  }
+
+  BeatStates _sheetStateToBeatStates(SheetState sheetState) {
+    final chords = sheetState.sheetData.chords;
+    final List<ValueNotifier<BeatState>> beatStates = [];
+
+    int positionCounter = 0;
+
+    for (int chordIndex = 0; chordIndex < chords.length; ++chordIndex) {
+      ChordBlock chordBlock = chords[chordIndex];
+
+      while (positionCounter < chordBlock.position) {
+        beatStates.add(ValueNotifier(BeatState(null, false)));
+        positionCounter++;
+      }
+
+      beatStates.add(ValueNotifier(BeatState(chordBlock.chord, false)));
+      positionCounter++;
+
+      // 같은 포지션인 코드들은 맨 앞 하나만 반영함.
+      while (chordIndex < chords.length - 1 &&
+          chords[chordIndex].position == chords[chordIndex + 1].position) {
+        chordIndex++;
+      }
+    }
+
+    return BeatStates(beatStates);
   }
 }

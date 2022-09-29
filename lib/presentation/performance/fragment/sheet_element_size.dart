@@ -36,7 +36,8 @@ class SheetElementSize {
     required this.barWidth,
     double? barHeight,
   }) {
-    this.tileWidth = (sheetWidth - (4 * measureCount + 1) * spaceWidth - measureCount * barWidth) / (5 * measureCount);
+    this.tileWidth = (sheetWidth - (5 * measureCount + 1) * spaceWidth - measureCount * barWidth) / (4 * measureCount);
+    print('testtt ${sheetWidth} ${5 * spaceWidth + barWidth + 4 * tileWidth}');
     this.tileHeight = tileWidth;
 
     this.spaceHeight = spaceHeight ?? this.tileHeight;

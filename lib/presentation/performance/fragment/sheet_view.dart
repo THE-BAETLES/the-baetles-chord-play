@@ -3,6 +3,7 @@ import 'package:the_baetles_chord_play/widget/molecule/beat_tile.dart';
 import 'package:the_baetles_chord_play/widget/atom/marker_stick.dart';
 
 import '../../../domain/model/sheet_data.dart';
+import '../state/beat_state.dart';
 import 'sheet_element_size.dart';
 import '../../../widget/atom/app_colors.dart';
 import '../../../widget/atom/chord_text.dart';
@@ -20,6 +21,7 @@ class SheetView extends StatelessWidget {
   final int currentPosition;
   final SheetElementSize sheetElementSize;
   final ScrollController? scrollController;
+  final List<ValueNotifier<BeatState>> beatStates;
 
   final Function(int)? onClick;
   final Function(int)? onLongClick;
@@ -32,6 +34,7 @@ class SheetView extends StatelessWidget {
     required this.correctIndexes,
     required this.wrongIndexes,
     required this.sheetElementSize,
+    required this.beatStates,
     this.scrollController,
     this.onClick,
     this.onLongClick,
@@ -48,20 +51,21 @@ class SheetView extends StatelessWidget {
     int currentChordIndex = 0;
     int rowCount = sheetData.chords.isNotEmpty
         ? sheetData.chords.last.position ~/
-                (beatPerMeasure * sheetElementSize.measureCount) + 1
+                (beatPerMeasure * sheetElementSize.measureCount) +
+            1
         : 0;
 
     for (int rowIndex = 0; rowIndex < rowCount; ++rowIndex) {
       tileRows.add(
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: _tileRow(
             beatPerMeasure,
             (beatPerMeasure * sheetElementSize.measureCount),
             rowIndex,
             highlightedTileIndex,
-            currentChordIndex,
-            sheetData,
+            // currentChordIndex,
+            beatStates,
           ),
         ),
       );
@@ -85,19 +89,17 @@ class SheetView extends StatelessWidget {
       onScaleStart: scaleAdapter?.onScaleStart,
       onScaleUpdate: scaleAdapter?.onScaleUpdate,
       onScaleEnd: scaleAdapter?.onScaleEnd,
-      child: SafeArea(
-        child: SizedBox(
-          width: sheetElementSize.sheetWidth,
-          height: sheetElementSize.sheetHeight,
-          child: ListView(
-            controller: scrollController,
-            physics: const BouncingScrollPhysics(),
-            children: [
-              const SizedBox(height: topMargin),
-              ...tileRows,
-              const SizedBox(height: bottomMargin),
-            ],
-          ),
+      child: SizedBox(
+        width: sheetElementSize.sheetWidth,
+        height: sheetElementSize.sheetHeight,
+        child: ListView(
+          controller: scrollController,
+          physics: const BouncingScrollPhysics(),
+          children: [
+            const SizedBox(height: topMargin),
+            ...tileRows,
+            const SizedBox(height: bottomMargin),
+          ],
         ),
       ),
     );
@@ -108,11 +110,14 @@ class SheetView extends StatelessWidget {
     int beatPerRow,
     int rowIndex,
     int highlightedTileIndex,
-    int startChordIndex,
-    SheetData sheetData,
+    List<ValueNotifier<BeatState>> beatStates,
   ) {
     final List<Widget> rowChildren = [];
-    int currentChordIndex = startChordIndex;
+    rowChildren.add(
+      Container(
+        width: sheetElementSize.spaceWidth,
+      ),
+    );
 
     for (int tileIndex = 0; tileIndex < beatPerRow; ++tileIndex) {
       if (tileIndex % (beatPerWord) == 0) {
@@ -132,48 +137,67 @@ class SheetView extends StatelessWidget {
 
       int tileIndexOfSheet = _calcTileIndex(rowIndex, beatPerRow, tileIndex);
 
-      Color borderColor = Colors.transparent;
-      Color textColor = AppColors.black04;
+      late ValueNotifier<BeatState> beatState;
 
-      if (correctIndexes.contains(tileIndexOfSheet)) {
-        borderColor = AppColors.blue71;
-        textColor = AppColors.blue71;
-      } else if (wrongIndexes.contains(tileIndexOfSheet)) {
-        borderColor = AppColors.redFF;
-        textColor = AppColors.redFF;
+      if (tileIndexOfSheet < beatStates.length) {
+        beatState = beatStates[tileIndexOfSheet];
+      } else {
+        beatState = ValueNotifier(
+          BeatState(
+            null,
+            false,
+          ),
+        );
       }
 
-      if (highlightedTileIndex == tileIndexOfSheet) {
-        textColor = Colors.white;
-      }
+      // bool hasChord = currentChordIndex < sheetData.chords.length &&
+      //     tileIndexOfSheet == sheetData.chords[currentChordIndex].position;
 
-      bool hasChord = currentChordIndex < sheetData.chords.length &&
-          tileIndexOfSheet == sheetData.chords[currentChordIndex].position;
+      rowChildren.add(
+        ValueListenableBuilder(
+          valueListenable: beatState,
+          builder: (context, value, _) {
+            // present correct and incorrect
+            Color borderColor = Colors.transparent;
+            Color textColor = AppColors.black04;
 
-      rowChildren.add(BeatTile(
-        height: sheetElementSize.tileHeight,
-        width: sheetElementSize.tileWidth,
-        isHighlighted: highlightedTileIndex == tileIndexOfSheet,
-        borderColor: borderColor,
-        onClick: () {
-          onClick?.call(tileIndexOfSheet);
-        },
-        onLongClick: () {
-          onLongClick?.call(tileIndexOfSheet);
-        },
-        child: hasChord
-            ? ChordText(
-                root: sheetData
-                    .chords[currentChordIndex].chord.root.noteNameWithoutOctave,
-                postfix: sheetData
-                    .chords[currentChordIndex].chord.triadType.shortNotation,
-                rootSize: sheetElementSize.chordRootTextSize,
-                postfixSize: sheetElementSize.chordPostfixTextSize,
-                rootColor: textColor,
-                postfixColor: textColor,
-              )
-            : null,
-      ));
+            if (correctIndexes.contains(tileIndexOfSheet)) {
+              borderColor = AppColors.blue71;
+              textColor = AppColors.blue71;
+            } else if (wrongIndexes.contains(tileIndexOfSheet)) {
+              borderColor = AppColors.redFF;
+              textColor = AppColors.redFF;
+            }
+
+            if (beatState.value.isPlaying) {
+              textColor = Colors.white;
+            }
+
+            return BeatTile(
+              height: sheetElementSize.tileHeight,
+              width: sheetElementSize.tileWidth,
+              isHighlighted: beatState.value.isPlaying,
+              borderColor: borderColor,
+              onClick: () {
+                onClick?.call(tileIndexOfSheet);
+              },
+              onLongClick: () {
+                onLongClick?.call(tileIndexOfSheet);
+              },
+              child: beatState.value.chord != null
+                  ? ChordText(
+                      root: beatState.value.chord!.root.noteNameWithoutOctave,
+                      postfix: beatState.value.chord!.triadType.shortNotation,
+                      rootSize: sheetElementSize.chordRootTextSize,
+                      postfixSize: sheetElementSize.chordPostfixTextSize,
+                      rootColor: textColor,
+                      postfixColor: textColor,
+                    )
+                  : null,
+            );
+          },
+        ),
+      );
 
       rowChildren.add(
         Container(
@@ -181,11 +205,11 @@ class SheetView extends StatelessWidget {
         ),
       );
 
-      while (currentChordIndex < sheetData.chords.length &&
-          tileIndexOfSheet == sheetData.chords[currentChordIndex].position) {
-        // 같은 포지션에 코드가 두 개 이상 있으면 두번째부터 무시함.
-        currentChordIndex++;
-      }
+      // while (currentChordIndex < sheetData.chords.length &&
+      //     tileIndexOfSheet == sheetData.chords[currentChordIndex].position) {
+      //   // 같은 포지션에 코드가 두 개 이상 있으면 두번째부터 무시함.
+      //   currentChordIndex++;
+      // }
     }
 
     return rowChildren;
