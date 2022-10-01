@@ -5,6 +5,8 @@ class SheetData {
   final double bpm;
   final List<ChordBlock> chords;
 
+  double get bps => bpm / 60.0;
+
   SheetData({
     required this.id,
     required this.bpm,

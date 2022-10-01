@@ -1,7 +1,7 @@
 import 'package:the_baetles_chord_play/service/conductor/conductor_interface.dart';
 
 import '../../domain/model/play_option.dart';
-import '../../presentation/performance/sheet_state.dart';
+import '../../presentation/performance/state/sheet_state.dart';
 
 abstract class PerformerInterface {
   Future<bool> syncPlayOptionAndReady(PlayOption playOption);

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const whiteEF = Color(0xFFEFEFFF);
+  static const servePointColor1 = Color(0xFFEFEFFF);
   static const whiteF8 = Color(0xFFF8F8FF);
-  static const blue4E = Color(0xFF4E54FF);
-  static const blue9C = Color(0xFF9CA0FF);
+  static const mainPointColor = Color(0xFF4E54FF);
+  static const servePointColor2 = Color(0xFF9CA0FF);
   static const blue7F = Color(0xFF7F80B1);
   static const blue71 = Color(0xFF7176FF);
   static const black04 = Color(0xFF040404);
@@ -24,4 +24,6 @@ class AppColors {
   static const shadowB5 = Color(0x41B5BF85);
   static const shadowA1 = Color(0x1AA1A1A1);
   static const shadow94 = Color(0x41949494);
+  static const shadow00 = Color(0x99000000);
+  static const transparentF4 = Color(0x20CBCBFF);
 }

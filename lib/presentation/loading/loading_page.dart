@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
@@ -98,19 +99,19 @@ class _LoadingPageState extends State<LoadingPage> {
                     width: 340,
                     padding: EdgeInsets.all(3),
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: AppColors.blue4E,
-                          width: 1,
-                        )),
-                    child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: LinearProgressIndicator(
-                        value: viewModel.progress / 100.0,
-                        semanticsLabel: 'Linear progress indicator',
-                        color: AppColors.blue4E,
-                        backgroundColor: Colors.white,
+                      border: Border.all(
+                        color: AppColors.mainPointColor,
+                        width: 1,
                       ),
+                    ),
+                    child: FAProgressBar(
+                      currentValue: viewModel.progress,
+                      progressColor: AppColors.mainPointColor,
+                      backgroundColor: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      animatedDuration: Duration(milliseconds: 200),
+                      size: 8,
                     ),
                   ),
                 ],

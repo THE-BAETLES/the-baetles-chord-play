@@ -109,12 +109,18 @@ class YoutubeConductorService implements ConductorInterface {
       // 주기적으로 currentPosition과 youtubeController.position 동기화
       _timer = Timer.periodic(syncPeriod, (timer) {
         if (!lock.isLocked && _youtubeController != null) {
-          _currentPosition.value =
-              _youtubeController!.value.position.inMilliseconds;
+          () async {
+            await lock.acquire();
 
-          for (Function callback in _onPositionChangeCallbacks) {
-            callback(_currentPosition.value);
-          }
+            _currentPosition.value =
+                _youtubeController!.value.position.inMilliseconds;
+
+            for (Function callback in _onPositionChangeCallbacks) {
+              callback(_currentPosition.value);
+            }
+
+            lock.release();
+          }();
         }
       });
     }
@@ -165,11 +171,9 @@ class YoutubeConductorService implements ConductorInterface {
     _youtubeController!.setPlaybackRate(playOption.tempo);
 
     if (playOption.isPlaying) {
-      _youtubeController!.load(
-        _youtubeController!.initialVideoId,
-        startAt: playPosition ~/ 1000,
+      _youtubeController!.seekTo(
+        Duration(milliseconds: playPosition),
       );
-      log("youtube controller start playing");
     } else {
       _youtubeController!.seekTo(
         Duration(milliseconds: playPosition),

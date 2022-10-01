@@ -293,6 +293,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_animation_progress_bar:
+    dependency: "direct main"
+    description:
+      name: flutter_animation_progress_bar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.1"
   flutter_client_sse:
     dependency: "direct main"
     description:
@@ -309,6 +316,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.2"
+  flutter_guitar_tabs:
+    dependency: "direct main"
+    description:
+      name: flutter_guitar_tabs
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.8"
   flutter_inappwebview:
     dependency: transitive
     description:
@@ -543,6 +557,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  loading_animation_widget:
+    dependency: "direct main"
+    description:
+      name: loading_animation_widget
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.0+3"
   logger:
     dependency: "direct main"
     description:

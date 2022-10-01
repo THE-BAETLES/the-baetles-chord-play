@@ -6,6 +6,8 @@ import '../atom/app_colors.dart';
 
 class BeatTile extends StatelessWidget {
   final Widget? child;
+  final double width;
+  final double height;
   final bool isHighlighted;
   final Color? borderColor;
   final Function()? onClick;
@@ -13,6 +15,8 @@ class BeatTile extends StatelessWidget {
 
   const BeatTile({
     Key? key,
+    required this.width,
+    required this.height,
     this.child,
     this.isHighlighted = false,
     this.borderColor,
@@ -23,7 +27,6 @@ class BeatTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 2),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(6),
         border: Border.all(
@@ -37,8 +40,8 @@ class BeatTile extends StatelessWidget {
           onTap: onClick,
           onLongPress: onLongClick,
           child: Container(
-            width: 40,
-            height: 40,
+            width: width - 2,
+            height: height - 2,
             color: isHighlighted ? AppColors.blue7F : Colors.white,
             child: Center(
               child: child,

@@ -50,9 +50,9 @@ class _EllipseToggleButtonState extends State<EllipseToggleButton> {
             widget.onPressed(_isActivated);
           },
           style: ElevatedButton.styleFrom(
-            primary: _isActivated ? AppColors.blue4E : Colors.white,
+            primary: _isActivated ? AppColors.mainPointColor : Colors.white,
             side: BorderSide(
-              color: _isActivated ? AppColors.blue4E : AppColors.grayD2,
+              color: _isActivated ? AppColors.mainPointColor : AppColors.grayD2,
             ),
             shape: RoundedRectangleBorder(
               borderRadius: widget.borderRadius,

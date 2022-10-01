@@ -13,7 +13,7 @@ class SignUpTextStyle {
   );
 
   static const TextStyle inputText = TextStyle(
-    color: AppColors.blue4E,
+    color: AppColors.mainPointColor,
     fontFamily: AppFontFamilies.pretendard,
     fontWeight: FontWeight.w600,
     fontSize: 24,

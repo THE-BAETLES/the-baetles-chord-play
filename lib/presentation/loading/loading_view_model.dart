@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client_sse/flutter_client_sse.dart';
@@ -17,6 +19,10 @@ import '../../domain/use_case/create_sheet.dart';
 import '../../domain/use_case/get_sheet_data.dart';
 
 class LoadingViewModel extends ChangeNotifier {
+  static final onCompleteDownload = "1";
+  static final onCompleteExtraction = "2";
+  static final onCompleteGeneration = "3";
+
   final GetSheetData _getSheetData;
 
   double _progress = 0;
@@ -34,32 +40,27 @@ class LoadingViewModel extends ChangeNotifier {
   LoadingViewModel(this._getSheetData);
 
   void onProgressHandler(SSEModel event) {
-    print("SSE Progress Event");
+    log("SSE Progress Event");
     String? status = event.data?.trim();
 
     if (kDebugMode) {
-      print("SSE progress event listen! - status : $status");
+      log("SSE progress event listen! - status : $status");
     }
 
-    if (status == "1") {
-      _progress = 30;
-    } else if (status == "2") {
-      _progress = 60;
-    } else if (status == "3") {
-      _progress = 90;
-      // ProgressService().stop();
+    if (status == onCompleteDownload) {
+      _setAndNotifyProgressValue(50);
+    } else if (status == onCompleteExtraction) {
+      _setAndNotifyProgressValue(70);
+    } else if (status == onCompleteGeneration) {
+      _setAndNotifyProgressValue(90);
 
       (() async {
         SheetClient client =
             RestClientFactory().getClient(RestClientType.sheet) as SheetClient;
         _sheetData = (await client.getSheetData(_sheetInfo!.id)).toSheetData();
-        _progress = 100;
-
-        notifyListeners();
+        _setAndNotifyProgressValue(100);
       })();
     }
-
-    notifyListeners();
   }
 
   void sseDoneHandler() async {
@@ -69,18 +70,51 @@ class LoadingViewModel extends ChangeNotifier {
   }
 
   void loadSheet(Video video, SheetInfo sheetInfo) async {
+    _setAndNotifyProgressValue(1);
+
     _sheetInfo = sheetInfo;
+
+    // region data for test below (to be deleted later)
+    _sheetData = SheetData(id: 'imdummy', bpm: 60, chords: [
+      ChordBlock(Chord(Note.fromNoteName('C3'), TriadType.major), 12, 12, 13),
+      ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 25, 12.213696067, 13.560453428),
+      ChordBlock(Chord(Note.fromNoteName('G#3'), TriadType.major), 28, 13.606893337, 14.489251608),
+      ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 30, 14.535691517, 16.997006694),
+      ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 35, 17.043446603, 18.11156451),
+
+      ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 50, 14.535691517, 16.997006694),
+      ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 70, 17.043446603, 18.11156451),
+      ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 90, 14.535691517, 16.997006694),
+      ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 100, 17.043446603, 18.11156451),
+      ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 110, 14.535691517, 16.997006694),
+      ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 120, 17.043446603, 18.11156451),
+
+      ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 200, 14.535691517, 16.997006694),
+      ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 250, 17.043446603, 18.11156451),
+    ]);
+    _setAndNotifyProgressValue(100);
+    return;
+    // endregion
+
+
     _sheetData = await _getSheetData(sheetInfo.id);
+
+    _setAndNotifyProgressValue(10);
+
     if (_sheetData == null) {
       ProgressService().start(video.id, onProgressHandler, sseDoneHandler);
     } else {
-      _progress = 100;
-      notifyListeners();
+      _setAndNotifyProgressValue(100);
     }
   }
 
   void reset() {
     _progress = 0;
     _sheetData = null;
+  }
+
+  void _setAndNotifyProgressValue(double value) {
+    _progress = value;
+    notifyListeners();
   }
 }

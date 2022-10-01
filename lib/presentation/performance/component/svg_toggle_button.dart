@@ -34,7 +34,7 @@ class SvgToggleButton extends StatelessWidget {
         width: iconWidth,
         height: iconHeight,
         fit: BoxFit.cover,
-        color: isToggled ? AppColors.blue9C : null,
+        color: isToggled ? AppColors.servePointColor2 : null,
       ),
     );
   }

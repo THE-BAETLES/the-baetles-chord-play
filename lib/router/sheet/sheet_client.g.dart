@@ -87,14 +87,19 @@ class _SheetClient implements SheetClient {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<GetSheetDataResponse>(
-            Options(method: 'GET', headers: _headers, extra: _extra)
-                .compose(_dio.options, '/sheets/data/${sheetId}',
-                    queryParameters: queryParameters, data: _data)
-                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = GetSheetDataResponse.fromJson(_result.data!);
-    return value;
+    try {
+      final _result = await _dio.fetch<Map<String, dynamic>>(
+          _setStreamType<GetSheetDataResponse>(
+              Options(method: 'GET', headers: _headers, extra: _extra)
+                  .compose(_dio.options, '/sheets/data/${sheetId}',
+                  queryParameters: queryParameters, data: _data)
+                  .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+      final value = GetSheetDataResponse.fromJson(_result.data!);
+      return value;
+    } on Exception catch(e) {
+      log(e.toString()); // hack : 현재 400 에러가 뜨면 sse로 전환하고 있음. 개선해야 함.
+      throw e;
+    }
   }
 
   @override

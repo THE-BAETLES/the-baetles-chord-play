@@ -39,31 +39,33 @@ class _BridgePageState extends State<BridgePage> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Column(
-            children: [
-              YoutubeVideoPlayer(
-                controller: viewModel.youtubePlayerController!,
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Wrap(
-                    children: [
-                      VideoInfoCard(
-                        video: video,
-                        onChangeInstrument: (Instrument? instrument) {
-                          viewModel.onChangeInstrument(instrument);
-                        },
-                      ),
-                      const Divider(
-                        color: AppColors.grayF8,
-                        thickness: 8,
-                      ),
-                      _tabController(context, viewModel),
-                    ],
+          Positioned.fill(
+            child: Column(
+              children: [
+                YoutubeVideoPlayer(
+                  controller: viewModel.youtubePlayerController!,
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Wrap(
+                      children: [
+                        VideoInfoCard(
+                          video: video,
+                          onChangeInstrument: (Instrument? instrument) {
+                            viewModel.onChangeInstrument(instrument);
+                          },
+                        ),
+                        const Divider(
+                          color: AppColors.grayF8,
+                          thickness: 8,
+                        ),
+                        _tabController(context, viewModel),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           const Visibility(
             visible: true,
@@ -122,7 +124,7 @@ class _BridgePageState extends State<BridgePage> {
                   child: Text("공유된 악보"),
                 ),
               ],
-              labelColor: AppColors.blue4E,
+              labelColor: AppColors.mainPointColor,
               labelStyle: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
@@ -134,7 +136,7 @@ class _BridgePageState extends State<BridgePage> {
                 fontWeight: FontWeight.w400,
                 fontFamily: AppFontFamilies.pretendard,
               ),
-              indicatorColor: AppColors.blue4E,
+              indicatorColor: AppColors.mainPointColor,
               indicatorSize: TabBarIndicatorSize.label,
             ),
             const Divider(

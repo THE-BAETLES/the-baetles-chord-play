@@ -40,7 +40,9 @@ import 'package:the_baetles_chord_play/service/google_auth_service.dart';
 import 'package:the_baetles_chord_play/service/orientation_manager/orientation_manager.dart';
 import 'package:the_baetles_chord_play/service/orientation_manager/screen_orientation.dart';
 import 'package:the_baetles_chord_play/service/progress_service.dart';
+import 'package:the_baetles_chord_play/widget/molecule/chord_picker.dart';
 
+import 'controller/chord_picker_view_model.dart';
 import 'domain/model/loop.dart';
 import 'domain/model/play_option.dart';
 import 'domain/use_case/create_sheet.dart';

@@ -1,0 +1,4 @@
+enum BeatAccuracy {
+  wrong,
+  correct,
+}

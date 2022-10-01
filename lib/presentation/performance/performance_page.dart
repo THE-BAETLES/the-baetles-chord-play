@@ -1,22 +1,22 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:the_baetles_chord_play/domain/model/triad_type.dart';
+import 'package:the_baetles_chord_play/presentation/performance/fragment/sheet_element_size.dart';
 import 'package:the_baetles_chord_play/presentation/performance/control_bar.dart';
+import 'package:the_baetles_chord_play/presentation/performance/performance_app_bar.dart';
 import 'package:the_baetles_chord_play/presentation/performance/performance_view_model.dart';
 
-import '../../domain/model/chord.dart';
-import '../../domain/model/note.dart';
 import '../../domain/model/sheet_data.dart';
 import '../../domain/model/sheet_info.dart';
 import '../../domain/model/video.dart';
 import '../../widget/atom/app_colors.dart';
 import '../../widget/atom/app_font_families.dart';
 import '../../widget/molecule/EllipseToggleButton.dart';
-import '../../widget/organism/sheet_view.dart';
+import '../../widget/molecule/chord_picker.dart';
+import 'fragment/guitar_tab_view.dart';
+import 'fragment/sheet_auto_scroll_controller.dart';
+import 'fragment/sheet_view.dart';
 
 class PerformancePage extends StatefulWidget {
   const PerformancePage({Key? key}) : super(key: key);
@@ -25,8 +25,8 @@ class PerformancePage extends StatefulWidget {
   State<PerformancePage> createState() => _PerformancePageState();
 }
 
-class _PerformancePageState extends State<PerformancePage> {
-
+class _PerformancePageState extends State<PerformancePage>
+    with TickerProviderStateMixin {
   late PerformanceViewModel _performanceViewModel;
 
   @override
@@ -36,19 +36,7 @@ class _PerformancePageState extends State<PerformancePage> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Map<String, dynamic> arguments =
-          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-      Video video = arguments['video'] as Video;
-      SheetInfo sheetInfo = arguments["sheetInfo"] as SheetInfo;
-      SheetData sheetData = arguments['sheetData'] as SheetData;
-
-      PerformanceViewModel viewModel = context.read<PerformanceViewModel>();
-
-      viewModel.initViewModel(
-        video: video,
-        sheetInfo: sheetInfo,
-        sheetData: sheetData,
-      );
+      _initViewModel();
     });
 
     _performanceViewModel = context.read<PerformanceViewModel>();
@@ -59,50 +47,6 @@ class _PerformancePageState extends State<PerformancePage> {
     PerformanceViewModel viewModel = context.read<PerformanceViewModel>();
 
     return Scaffold(
-      appBar: AppBar(
-        systemOverlayStyle:
-            const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
-        toolbarHeight: 52,
-        backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(
-          color: AppColors.black04,
-        ),
-        elevation: 0,
-        title: Text(
-          viewModel.sheetState?.sheetInfo.title ?? "",
-          style: TextStyle(
-            color: AppColors.black04,
-            fontFamily: AppFontFamilies.notosanskr,
-            fontWeight: FontWeight.w500,
-            fontSize: 14,
-          ),
-          textAlign: TextAlign.center,
-        ),
-        actions: [
-          Container(
-            width: 22,
-            height: 20.52,
-            child: SvgPicture.asset(
-              "assets/icons/ic_empty_heart.svg",
-              fit: BoxFit.contain,
-            ),
-          ),
-          Container(
-            width: 16,
-          ),
-          Container(
-            width: 28,
-            height: 29,
-            child: SvgPicture.asset(
-              "assets/icons/ic_expansion.svg",
-              fit: BoxFit.contain,
-            ),
-          ),
-          Container(
-            width: 16,
-          ),
-        ],
-      ),
       backgroundColor: AppColors.grayF5,
       body: Stack(
         fit: StackFit.expand,
@@ -110,132 +54,40 @@ class _PerformancePageState extends State<PerformancePage> {
           Positioned(
             top: 0,
             left: 0,
-            child: Container(
-              height: MediaQuery.of(context).size.height - 130,
-              width: MediaQuery.of(context).size.width,
-              child: ValueListenableBuilder(
-                valueListenable: viewModel.currentPosition,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: ValueListenableBuilder(
+                valueListenable: viewModel.isTabVisible,
                 builder: (context, value, _) {
-                  return SheetView(
-                    currentPosition: viewModel.currentPosition.value,
-                    sheetData: (viewModel.sheetState?.sheetData)!,
-                    correctIndexes: viewModel.correctIndexes.toList(),
-                    wrongIndexes: viewModel.wrongIndexes.toList(),
-                    onClick: (int tileIndex) {
-                      viewModel.onTileClick(tileIndex);
-                    },
-                    onLongClick: (tileIndex) {
-                      viewModel.onTileLongClick(tileIndex);
-                    },
+                  return Row(
+                    children: [
+                      _sheetView(viewModel),
+                      _tabView(viewModel),
+                    ],
                   );
-                },
-              ),
-            ),
+                }),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: _appBar(viewModel),
           ),
           Positioned(
             bottom: 0,
-            child: ControlBar(),
+            left: 0,
+            right: 0,
+            child: _controlBar(viewModel),
           ),
-          Visibility(
-            visible: viewModel.isEditing,
-            child: Positioned(
-              left: 0,
-              top: 0,
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: Dialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: SizedBox(
-                  width: 200,
-                  height: 200,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _chordRow(
-                          Note((viewModel.editingRoot?.keyNumber ?? 12) - 1),
-                          viewModel),
-                      _chordRow(viewModel.editingRoot, viewModel),
-                      _chordRow(
-                          Note((viewModel.editingRoot?.keyNumber ?? 12) + 1),
-                          viewModel),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+          Positioned.fill(
+            left: 0,
+            top: 0,
+            child: _loadingDialog(),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _chordRow(Note? note, PerformanceViewModel viewModel) {
-    return Container(
-      width: 300,
-      height: 44,
-      margin: EdgeInsets.symmetric(
-        vertical: 10,
-        horizontal: 18,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            flex: 1,
-            child: EllipseToggleButton(
-              text: "${note?.noteNameWithoutOctave} minor",
-              initState: false,
-              onPressed: (_) => viewModel.onApplyEdit(
-                Chord(
-                  note!,
-                  TriadType.minor,
-                ),
-              ),
-              textStyleOnActivated: TextStyle(
-                fontFamily: AppFontFamilies.pretendard,
-                fontWeight: FontWeight.w400,
-                color: Colors.white,
-                fontSize: 14,
-              ),
-              textStyleOnInActivated: TextStyle(
-                fontFamily: AppFontFamilies.pretendard,
-                fontWeight: FontWeight.w400,
-                color: AppColors.black04,
-                fontSize: 14,
-              ),
-              borderRadius: BorderRadius.circular(23),
-            ),
-          ),
-          SizedBox(
-            width: 8,
-          ),
-          Expanded(
-            flex: 1,
-            child: EllipseToggleButton(
-              text: "${note?.noteNameWithoutOctave} major",
-              initState: false,
-              onPressed: (_) => viewModel.onApplyEdit(
-                Chord(
-                  note!,
-                  TriadType.major,
-                ),
-              ),
-              textStyleOnActivated: TextStyle(
-                fontFamily: AppFontFamilies.pretendard,
-                fontWeight: FontWeight.w400,
-                color: Colors.white,
-                fontSize: 14,
-              ),
-              textStyleOnInActivated: TextStyle(
-                fontFamily: AppFontFamilies.pretendard,
-                fontWeight: FontWeight.w400,
-                color: AppColors.black04,
-                fontSize: 14,
-              ),
-              borderRadius: BorderRadius.circular(23),
-            ),
+          Positioned.fill(
+            left: 0,
+            top: 0,
+            child: _chordPicker(viewModel),
           ),
         ],
       ),
@@ -245,11 +97,328 @@ class _PerformancePageState extends State<PerformancePage> {
   @override
   void didChangeDependencies() {
     _performanceViewModel = context.read<PerformanceViewModel>();
+    super.didChangeDependencies();
   }
 
   @override
   void dispose() {
     _performanceViewModel.reset();
     super.dispose();
+  }
+
+  void _initViewModel() {
+    Map<String, dynamic> arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    Video video = arguments['video'] as Video;
+    SheetInfo sheetInfo = arguments["sheetInfo"] as SheetInfo;
+    SheetData sheetData = arguments['sheetData'] as SheetData;
+
+    PerformanceViewModel viewModel = context.read<PerformanceViewModel>();
+
+    viewModel.initViewModel(
+      video: video,
+      sheetInfo: sheetInfo,
+      sheetData: sheetData,
+    );
+  }
+
+  Widget _sheetView(PerformanceViewModel viewModel) {
+    return Expanded(
+      child: ValueListenableBuilder(
+        valueListenable: viewModel.beatStates,
+        builder: (context, value, _) {
+          return ValueListenableBuilder(
+            valueListenable: viewModel.measureCount,
+            builder: (context, value, _) {
+              return ValueListenableBuilder(
+                valueListenable: viewModel.sheetState,
+                builder: (context, value, _) {
+                  if (viewModel.sheetState.value?.sheetData == null) {
+                    return Container();
+                  }
+                  return SafeArea(
+                    child: LayoutBuilder(builder: (
+                      BuildContext context,
+                      BoxConstraints constraints,
+                    ) {
+                      final sheetElementSize = SheetElementSize.resize(
+                        sheetHeight: constraints.maxHeight,
+                        sheetWidth: constraints.maxWidth,
+                        measureCount: viewModel.measureCount.value,
+                        spaceWidth: 5,
+                        barWidth: 2,
+                      );
+
+                      return SheetView(
+                        currentPosition: viewModel.currentPosition.value,
+                        sheetData: (viewModel.sheetState.value?.sheetData)!,
+                        beatStates: viewModel.beatStates.value.beatStates,
+                        correctIndexes:
+                            viewModel.feedbackState.correctIndexes.toList(),
+                        wrongIndexes:
+                            viewModel.feedbackState.wrongIndexes.toList(),
+                        scrollController: SheetAutoScrollController(
+                          topMargin: SheetView.topMargin,
+                          bottomMargin: SheetView.bottomMargin,
+                          lineHeight: sheetElementSize.tileHeight +
+                              SheetView.spaceBetweenRow,
+                          screenHeight: MediaQuery.of(context).size.height,
+                          measureCount: viewModel.measureCount.value,
+                          msPerBeat: 1000 ~/
+                              (viewModel.sheetState.value!.sheetData.bpm /
+                                  60.0),
+                          lineCount:
+                              (viewModel.beatStates.value.beatStates.length /
+                                      viewModel.measureCount.value.toDouble())
+                                  .ceil(),
+                          positionInMs: viewModel.currentPosition,
+                        ),
+                        onClick: (int tileIndex) {
+                          viewModel.onTileClick(tileIndex);
+                        },
+                        onLongClick: (tileIndex) {
+                          viewModel.onTileLongClick(tileIndex);
+                        },
+                        scaleAdapter: viewModel.scaleAdapter,
+                        sheetElementSize: sheetElementSize,
+                      );
+                    }),
+                  );
+                },
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _tabView(PerformanceViewModel viewModel) {
+    return Builder(builder: (context) {
+      final AnimationController controller = AnimationController(
+        duration: const Duration(milliseconds: 500),
+        vsync: this,
+      );
+
+      if (viewModel.isTabVisible.value) {
+        controller.reverse(from: 1.0);
+      } else {
+        controller.animateTo(1.0);
+      }
+
+      return SlideTransition(
+        transformHitTests: true,
+        position: Tween<Offset>(
+          begin: Offset.zero,
+          end: const Offset(1, 0),
+        ).animate(CurvedAnimation(parent: controller, curve: Curves.ease)),
+        child: LayoutBuilder(builder: (
+          BuildContext context,
+          BoxConstraints constraints,
+        ) {
+          return AnimatedContainer(
+            color: Colors.white,
+            duration: Duration(milliseconds: 500),
+            child: GuitarTabView(
+              width: viewModel.isTabVisible.value ? 230 : 0,
+              height: constraints.maxHeight,
+            ),
+          );
+        }),
+      );
+    });
+  }
+
+  Widget _appBar(PerformanceViewModel viewModel) {
+    return ValueListenableBuilder(
+      valueListenable: viewModel.playOption,
+      builder: (context, value, _) {
+        final AnimationController controller = AnimationController(
+          duration: const Duration(milliseconds: 200),
+          vsync: this,
+        );
+
+        if (viewModel.playOption.value.isPlaying) {
+          controller.animateTo(1.0);
+        } else {
+          controller.reverse(from: 1.0);
+        }
+
+        return SlideTransition(
+          transformHitTests: true,
+          position: Tween<Offset>(
+            begin: Offset.zero,
+            end: const Offset(0, -1),
+          ).animate(CurvedAnimation(
+            parent: controller,
+            curve: Curves.ease,
+          )),
+          child: PerformanceAppBar(
+            viewModel: viewModel,
+            // height: !viewModel.playOption.value.isPlaying ? 52 : 0,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _controlBar(PerformanceViewModel viewModel) {
+    return SizedBox(
+      height: 65,
+      child: Column(
+        children: [
+          ValueListenableBuilder(
+            valueListenable: viewModel.currentPosition,
+            builder: (context, value, _) {
+              return LinearProgressIndicator(
+                value: ((viewModel.currentPositionInPercentage ?? 0) / 100.0)
+                    .clamp(0, 1),
+                color: AppColors.mainPointColor,
+                backgroundColor: Colors.transparent,
+                minHeight: 3,
+              );
+            },
+          ),
+          const ControlBar(),
+        ],
+      ),
+    );
+  }
+
+  Widget _loadingDialog() {
+    return ValueListenableBuilder(
+      valueListenable: _performanceViewModel.isLoading,
+      builder: (context, value, _) {
+        return SafeArea(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Visibility(
+                    visible: _performanceViewModel.isLoading.value,
+                    child: Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(40),
+                        color: AppColors.mainPointColor.withAlpha(150),
+                      ),
+                      child: LoadingAnimationWidget.staggeredDotsWave(
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _chordPicker(PerformanceViewModel viewModel) {
+    return ValueListenableBuilder(
+      valueListenable: viewModel.editingPosition,
+      builder: (context, value, _) {
+        return Visibility(
+          visible: viewModel.isEditing,
+          child: GestureDetector(
+            onTap: () {
+              viewModel.editingPosition.value = null;
+            },
+            child: Container(
+              color: AppColors.shadow00,
+              alignment: Alignment.center,
+              child: Dialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Container(
+                  width: 270,
+                  height: 280,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 15,
+                    horizontal: 20,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 190,
+                        child: ChordPicker(
+                          onChangeChord: viewModel.onChangeChord,
+                          initRoot: viewModel.editedChord?.root,
+                          initTriadType: viewModel.editedChord?.triadType,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      SizedBox(
+                        width: 280,
+                        height: 44,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: EllipseToggleButton(
+                                text: "취소",
+                                initState: false,
+                                onPressed: (_) => viewModel.onCancleEdit(),
+                                textStyleOnActivated: const TextStyle(
+                                  fontFamily: AppFontFamilies.pretendard,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                ),
+                                textStyleOnInActivated: const TextStyle(
+                                  fontFamily: AppFontFamilies.pretendard,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.black04,
+                                  fontSize: 14,
+                                ),
+                                borderRadius: BorderRadius.circular(23),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: EllipseToggleButton(
+                                text: "확인",
+                                initState: true,
+                                onPressed: (_) => viewModel.onApplyEdit(),
+                                textStyleOnActivated: const TextStyle(
+                                  fontFamily: AppFontFamilies.pretendard,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                ),
+                                textStyleOnInActivated: const TextStyle(
+                                  fontFamily: AppFontFamilies.pretendard,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.black04,
+                                  fontSize: 14,
+                                ),
+                                borderRadius: BorderRadius.circular(23),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 }
