@@ -69,24 +69,28 @@ class PerformanceAppBar extends StatelessWidget {
                   Container(
                     width: 22,
                     height: 20.52,
+                    margin: EdgeInsets.symmetric(horizontal: 8),
                     child: SvgPicture.asset(
                       "assets/icons/ic_empty_heart.svg",
                       fit: BoxFit.contain,
                     ),
                   ),
-                  Container(
-                    width: 16,
-                  ),
-                  Container(
-                    width: 28,
-                    height: 29,
-                    child: SvgPicture.asset(
-                      "assets/icons/ic_expansion.svg",
-                      fit: BoxFit.contain,
+                  GestureDetector(
+                    onTap: () {
+                      viewModel.onSetTabVisibility(!viewModel.isTabVisible.value);
+                    },
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 8),
+                      width: 28,
+                      height: 29,
+                      child: SvgPicture.asset(
+                        "assets/icons/ic_expansion.svg",
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                   Container(
-                    width: 16,
+                    width: 8,
                   ),
                 ],
               ),

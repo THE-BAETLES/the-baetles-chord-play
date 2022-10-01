@@ -47,6 +47,7 @@ class PerformanceViewModel with ChangeNotifier {
       ValueNotifier(null);
   final ValueNotifier<int> _measureCount = ValueNotifier(4);
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
+  final ValueNotifier<bool> _isTabVisible = ValueNotifier(false);
   final ValueNotifier<BeatStates> _beatStates = ValueNotifier(BeatStates([]));
 
   late final Function(int) _conductorPositionCallback;
@@ -82,6 +83,8 @@ class PerformanceViewModel with ChangeNotifier {
   ValueNotifier<bool> get isLoading => _isLoading;
 
   ValueNotifier<BeatStates> get beatStates => _beatStates;
+
+  ValueNotifier<bool> get isTabVisible => _isTabVisible;
 
   bool get isEditing => _editingPosition.value != null;
 
@@ -365,5 +368,9 @@ class PerformanceViewModel with ChangeNotifier {
     }
 
     return BeatStates(beatStates);
+  }
+
+  void onSetTabVisibility(bool isVisible) {
+    isTabVisible.value = isVisible;
   }
 }

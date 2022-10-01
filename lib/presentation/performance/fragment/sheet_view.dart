@@ -58,7 +58,7 @@ class SheetView extends StatelessWidget {
     for (int rowIndex = 0; rowIndex < rowCount; ++rowIndex) {
       tileRows.add(
         Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: _tileRow(
             beatPerMeasure,
             (beatPerMeasure * sheetElementSize.measureCount),

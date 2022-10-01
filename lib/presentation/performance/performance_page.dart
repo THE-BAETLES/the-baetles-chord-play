@@ -56,12 +56,16 @@ class _PerformancePageState extends State<PerformancePage>
             left: 0,
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            child: Row(
-              children: [
-                _sheetView(viewModel),
-                _tabView(),
-              ],
-            ),
+            child: ValueListenableBuilder(
+                valueListenable: viewModel.isTabVisible,
+                builder: (context, value, _) {
+                  return Row(
+                    children: [
+                      _sheetView(viewModel),
+                      _tabView(viewModel),
+                    ],
+                  );
+                }),
           ),
           Positioned(
             top: 0,
@@ -156,11 +160,17 @@ class _PerformancePageState extends State<PerformancePage>
                         scrollController: SheetAutoScrollController(
                           topMargin: SheetView.topMargin,
                           bottomMargin: SheetView.bottomMargin,
-                          lineHeight: sheetElementSize.tileHeight + SheetView.spaceBetweenRow,
+                          lineHeight: sheetElementSize.tileHeight +
+                              SheetView.spaceBetweenRow,
                           screenHeight: MediaQuery.of(context).size.height,
                           measureCount: viewModel.measureCount.value,
-                          msPerBeat: 1000 ~/ (viewModel.sheetState.value!.sheetData.bpm / 60.0),
-                          lineCount: (viewModel.beatStates.value.beatStates.length / viewModel.measureCount.value.toDouble()).ceil(),
+                          msPerBeat: 1000 ~/
+                              (viewModel.sheetState.value!.sheetData.bpm /
+                                  60.0),
+                          lineCount:
+                              (viewModel.beatStates.value.beatStates.length /
+                                      viewModel.measureCount.value.toDouble())
+                                  .ceil(),
                           positionInMs: viewModel.currentPosition,
                         ),
                         onClick: (int tileIndex) {
@@ -183,14 +193,38 @@ class _PerformancePageState extends State<PerformancePage>
     );
   }
 
-  Widget _tabView() {
-    return LayoutBuilder(builder: (
-      BuildContext context,
-      BoxConstraints constraints,
-    ) {
-      return Container(
-        color: Colors.white,
-        child: GuitarTabView(width: 230, height: constraints.maxHeight),
+  Widget _tabView(PerformanceViewModel viewModel) {
+    return Builder(builder: (context) {
+      final AnimationController controller = AnimationController(
+        duration: const Duration(milliseconds: 500),
+        vsync: this,
+      );
+
+      if (viewModel.isTabVisible.value) {
+        controller.reverse(from: 1.0);
+      } else {
+        controller.animateTo(1.0);
+      }
+
+      return SlideTransition(
+        transformHitTests: true,
+        position: Tween<Offset>(
+          begin: Offset.zero,
+          end: const Offset(1, 0),
+        ).animate(CurvedAnimation(parent: controller, curve: Curves.ease)),
+        child: LayoutBuilder(builder: (
+          BuildContext context,
+          BoxConstraints constraints,
+        ) {
+          return AnimatedContainer(
+            color: Colors.white,
+            duration: Duration(milliseconds: 500),
+            child: GuitarTabView(
+              width: viewModel.isTabVisible.value ? 230 : 0,
+              height: constraints.maxHeight,
+            ),
+          );
+        }),
       );
     });
   }
