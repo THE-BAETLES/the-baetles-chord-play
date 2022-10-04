@@ -1,10 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:the_baetles_chord_play/utility/time_formatter.dart';
 
 void main() {
   group('TimeFormatter test', ()
   {
-    test('format hms', () {
+    test('formatDurationToHms', () {
       Duration duration1 = Duration(milliseconds: 0);
       expect(TimeFormatter.formatDurationToHms(duration1), "0:00");
 
@@ -23,5 +25,7 @@ void main() {
       Duration duration6 = Duration(milliseconds: 114563526);
       expect(TimeFormatter.formatDurationToHms(duration6), "31:49:23");
     });
+
+    log("TimeFormatter test complete");
   });
 }

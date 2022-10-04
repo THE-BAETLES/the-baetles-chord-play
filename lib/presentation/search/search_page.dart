@@ -8,6 +8,7 @@ import '../../widget/atom/app_colors.dart';
 import '../../widget/atom/app_font_families.dart';
 import '../../widget/atom/search_icon.dart';
 import '../../widget/molecule/video_block.dart';
+import '../../widget/organism/video_list_view.dart';
 import '../performance/performance_view_model.dart';
 
 class SearchPage extends StatefulWidget {
@@ -99,21 +100,11 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _searchResultList(SearchViewModel viewModel) {
-    final List<Widget> videoBlocks = [];
-
-    for (Video video in viewModel.searchResult) {
-      videoBlocks.add(
-        VideoBlock(
-          video: video,
-          onClick: (Video video) {
-            Navigator.pushNamed(context, "/bridge-page", arguments: video);
-          },
-        ),
-      );
-    }
-
-    return ListView(
-      children: videoBlocks,
+    return VideoListView(
+      videos: viewModel.searchResult,
+      onVideoBlockClicked: (Video video) {
+        Navigator.pushNamed(context, "/bridge-page", arguments: video);
+      },
     );
   }
 

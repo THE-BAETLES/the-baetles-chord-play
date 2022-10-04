@@ -56,6 +56,7 @@ class VideoSummary extends StatelessWidget {
               PlayCount(
                 count: video.playCount,
                 formatter: NumberFormat("#,###"),
+                presentPostfix: true,
               ),
             ],
           )

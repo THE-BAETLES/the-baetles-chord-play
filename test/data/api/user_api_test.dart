@@ -1,10 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/mockito.dart';
 import 'package:the_baetles_chord_play/data/source/remote_data_source.dart';
 
-import 'user_api_test.mocks.dart';
+import './user_api_test.mocks.dart';
 
 @GenerateMocks([http.Client])
 void main() async {
@@ -74,5 +76,7 @@ void main() async {
                 '${RemoteDataSource.bearer} ${fakeToken}'
           }));
     });
+
+    log("user api test complete");
   });
 }

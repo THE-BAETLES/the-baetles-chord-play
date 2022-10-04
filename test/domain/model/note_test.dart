@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:the_baetles_chord_play/domain/model/chord.dart';
 import 'package:the_baetles_chord_play/domain/model/note.dart';
@@ -76,7 +78,7 @@ void main() {
       expect(note9.rootName, "F");
       expect(note9.rootNumber, 5);
 
-      print("Note model test complete");
+      log("Note model test complete");
     });
   });
 
@@ -106,55 +108,7 @@ void main() {
       Chord chord8 = Chord.fromString("A#0:aug");
       expect(chord4, chord8);
 
-      print("Chord model test complete");
+      log("Chord model test complete");
     });
   });
-
-  // group('ChordBlock model test', () {
-  //   test('json to instance', () {
-//       String json =
-//       """{
-//   "bpm": 120,
-//   "chord_infos": [
-//     {
-//       "chord": "F#:maj",
-//       "end": 13.560453428,
-//       "position": 25,
-//       "start": 12.213696067
-//     },
-//     {
-//       "chord": "G#:maj",
-//       "end": 14.489251608,
-//       "position": 28,
-//       "start": 13.606893337
-//     },
-//     {
-//       "chord": "A#:maj",
-//       "end": 16.997006694,
-//       "position": 30,
-//       "start": 14.535691517
-//     },
-//     {
-//       "chord": "F#:maj",
-//       "end": 18.11156451,
-//       "position": 35,
-//       "start": 17.043446603
-//     },
-//     {
-//       "chord": "G#:maj",
-//       "end": 18.993922781,
-//       "position": 37,
-//       "start": 18.158004419
-//     },
-//     {
-//       "chord": "A#:maj",
-//       "end": 21.548117776,
-//       "position": 39,
-//       "start": 19.04036269
-//     },
-//   ],
-// }""";
-//
-//
-//   });
 }

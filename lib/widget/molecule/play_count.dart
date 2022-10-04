@@ -9,10 +9,12 @@ class PlayCount extends StatelessWidget {
 
   final int count;
   final NumberFormat formatter;
+  final bool presentPostfix;
 
   PlayCount({
     required this.count,
     required this.formatter,
+    this.presentPostfix = false,
     Key? key,
   }) : super(key: key);
 
@@ -28,7 +30,7 @@ class PlayCount extends StatelessWidget {
         ),
         const SizedBox(width: 4),
         Text(
-          formatter.format(count),
+          "${formatter.format(count)}${presentPostfix ? '회' : ''}",
           style: TextStyle(
             fontSize: 11,
             fontFamily: AppFontFamilies.pretendard,
