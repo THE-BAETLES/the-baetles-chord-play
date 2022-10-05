@@ -19,7 +19,6 @@ class BridgeViewModel with ChangeNotifier {
   Video? _video;
   Instrument? _selectedInstrument = Instrument.guitar;
   int _tabBarOffset = 0;
-  SheetInfo? _selectedSheet;
   YoutubePlayerController? _youtubePlayerController;
   List<ChordBlock>? chordBlocksToDuplicate; // 나중에 SheetBuilder로 분리
 
@@ -38,8 +37,6 @@ class BridgeViewModel with ChangeNotifier {
   UnmodifiableListView<SheetInfo>? get likedSheets => _likedSheets;
   UnmodifiableListView<SheetInfo>? get sharedSheets => _sharedSheets;
   Video? get video => _video;
-  SheetInfo? get selectedSheet => _selectedSheet;
-  bool get isStartButtonActivated => _selectedSheet != null;
   bool get isInputSheetDetailPopupVisible => chordBlocksToDuplicate != null;
   YoutubePlayerController? get youtubePlayerController => _youtubePlayerController;
 
@@ -121,27 +118,14 @@ class BridgeViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void onSelectSheet(SheetInfo sheet) {
-    if (_selectedSheet != sheet) {
-      _selectedSheet = sheet;
-
-      notifyListeners();
-    }
-  }
-
-  void onStartButtonClicked(BuildContext context) {
-    if (_selectedSheet == null) {
-      assert(false);
-      return;
-    }
-
+  void onSelectSheet(BuildContext context, SheetInfo sheet) {
     _youtubePlayerController?.pause();
 
     Navigator.of(context).pushNamed(
       '/loading-page',
       arguments: {
         "video": _video!,
-        "sheetInfo": _selectedSheet!,
+        "sheetInfo": sheet,
       },
     );
   }
@@ -186,7 +170,6 @@ class BridgeViewModel with ChangeNotifier {
     _video = null;
     _selectedInstrument = Instrument.guitar;
     _tabBarOffset = 0;
-    _selectedSheet = null;
     _youtubePlayerController = null;
   }
 }

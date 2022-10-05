@@ -6,7 +6,6 @@ import 'package:the_baetles_chord_play/widget/atom/app_font_families.dart';
 import 'package:the_baetles_chord_play/widget/atom/youtube_video_player.dart';
 import 'package:the_baetles_chord_play/widget/molecule/middle_hightlight_text.dart';
 import 'package:the_baetles_chord_play/widget/organism/transparent_appbar.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../domain/model/instrument.dart';
 import '../../domain/model/video.dart';
@@ -45,33 +44,20 @@ class _BridgePageState extends State<BridgePage> {
                 YoutubeVideoPlayer(
                   controller: viewModel.youtubePlayerController!,
                 ),
+                VideoInfoCard(
+                  video: video,
+                  onChangeInstrument: (Instrument? instrument) {
+                    viewModel.onChangeInstrument(instrument);
+                  },
+                ),
+                const Divider(
+                  color: AppColors.grayF8,
+                  thickness: 8,
+                ),
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Wrap(
-                      children: [
-                        VideoInfoCard(
-                          video: video,
-                          onChangeInstrument: (Instrument? instrument) {
-                            viewModel.onChangeInstrument(instrument);
-                          },
-                        ),
-                        const Divider(
-                          color: AppColors.grayF8,
-                          thickness: 8,
-                        ),
-                        _tabController(context, viewModel),
-                      ],
-                    ),
-                  ),
+                  child: _tabController(context, viewModel),
                 ),
               ],
-            ),
-          ),
-          const Visibility(
-            visible: true,
-            child: Positioned(
-              bottom: 0,
-              child: BridgeControlBar(),
             ),
           ),
           Visibility(
@@ -105,9 +91,11 @@ class _BridgePageState extends State<BridgePage> {
 
         tabController.animateTo(viewModel.tabBarOffset);
 
-        return Wrap(
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const TabBar(
+              physics: BouncingScrollPhysics(),
               isScrollable: true,
               padding: EdgeInsets.symmetric(horizontal: 15),
               tabs: [
@@ -161,8 +149,7 @@ class _BridgePageState extends State<BridgePage> {
                 ],
               ),
             ),
-            SizedBox(
-              height: 500,
+            Expanded(
               child: TabBarView(
                 children: [
                   BridgeSheetListView(

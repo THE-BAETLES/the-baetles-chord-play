@@ -62,26 +62,26 @@ class BridgeControlBar extends StatelessWidget {
           Flexible(
             child: Container(
               height: 50,
-              child: EllipseToggleButton(
-                text: 'Play',
-                initState: viewModel.isStartButtonActivated,
-                onPressed: (bool isActivated) {
-                  viewModel.onStartButtonClicked(context);
-                },
-                textStyleOnActivated: const TextStyle(
-                  fontFamily: AppFontFamilies.notosanskr,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.white,
-                ),
-                textStyleOnInActivated: const TextStyle(
-                  fontFamily: AppFontFamilies.notosanskr,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.gray73,
-                ),
-                borderRadius: BorderRadius.circular(30),
-              ),
+              // child: EllipseToggleButton(
+              //   text: 'Play',
+              //   // initState: viewModel.isStartButtonActivated,
+              //   onPressed: (bool isActivated) {
+              //     // viewModel.onStartButtonClicked(context);
+              //   },
+              //   textStyleOnActivated: const TextStyle(
+              //     fontFamily: AppFontFamilies.notosanskr,
+              //     fontSize: 16,
+              //     fontWeight: FontWeight.w400,
+              //     color: Colors.white,
+              //   ),
+              //   textStyleOnInActivated: const TextStyle(
+              //     fontFamily: AppFontFamilies.notosanskr,
+              //     fontSize: 16,
+              //     fontWeight: FontWeight.w400,
+              //     color: AppColors.gray73,
+              //   ),
+              //   borderRadius: BorderRadius.circular(30),
+              // ),
             ),
           ),
         ],

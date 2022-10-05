@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:the_baetles_chord_play/widget/atom/app_colors.dart';
 
 import '../../domain/model/sheet_info.dart';
+import '../../widget/molecule/like_count.dart';
 import '../../widget/molecule/sheet_info_card.dart';
 import 'bridge_view_model.dart';
 
@@ -28,21 +29,45 @@ class _BridgeSheetListViewState extends State<BridgeSheetListView> {
     return ListView.builder(
       padding: EdgeInsets.zero,
       itemCount: widget.sheets?.length ?? 0,
+      physics: const BouncingScrollPhysics(),
       itemBuilder: (BuildContext context, int index) {
         BridgeViewModel viewModel = context.watch<BridgeViewModel>();
         SheetInfo sheet = widget.sheets![index];
 
-        return SheetInfoCard(
-          sheetTitle: sheet.title,
-          videoTitle: widget.videoTitle,
-          ownerUserId: sheet.userId,
-          likeCount: sheet.likeCount,
-          backgroundColor: viewModel.selectedSheet == sheet
-              ? AppColors.whiteF8
-              : Colors.white,
-          onClicked: () {
-            viewModel.onSelectSheet(sheet);
-          },
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+          child: Row(
+            children: [
+              Expanded(
+                child: SheetInfoCard(
+                  sheetTitle: sheet.title,
+                  videoTitle: widget.videoTitle,
+                  ownerUserId: sheet.userId,
+                  likeCount: sheet.likeCount,
+                  backgroundColor: Colors.white,
+                  onClicked: () {
+                    viewModel.onSelectSheet(context, sheet);
+                  },
+                ),
+              ),
+              GestureDetector(
+                onTap: () {},
+                child: SizedBox(
+                    width: 40,
+                    child: Column(
+                      children: [
+                        LikeCount(
+                          count: sheet.likeCount,
+                          width: 20,
+                          space: 12,
+                          color: (true) ? AppColors.redFF : AppColors.gray80,
+                        ),
+                      ],
+                    ),
+                  ),
+              ),
+            ],
+          ),
         );
       },
     );

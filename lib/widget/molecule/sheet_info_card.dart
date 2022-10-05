@@ -29,19 +29,8 @@ class SheetInfoCard extends StatelessWidget {
       onTap: () => onClicked?.call(),
       child: Container(
         color: backgroundColor ?? Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         child: Row(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: Image.asset(
-                "assets/images/img_sheet_cover_1.jpg",
-                width: 90,
-                height: 90,
-                fit: BoxFit.cover,
-              ),
-            ),
-            Container(width: 15),
             Flexible(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -87,11 +76,9 @@ class SheetInfoCard extends StatelessWidget {
                       Container(
                         child: UserInfoView(
                           userNickname: "baetles",
-                          userProfileImage: Image.asset("assets/icons/ic_robot.png"),
+                          userProfileImage:
+                              Image.asset("assets/icons/ic_robot.png"),
                         ),
-                      ),
-                      LikeCount(
-                        count: likeCount,
                       ),
                     ],
                   ),
