@@ -23,7 +23,7 @@ class VideoListView extends StatelessWidget {
           videoBlocks.add(
             VideoBlock(
               video: video,
-              onClick: onVideoBlockClicked?.call(video),
+              onClick: onVideoBlockClicked,
             ),
           );
         }

@@ -28,49 +28,63 @@ class BridgeSheetListView extends StatefulWidget {
 class _BridgeSheetListViewState extends State<BridgeSheetListView> {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: EdgeInsets.zero,
-      itemCount: widget.sheets?.length ?? 0,
-      physics: const BouncingScrollPhysics(),
-      itemBuilder: (BuildContext context, int index) {
-        SheetInfo sheet = widget.sheets![index];
+    return Container(
+      child: ListView.builder(
+        padding: EdgeInsets.zero,
+        itemCount: widget.sheets?.length ?? 0,
+        physics: const BouncingScrollPhysics(),
+        itemBuilder: (BuildContext context, int index) {
+          SheetInfo sheet = widget.sheets![index];
 
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-          child: Row(
+          return Column(
             children: [
-              Expanded(
-                child: SheetInfoCard(
-                  sheetTitle: sheet.title,
-                  videoTitle: widget.videoTitle,
-                  ownerUserId: sheet.userId,
-                  likeCount: sheet.likeCount,
-                  backgroundColor: Colors.white,
-                  onClicked: () {
-                    widget.onClick?.call(context, sheet);
-                  },
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: SheetInfoCard(
+                        sheetTitle: sheet.title,
+                        videoTitle: widget.videoTitle,
+                        ownerUserId: sheet.userId,
+                        likeCount: sheet.likeCount,
+                        backgroundColor: Colors.white,
+                        onClicked: () {
+                          widget.onClick?.call(context, sheet);
+                        },
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {},
+                      child: SizedBox(
+                          width: 40,
+                          child: Column(
+                            children: [
+                              LikeCount(
+                                count: sheet.likeCount,
+                                width: 20,
+                                space: 12,
+                                color: (true) ? AppColors.redFF : AppColors.gray80,
+                              ),
+                            ],
+                          ),
+                        ),
+                    ),
+                  ],
                 ),
               ),
-              GestureDetector(
-                onTap: () {},
-                child: SizedBox(
-                    width: 40,
-                    child: Column(
-                      children: [
-                        LikeCount(
-                          count: sheet.likeCount,
-                          width: 20,
-                          space: 12,
-                          color: (true) ? AppColors.redFF : AppColors.gray80,
-                        ),
-                      ],
-                    ),
-                  ),
-              ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                height: 2,
+                color: AppColors.grayF5
+              )
             ],
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

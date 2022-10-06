@@ -16,6 +16,6 @@ class Navigate {
     '/bridge-page' : (context) => BridgePage(),
     '/performance-page' : (context) => PerformancePage(key: UniqueKey()),
     '/loading-page' : (context) => LoadingPage(key: UniqueKey()),
-    '/sheet-page' : (context) => SearchPage(),
+    '/search-page' : (context) => SearchPage(),
   };
 }

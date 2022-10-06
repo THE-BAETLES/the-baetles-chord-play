@@ -21,7 +21,9 @@ class VideoBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (() => onClick?.call(video)),
+      onTap: () {
+        onClick?.call(video);
+      },
       child: Container(
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),

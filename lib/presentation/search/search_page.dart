@@ -103,7 +103,10 @@ class _SearchPageState extends State<SearchPage> {
     return VideoListView(
       videos: viewModel.searchResult,
       onVideoBlockClicked: (Video video) {
-        Navigator.pushNamed(context, "/bridge-page", arguments: video);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushNamed(context, "/bridge-page", arguments: video);
+        });
+        viewModel.onSelectVideo(video);
       },
     );
   }

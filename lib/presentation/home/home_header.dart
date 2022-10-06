@@ -71,7 +71,7 @@ class HomeHeader extends StatelessWidget {
 
   Widget _searchBar(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.of(context).pushNamed("/sheet-page"),
+      onTap: () => Navigator.of(context).pushNamed('/search-page'),
       child: Container(
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.symmetric(vertical: 14, horizontal: 5),

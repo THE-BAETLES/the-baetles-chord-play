@@ -12,7 +12,7 @@ class OrientationManager extends NavigatorObserver {
     '/sign-up-page',
     'home-page',
     '/bridge-page',
-    '/sheet-page',
+    '/search-page',
   });
 
   final HashSet<String> _landscapeOnlyPage = HashSet.of({

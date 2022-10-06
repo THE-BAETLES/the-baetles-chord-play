@@ -181,6 +181,17 @@ class _BridgePageState extends State<BridgePage> {
                   .width,
               padding: EdgeInsets.symmetric(horizontal: 15),
               height: 50,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: Offset(0, 5), // changes position of shadow
+                  ),
+                ],
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,

@@ -28,7 +28,7 @@ class SheetInfoCard extends StatelessWidget {
     return GestureDetector(
       onTap: () => onClicked?.call(),
       child: Container(
-        color: backgroundColor ?? Colors.white,
+        color: backgroundColor ?? Colors.transparent,
         child: Row(
           children: [
             Flexible(
@@ -53,21 +53,24 @@ class SheetInfoCard extends StatelessWidget {
                       Container(
                         height: 4,
                       ),
-                      Text(
-                        videoTitle,
-                        style: TextStyle(
-                          color: AppColors.gray80,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: AppFontFamilies.pretendard,
+                      Container(
+                        height: 26,
+                        child: Text(
+                          videoTitle,
+                          style: TextStyle(
+                            color: AppColors.gray80,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: AppFontFamilies.pretendard,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
                   Container(
-                    height: 23,
+                    height: 13,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

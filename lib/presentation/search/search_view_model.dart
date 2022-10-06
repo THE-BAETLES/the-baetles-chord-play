@@ -22,4 +22,8 @@ class SearchViewModel extends ChangeNotifier {
     _controller.clear();
     searchResult.clear();
   }
+
+  void onSelectVideo(Video video) {
+    notifyListeners();
+  }
 }
