@@ -24,7 +24,11 @@ class VideoListBlock extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        BlockTitle(title: "연주했던 곡", subTitle: "${this.userName}님이 연습했던 악보영상들"),
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 15),
+          child: BlockTitle(
+              title: "연주했던 곡", subTitle: "${this.userName}님이 연습했던 악보영상들"),
+        ),
         VideoList(
           video: videos,
           onVideoClicked: _onVideoClicked,

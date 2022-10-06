@@ -22,7 +22,10 @@ class VideoGridBlock extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        BlockTitle(title: "추천 악보영상", subTitle: "이런 곡 연습은 어떠세요?"),
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 15),
+          child: BlockTitle(title: "추천 악보영상", subTitle: "이런 곡 연습은 어떠세요?"),
+        ),
         VideoGrid(
           video: videos,
           onVideoClicked: _onVideoClicked,

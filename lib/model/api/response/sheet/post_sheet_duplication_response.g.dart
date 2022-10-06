@@ -1,21 +1,21 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'post_sheet_data_response.dart';
+part of 'post_sheet_duplication_response.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-PostSheetDataResponse _$PostSheetDataResponseFromJson(
+PostSheetDuplicationResponse _$PostSheetDuplicationResponseFromJson(
         Map<String, dynamic> json) =>
-    PostSheetDataResponse(
+    PostSheetDuplicationResponse(
       json['code'] as String,
       json['message'] as String,
-      json['data'] as String,
+      SheetSchema.fromJson(json['data'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$PostSheetDataResponseToJson(
-        PostSheetDataResponse instance) =>
+Map<String, dynamic> _$PostSheetDuplicationResponseToJson(
+        PostSheetDuplicationResponse instance) =>
     <String, dynamic>{
       'code': instance.code,
       'message': instance.message,

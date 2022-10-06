@@ -45,7 +45,7 @@ import 'package:the_baetles_chord_play/widget/molecule/chord_picker.dart';
 import 'controller/chord_picker_view_model.dart';
 import 'domain/model/loop.dart';
 import 'domain/model/play_option.dart';
-import 'domain/use_case/create_sheet.dart';
+import 'domain/use_case/create_sheet_duplication.dart';
 import 'domain/use_case/generate_video.dart';
 import 'domain/use_case/get_my_sheets_of_video.dart';
 import 'domain/use_case/get_nickname_suggestion.dart';
@@ -128,7 +128,7 @@ class MyApp extends StatelessWidget {
               GetSheetsOfVideo(SheetRepository()),
             ),
             GenerateVideo(VideoRepository()),
-            CreateSheet(SheetRepository()),
+            CreateSheetDuplication(SheetRepository()),
           ),
         ),
         ChangeNotifierProvider(

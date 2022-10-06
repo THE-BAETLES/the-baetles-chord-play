@@ -4,10 +4,10 @@ import 'package:the_baetles_chord_play/widget/atom/app_font_families.dart';
 
 import '../atom/app_colors.dart';
 
-class AddSheetButton extends StatelessWidget {
+class CreateSheetButton extends StatelessWidget {
   final void Function()? onClick;
 
-  const AddSheetButton({Key? key, this.onClick}) : super(key: key);
+  const CreateSheetButton({Key? key, this.onClick}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -7,8 +7,11 @@ class BlockTitle extends StatelessWidget {
   final String title;
   final String subTitle;
 
-  const BlockTitle({required this.title, this.subTitle = "", Key? key})
-      : super(key: key);
+  const BlockTitle({
+    Key? key,
+    required this.title,
+    this.subTitle = "",
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +20,6 @@ class BlockTitle extends StatelessWidget {
         Container(
           width: MediaQuery.of(context).size.width,
           alignment: Alignment.centerLeft,
-          margin: EdgeInsets.only(left: 15),
           child: Text(
             title,
             style: TextStyle(
@@ -31,7 +33,6 @@ class BlockTitle extends StatelessWidget {
         Container(
           width: MediaQuery.of(context).size.width,
           alignment: Alignment.centerLeft,
-          margin: EdgeInsets.only(left: 15),
           child: Text(
             subTitle,
             style: TextStyle(

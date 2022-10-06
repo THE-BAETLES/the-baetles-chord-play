@@ -27,7 +27,7 @@ class _SheetCreationDialogState extends State<SheetCreationDialog> {
       ),
       child: Container(
         width: 300,
-        height: 300,
+        height: 200,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -84,52 +84,6 @@ class _SheetCreationDialogState extends State<SheetCreationDialog> {
                   fontFamily: AppFontFamilies.pretendard,
                   fontSize: 14,
                   color: viewModel.isTitleValid
-                      ? AppColors.black04
-                      : AppColors.redFF,
-                ),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: TextField(
-                scrollPadding: EdgeInsets.zero,
-                onChanged: viewModel.onChangeBpm,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  border: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: viewModel.isBpmValid
-                          ? AppColors.grayD2
-                          : AppColors.redFF,
-                    ),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: AppColors.grayD2,
-                    ),
-                  ),
-                  contentPadding: EdgeInsets.symmetric(
-                    vertical: 11,
-                    horizontal: 12,
-                  ),
-                  hintText: "악보의 BPM을 입력해주세요.",
-                  hintStyle: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: AppFontFamilies.pretendard,
-                      color: AppColors.grayD2),
-                  counterText: "",
-                ),
-                autocorrect: false,
-                maxLines: 1,
-                maxLength: 15,
-                cursorColor: AppColors.black04,
-                enableInteractiveSelection: false,
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontFamily: AppFontFamilies.pretendard,
-                  fontSize: 14,
-                  color: viewModel.isBpmValid
                       ? AppColors.black04
                       : AppColors.redFF,
                 ),

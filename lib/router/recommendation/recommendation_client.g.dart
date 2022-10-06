@@ -9,7 +9,10 @@ part of 'recommendation_client.dart';
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
 
 class _RecommendationClient implements RecommendationClient {
-  _RecommendationClient(this._dio, {this.baseUrl}) {
+  _RecommendationClient(
+    this._dio, {
+    this.baseUrl,
+  }) {
     baseUrl ??= 'https://5d42a6e2bc64f90014a56ca0.mockapi.io/api/v1/';
   }
 
@@ -18,20 +21,30 @@ class _RecommendationClient implements RecommendationClient {
   String? baseUrl;
 
   @override
-  Future<RecommendationResponse> getRecommendationList(offset, limit) async {
+  Future<RecommendationResponse> getRecommendationList(
+    offset,
+    limit,
+  ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'offset': offset,
-      r'limit': limit
+      r'limit': limit,
     };
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<RecommendationResponse>(
-            Options(method: 'GET', headers: _headers, extra: _extra)
-                .compose(_dio.options, '/recommendation',
-                    queryParameters: queryParameters, data: _data)
-                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+        _setStreamType<RecommendationResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/recommendation',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = RecommendationResponse.fromJson(_result.data!);
     return value;
   }

@@ -12,11 +12,13 @@ import 'bridge_view_model.dart';
 class BridgeSheetListView extends StatefulWidget {
   final UnmodifiableListView<SheetInfo>? sheets;
   final String videoTitle;
+  final Function(BuildContext, SheetInfo)? onClick;
 
   BridgeSheetListView({
     Key? key,
     required this.sheets,
     required this.videoTitle,
+    this.onClick,
   }) : super(key: key);
 
   @override
@@ -31,7 +33,6 @@ class _BridgeSheetListViewState extends State<BridgeSheetListView> {
       itemCount: widget.sheets?.length ?? 0,
       physics: const BouncingScrollPhysics(),
       itemBuilder: (BuildContext context, int index) {
-        BridgeViewModel viewModel = context.watch<BridgeViewModel>();
         SheetInfo sheet = widget.sheets![index];
 
         return Padding(
@@ -46,7 +47,7 @@ class _BridgeSheetListViewState extends State<BridgeSheetListView> {
                   likeCount: sheet.likeCount,
                   backgroundColor: Colors.white,
                   onClicked: () {
-                    viewModel.onSelectSheet(context, sheet);
+                    widget.onClick?.call(context, sheet);
                   },
                 ),
               ),

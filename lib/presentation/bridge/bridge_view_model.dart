@@ -11,7 +11,7 @@ import '../../domain/model/chord_block.dart';
 import '../../domain/model/instrument.dart';
 import '../../domain/model/sheet_info.dart';
 import '../../domain/model/video.dart';
-import '../../domain/use_case/create_sheet.dart';
+import '../../domain/use_case/create_sheet_duplication.dart';
 import '../../domain/use_case/generate_video.dart';
 import '../../domain/use_case/get_liked_sheets_of_video.dart';
 
@@ -20,7 +20,9 @@ class BridgeViewModel with ChangeNotifier {
   Instrument? _selectedInstrument = Instrument.guitar;
   int _tabBarOffset = 0;
   YoutubePlayerController? _youtubePlayerController;
-  List<ChordBlock>? chordBlocksToDuplicate; // 나중에 SheetBuilder로 분리
+  final ValueNotifier<bool> _isCreatingSheet = ValueNotifier(false);
+  final ValueNotifier<bool> _isSettingSheet = ValueNotifier(false);
+  SheetInfo? _sheetToDuplicate;
 
   UnmodifiableListView<SheetInfo>? _mySheets;
   UnmodifiableListView<SheetInfo>? _likedSheets;
@@ -31,14 +33,15 @@ class BridgeViewModel with ChangeNotifier {
   final GetMySheetsOfVideo _getMySheetsOfVideo;
   final GetLikedSheetsOfVideo _getLikedSheetsOfVideo;
   final GetSharedSheetsOfVideo _getSharedSheetsOfVideo;
-  final CreateSheet _createSheet;
+  final CreateSheetDuplication _createSheet;
 
   UnmodifiableListView<SheetInfo>? get mySheets => _mySheets;
   UnmodifiableListView<SheetInfo>? get likedSheets => _likedSheets;
   UnmodifiableListView<SheetInfo>? get sharedSheets => _sharedSheets;
   Video? get video => _video;
-  bool get isInputSheetDetailPopupVisible => chordBlocksToDuplicate != null;
   YoutubePlayerController? get youtubePlayerController => _youtubePlayerController;
+  ValueNotifier<bool> get isCreatingSheet => _isCreatingSheet;
+  ValueNotifier<bool> get isSettingSheet => _isSettingSheet;
 
   int get sheetCount {
     switch (_tabBarOffset) {
@@ -82,7 +85,7 @@ class BridgeViewModel with ChangeNotifier {
       SheetCreationDialogViewModel viewModel =
           context.read<SheetCreationDialogViewModel>();
       viewModel.addOnCompleteCallback(onCompleteSettingSheetDetail);
-      viewModel.addOnCancelCallback(onCancelSettingSheetDetail);
+      viewModel.addOnCancelCallback(onCancleCreatingSheet);
 
       await _generateVideo(video);
       await _loadSheets(video);
@@ -130,39 +133,35 @@ class BridgeViewModel with ChangeNotifier {
     );
   }
 
-  void onClickCreateSheetButton() {
-    chordBlocksToDuplicate = [];
-    notifyListeners();
+  void onClickCreateSheetButton(BuildContext context) {
+    _isCreatingSheet.value = true;
   }
 
-  void onClickCancleCreateSheetButton() {
-    chordBlocksToDuplicate = null;
-    notifyListeners();
+  void onCancleCreatingSheet() {
+    _isCreatingSheet.value = false;
+    _isSettingSheet.value = false;
   }
 
-  void onCompleteInputSheetDetail(String title, double bpm) {
-    _createSheet(
-      videoId: _video!.id,
-      title: title,
-      bpm: bpm,
-      chords: <ChordBlock>[],
-    );
+  void onSelectSheetToDuplicate(SheetInfo sheetInfo) {
+    _sheetToDuplicate = sheetInfo;
+    _isSettingSheet.value = true;
   }
 
-  Future<void> onCompleteSettingSheetDetail(String title, double bpm) async {
+
+  Future<void> onCompleteSettingSheetDetail(String title) async {
     await _createSheet(
-      videoId: _video!.id,
+      sheetId: _sheetToDuplicate?.id ?? "",
       title: title,
-      bpm: bpm,
-      chords: chordBlocksToDuplicate!,
     );
 
-    chordBlocksToDuplicate = null;
+    _isCreatingSheet.value = false;
+    _isSettingSheet.value = false;
+
     await _loadSheets(_video!);
+    notifyListeners();
   }
 
   void onCancelSettingSheetDetail() {
-    chordBlocksToDuplicate = null;
     notifyListeners();
   }
 
@@ -171,5 +170,8 @@ class BridgeViewModel with ChangeNotifier {
     _selectedInstrument = Instrument.guitar;
     _tabBarOffset = 0;
     _youtubePlayerController = null;
+    _isCreatingSheet.value = false;
+    _isSettingSheet.value = false;
+    _sheetToDuplicate = null;
   }
 }
