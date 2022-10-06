@@ -95,7 +95,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
 
-    implementation("androidx.activity:activity-ktx:1.4.0")
+    implementation("androidx.activity:activity-ktx:1.6.0")
 
     // Tensorflow lite dependencies
     implementation 'org.tensorflow:tensorflow-lite:2.2.0'
