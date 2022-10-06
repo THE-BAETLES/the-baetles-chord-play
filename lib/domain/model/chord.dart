@@ -13,6 +13,10 @@ class Chord {
     return '${root.rootName}${triadType.notation}';
   }
 
+  String get fullName {
+    return '${root.noteName}:${triadType.notation}';
+  }
+
   factory Chord.fromString(String chord) {
     List<String> splitString = chord.split(":");
     Note root = Note.fromNoteName(splitString[0]);

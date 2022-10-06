@@ -9,13 +9,10 @@ class CreateSheetDuplication {
 
   CreateSheetDuplication(this._sheetRepository);
 
-  Future<SheetInfo?> call({
+  Future<bool> call({
     required String sheetId,
     required String title,
   }) async {
-    SheetInfo? sheetInfo =
-        await _sheetRepository.createSheetDuplication(sheetId, title,);
-
-    return sheetInfo;
+    return await _sheetRepository.createSheetDuplication(sheetId, title,);
   }
 }

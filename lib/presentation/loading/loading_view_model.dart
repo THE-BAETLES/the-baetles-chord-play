@@ -75,25 +75,25 @@ class LoadingViewModel extends ChangeNotifier {
     _sheetInfo = sheetInfo;
 
     // region data for test below (to be deleted later)
-    // _sheetData = SheetData(id: 'imdummy', bpm: 60, chords: [
-    //   ChordBlock(Chord(Note.fromNoteName('C3'), TriadType.major), 12, 12, 13),
-    //   ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 25, 12.213696067, 13.560453428),
-    //   ChordBlock(Chord(Note.fromNoteName('G#3'), TriadType.major), 28, 13.606893337, 14.489251608),
-    //   ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 30, 14.535691517, 16.997006694),
-    //   ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 35, 17.043446603, 18.11156451),
-    //
-    //   ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 50, 14.535691517, 16.997006694),
-    //   ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 70, 17.043446603, 18.11156451),
-    //   ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 90, 14.535691517, 16.997006694),
-    //   ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 100, 17.043446603, 18.11156451),
-    //   ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 110, 14.535691517, 16.997006694),
-    //   ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 120, 17.043446603, 18.11156451),
-    //
-    //   ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 200, 14.535691517, 16.997006694),
-    //   ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 250, 17.043446603, 18.11156451),
-    // ]);
-    // _setAndNotifyProgressValue(100);
-    // return;
+    _sheetData = SheetData(id: 'imdummy', bpm: 60, chords: [
+      ChordBlock(Chord(Note.fromNoteName('C3'), TriadType.major), 12, 12, 13),
+      ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 25, 12.213696067, 13.560453428),
+      ChordBlock(Chord(Note.fromNoteName('G#3'), TriadType.major), 28, 13.606893337, 14.489251608),
+      ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 30, 14.535691517, 16.997006694),
+      ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 35, 17.043446603, 18.11156451),
+
+      ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 50, 14.535691517, 16.997006694),
+      ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 70, 17.043446603, 18.11156451),
+      ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 90, 14.535691517, 16.997006694),
+      ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 100, 17.043446603, 18.11156451),
+      ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 110, 14.535691517, 16.997006694),
+      ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 120, 17.043446603, 18.11156451),
+
+      ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 200, 14.535691517, 16.997006694),
+      ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 250, 17.043446603, 18.11156451),
+    ]);
+    _setAndNotifyProgressValue(100);
+    return;
     // endregion
 
 

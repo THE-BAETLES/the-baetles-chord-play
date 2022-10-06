@@ -5,6 +5,7 @@ import 'package:the_baetles_chord_play/controller/chord_picker_view_model.dart';
 import 'package:the_baetles_chord_play/domain/model/chord_block.dart';
 import 'package:the_baetles_chord_play/domain/model/play_option.dart';
 import 'package:the_baetles_chord_play/domain/use_case/add_conductor_position_listener.dart';
+import 'package:the_baetles_chord_play/domain/use_case/patch_sheet_data.dart';
 import 'package:the_baetles_chord_play/domain/use_case/remove_conductor_position_listener.dart';
 import 'package:the_baetles_chord_play/domain/use_case/set_youtube_player_controller.dart';
 import 'package:the_baetles_chord_play/presentation/performance/state/beat_state.dart';
@@ -58,11 +59,13 @@ class PerformanceViewModel with ChangeNotifier {
   final AddConductorPositionListener _addConductorPositionListener;
   final RemoveConductorPositionListener _removeConductorPositionListener;
   final SetYoutubePlayerController _setYoutubePlayerController;
+  final PatchSheetData _patchSheetData;
 
   late final MeasureScaleAdapter _scaleAdapter;
   late final ChordPickerViewModel _chordPickerViewModel;
 
-  PlayOptionCallbackPerformer _callbackPerformer = PlayOptionCallbackPerformer();
+  PlayOptionCallbackPerformer _callbackPerformer =
+      PlayOptionCallbackPerformer();
   ChordChecker? _chordChecker;
   Video? _video;
 
@@ -118,10 +121,13 @@ class PerformanceViewModel with ChangeNotifier {
     this._addConductorPositionListener,
     this._removeConductorPositionListener,
     this._setYoutubePlayerController,
+    this._patchSheetData,
   ) {
     _conductorPositionCallback = ((int position) {
       _currentPosition.value = position;
-      _beatStates.value.setPlayingPosition((position / 1000 * (_sheetState.value?.sheetData.bps ?? position)).toInt());
+      _beatStates.value.setPlayingPosition(
+          (position / 1000 * (_sheetState.value?.sheetData.bps ?? position))
+              .toInt());
 
       notifyListeners();
     });
@@ -159,7 +165,9 @@ class PerformanceViewModel with ChangeNotifier {
       sheetData: sheetData,
     );
 
-    _beatStates.value = _sheetStateToBeatStates(sheetState.value!);
+    _sheetState.addListener(() {
+      _beatStates.value = _sheetStateToBeatStates(sheetState.value!);
+    });
 
     _youtubeController.value = YoutubePlayerController(
       initialVideoId: video.id,
@@ -311,13 +319,21 @@ class PerformanceViewModel with ChangeNotifier {
         _editingPosition.value! * spb, (_editingPosition.value! + 1) * spb);
 
     if (index == -1) {
-      _sheetState.value?.sheetData.chords.add(newChord);
+      _sheetState.value!.sheetData.chords.add(newChord);
     } else if (_sheetState.value!.sheetData.chords[index].position ==
         _editingPosition.value) {
-      _sheetState.value?.sheetData.chords[index] = newChord;
+      _sheetState.value!.sheetData.chords[index] = newChord;
     } else {
-      _sheetState.value?.sheetData.chords.insert(index, newChord);
+      _sheetState.value!.sheetData.chords.insert(index, newChord);
     }
+
+    _patchSheetData(
+      sheetId: sheetState.value!.sheetInfo.id,
+      position: _editingPosition.value!,
+      chord: newChord.chord.fullName,
+    );
+
+    _sheetState.notifyListeners();
 
     _editingPosition.value = null;
     _selectedChord.value = null;

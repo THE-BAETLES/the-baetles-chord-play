@@ -5,6 +5,8 @@ import '../../../../domain/model/gender.dart';
 import '../../../../domain/model/performer_grade.dart';
 import '../request.dart';
 
+part 'post_user_request.g.dart';
+
 @JsonSerializable()
 class PostUserRequest extends Request {
   String country;

@@ -3,12 +3,13 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:the_baetles_chord_play/model/api/response/sheet/get_condition_sheet_response.dart';
 import 'package:the_baetles_chord_play/model/api/response/sheet/get_sheet_data_response.dart';
-import 'package:the_baetles_chord_play/model/schema/sheet/sheet_data_schema.dart';
+import 'package:the_baetles_chord_play/model/api/response/sheet/patch_sheet_data_response.dart';
 import 'package:the_baetles_chord_play/router/client.dart';
 import 'package:the_baetles_chord_play/router/rest_client_factory.dart';
 
 import '../../domain/model/sheet_data.dart';
 import '../../domain/model/sheet_info.dart';
+import '../../model/api/request/sheet/patch_sheet_data_request.dart';
 import '../../model/api/request/sheet/post_sheet_duplication_request.dart';
 import '../../model/api/response/sheet/post_sheet_duplication_response.dart';
 import '../../router/sheet/sheet_client.dart';
@@ -58,7 +59,8 @@ class SheetRepository {
     return sheetData;
   }
 
-  Future<SheetInfo?> createSheetDuplication(String sheetId, String title) async {
+  Future<bool> createSheetDuplication(
+      String sheetId, String title) async {
     SheetClient client =
         RestClientFactory().getClient(RestClientType.sheet) as SheetClient;
 
@@ -69,6 +71,21 @@ class SheetRepository {
       ),
     );
 
-    return response.data?.toSheetInfo();
+    return response.code == "200";
+  }
+
+  Future<bool> patchSheet(String sheetId, int position, String chord) async {
+    SheetClient client =
+        RestClientFactory().getClient(RestClientType.sheet) as SheetClient;
+
+    PatchSheetDataResponse response = await client.patchSheet(
+      sheetId,
+      PatchSheetDataRequest(
+        position: position,
+        chord: chord,
+      ),
+    );
+
+    return response.code == "200";
   }
 }

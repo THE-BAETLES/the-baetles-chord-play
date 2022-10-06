@@ -159,29 +159,29 @@ class _SheetClient implements SheetClient {
   }
 
   @override
-  Future<PatchSheetResponse> patchSheet(
+  Future<PatchSheetDataResponse> patchSheet(
     sheetId,
-    patchSheetRequest,
+    patchSheetDataRequest,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(patchSheetRequest.toJson());
-    final _result = await _dio
-        .fetch<Map<String, dynamic>>(_setStreamType<PatchSheetResponse>(Options(
+    _data.addAll(patchSheetDataRequest.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<PatchSheetDataResponse>(Options(
       method: 'PATCH',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              '/${sheetId}',
+              '/sheets/data/${sheetId}',
               queryParameters: queryParameters,
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = PatchSheetResponse.fromJson(_result.data!);
+    final value = PatchSheetDataResponse.fromJson(_result.data!);
     return value;
   }
 

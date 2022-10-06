@@ -1,19 +1,21 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'patch_sheet_response.dart';
+part of 'patch_sheet_data_response.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-PatchSheetResponse _$PatchSheetResponseFromJson(Map<String, dynamic> json) =>
-    PatchSheetResponse(
+PatchSheetDataResponse _$PatchSheetDataResponseFromJson(
+        Map<String, dynamic> json) =>
+    PatchSheetDataResponse(
       json['code'] as String,
       json['message'] as String,
-      SheetSchema.fromJson(json['data'] as Map<String, dynamic>),
+      json['data'] as String,
     );
 
-Map<String, dynamic> _$PatchSheetResponseToJson(PatchSheetResponse instance) =>
+Map<String, dynamic> _$PatchSheetDataResponseToJson(
+        PatchSheetDataResponse instance) =>
     <String, dynamic>{
       'code': instance.code,
       'message': instance.message,
