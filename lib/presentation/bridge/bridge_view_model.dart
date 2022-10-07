@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:the_baetles_chord_play/domain/use_case/delete_sheet.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_my_sheets_of_video.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_shared_sheets_of_video.dart';
 import 'package:the_baetles_chord_play/presentation/bridge/sheet_creation_dialog_view_model.dart';
@@ -22,6 +23,8 @@ class BridgeViewModel with ChangeNotifier {
   YoutubePlayerController? _youtubePlayerController;
   final ValueNotifier<bool> _isCreatingSheet = ValueNotifier(false);
   final ValueNotifier<bool> _isSettingSheet = ValueNotifier(false);
+  final ValueNotifier<bool> _isDeletingSheet = ValueNotifier(false);
+  SheetInfo? _sheetToDelete;
   SheetInfo? _sheetToDuplicate;
 
   UnmodifiableListView<SheetInfo>? _mySheets;
@@ -34,14 +37,24 @@ class BridgeViewModel with ChangeNotifier {
   final GetLikedSheetsOfVideo _getLikedSheetsOfVideo;
   final GetSharedSheetsOfVideo _getSharedSheetsOfVideo;
   final CreateSheetDuplication _createSheet;
+  final DeleteSheet _deleteSheet;
 
   UnmodifiableListView<SheetInfo>? get mySheets => _mySheets;
+
   UnmodifiableListView<SheetInfo>? get likedSheets => _likedSheets;
+
   UnmodifiableListView<SheetInfo>? get sharedSheets => _sharedSheets;
+
   Video? get video => _video;
-  YoutubePlayerController? get youtubePlayerController => _youtubePlayerController;
+
+  YoutubePlayerController? get youtubePlayerController =>
+      _youtubePlayerController;
+
   ValueNotifier<bool> get isCreatingSheet => _isCreatingSheet;
+
   ValueNotifier<bool> get isSettingSheet => _isSettingSheet;
+
+  ValueNotifier<bool> get isDeletingSheet => _isDeletingSheet;
 
   int get sheetCount {
     switch (_tabBarOffset) {
@@ -66,6 +79,7 @@ class BridgeViewModel with ChangeNotifier {
     this._getSharedSheetsOfVideo,
     this._generateVideo,
     this._createSheet,
+    this._deleteSheet,
   );
 
   Future<void> onPageBuild(BuildContext context, Video video) async {
@@ -81,11 +95,10 @@ class BridgeViewModel with ChangeNotifier {
         ),
       );
 
-
       SheetCreationDialogViewModel viewModel =
           context.read<SheetCreationDialogViewModel>();
       viewModel.addOnCompleteCallback(onCompleteSettingSheetDetail);
-      viewModel.addOnCancelCallback(onCancleCreatingSheet);
+      viewModel.addOnCancelCallback(onCancelCreatingSheet);
 
       await _generateVideo(video);
       await _loadSheets(video);
@@ -133,11 +146,31 @@ class BridgeViewModel with ChangeNotifier {
     );
   }
 
+  void onLongClickSheet(BuildContext context, SheetInfo sheet) {
+    _sheetToDelete = sheet;
+    _isDeletingSheet.value = true;
+  }
+
+  void onClickDeleteButton() {
+    if (_sheetToDelete == null) {
+      return;
+    }
+
+    _deleteSheet(_sheetToDelete!.id);
+    _isDeletingSheet.value = false;
+    _sheetToDelete = null;
+  }
+
+  void onClickCancelDeletingButton() {
+    _isDeletingSheet.value = false;
+    _sheetToDelete = null;
+  }
+
   void onClickCreateSheetButton(BuildContext context) {
     _isCreatingSheet.value = true;
   }
 
-  void onCancleCreatingSheet() {
+  void onCancelCreatingSheet() {
     _isCreatingSheet.value = false;
     _isSettingSheet.value = false;
   }
@@ -146,7 +179,6 @@ class BridgeViewModel with ChangeNotifier {
     _sheetToDuplicate = sheetInfo;
     _isSettingSheet.value = true;
   }
-
 
   Future<void> onCompleteSettingSheetDetail(String title) async {
     await _createSheet(
@@ -157,8 +189,7 @@ class BridgeViewModel with ChangeNotifier {
     _isCreatingSheet.value = false;
     _isSettingSheet.value = false;
 
-    await _loadSheets(_video!);
-    notifyListeners();
+    _loadSheets(_video!);
   }
 
   void onCancelSettingSheetDetail() {

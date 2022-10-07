@@ -12,6 +12,7 @@ class SheetInfoCard extends StatelessWidget {
   final int likeCount;
   final Color? backgroundColor;
   final void Function()? onClicked;
+  final void Function()? onLongClicked;
 
   const SheetInfoCard({
     Key? key,
@@ -21,12 +22,14 @@ class SheetInfoCard extends StatelessWidget {
     required this.likeCount,
     this.backgroundColor,
     this.onClicked,
+    this.onLongClicked,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => onClicked?.call(),
+      onLongPress: () => onLongClicked?.call(),
       child: Container(
         color: backgroundColor ?? Colors.transparent,
         child: Row(

@@ -136,7 +136,7 @@ class _SheetClient implements SheetClient {
   }
 
   @override
-  Future<DeleteSheetResponse> deleteSheetData(sheetId) async {
+  Future<DeleteSheetResponse> deleteSheet(sheetId) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};

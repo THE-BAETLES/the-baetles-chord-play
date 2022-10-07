@@ -13,12 +13,14 @@ class BridgeSheetListView extends StatefulWidget {
   final UnmodifiableListView<SheetInfo>? sheets;
   final String videoTitle;
   final Function(BuildContext, SheetInfo)? onClick;
+  final Function(BuildContext, SheetInfo)? onLongClicked;
 
   BridgeSheetListView({
     Key? key,
     required this.sheets,
     required this.videoTitle,
     this.onClick,
+    this.onLongClicked,
   }) : super(key: key);
 
   @override
@@ -54,6 +56,9 @@ class _BridgeSheetListViewState extends State<BridgeSheetListView> {
                         backgroundColor: Colors.white,
                         onClicked: () {
                           widget.onClick?.call(context, sheet);
+                        },
+                        onLongClicked: () {
+                          widget.onLongClicked?.call(context, sheet);
                         },
                       ),
                     ),

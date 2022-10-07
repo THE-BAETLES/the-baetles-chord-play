@@ -9,6 +9,7 @@ import 'package:the_baetles_chord_play/widget/atom/app_font_families.dart';
 import 'package:the_baetles_chord_play/widget/atom/youtube_video_player.dart';
 import 'package:the_baetles_chord_play/widget/molecule/block_title.dart';
 import 'package:the_baetles_chord_play/widget/molecule/middle_hightlight_text.dart';
+import 'package:the_baetles_chord_play/widget/molecule/confirm_dialog.dart';
 import 'package:the_baetles_chord_play/widget/organism/transparent_appbar.dart';
 
 import '../../domain/model/instrument.dart';
@@ -33,10 +34,7 @@ class _BridgePageState extends State<BridgePage> {
   @override
   Widget build(BuildContext context) {
     BridgeViewModel viewModel = context.watch<BridgeViewModel>();
-    Video video = ModalRoute
-        .of(context)!
-        .settings
-        .arguments as Video;
+    Video video = ModalRoute.of(context)!.settings.arguments as Video;
     viewModel.onPageBuild(context, video);
 
     return Scaffold(
@@ -52,17 +50,11 @@ class _BridgePageState extends State<BridgePage> {
                 isOpen: viewModel.isCreatingSheet,
               ),
               onPanelClosed: () {
-                viewModel.onCancleCreatingSheet();
+                viewModel.onCancelCreatingSheet();
               },
               minHeight: 0,
-              maxHeight: MediaQuery
-                  .of(context)
-                  .size
-                  .height -
-                  MediaQuery
-                      .of(context)
-                      .padding
-                      .top -
+              maxHeight: MediaQuery.of(context).size.height -
+                  MediaQuery.of(context).padding.top -
                   60,
               isDraggable: true,
               borderRadius: BorderRadius.circular(12),
@@ -101,11 +93,34 @@ class _BridgePageState extends State<BridgePage> {
               builder: (context, value, _) {
                 return Visibility(
                   visible: viewModel.isSettingSheet.value,
-                  child: SheetCreationDialog(),
+                  child: Container(
+                    color: AppColors.shadow00,
+                    child: SheetCreationDialog(),
+                  ),
                 );
-              }
+              },
             ),
           ),
+          Positioned.fill(
+              child: ValueListenableBuilder(
+                  valueListenable: viewModel.isDeletingSheet,
+                  builder: (context, value, _) {
+                    return Visibility(
+                        visible: viewModel.isDeletingSheet.value,
+                        child: Container(
+                          color: AppColors.shadow00,
+                          child: ConfirmDialog(
+                            title: "악보 삭제",
+                            body: Text("이 작업은 되돌릴 수 없습니다."),
+                            onClickConfirmButton: () {
+                              viewModel.onClickDeleteButton();
+                            },
+                            onClickCancelButton: () {
+                              viewModel.onClickCancelDeletingButton();
+                            },
+                          ),
+                        ));
+                  }))
         ],
       ),
     );
@@ -175,10 +190,7 @@ class _BridgePageState extends State<BridgePage> {
               color: AppColors.grayE9,
             ),
             Container(
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width,
+              width: MediaQuery.of(context).size.width,
               padding: EdgeInsets.symmetric(horizontal: 15),
               height: 50,
               decoration: BoxDecoration(
@@ -214,16 +226,19 @@ class _BridgePageState extends State<BridgePage> {
                     sheets: viewModel.mySheets,
                     videoTitle: viewModel.video?.title ?? "",
                     onClick: viewModel.onSelectSheet,
+                    onLongClicked: viewModel.onLongClickSheet,
                   ),
                   BridgeSheetListView(
                     sheets: viewModel.likedSheets,
                     videoTitle: viewModel.video?.title ?? "",
                     onClick: viewModel.onSelectSheet,
+                    onLongClicked: viewModel.onLongClickSheet,
                   ),
                   BridgeSheetListView(
                     sheets: viewModel.sharedSheets,
                     videoTitle: viewModel.video?.title ?? "",
                     onClick: viewModel.onSelectSheet,
+                    onLongClicked: viewModel.onLongClickSheet,
                   ),
                 ],
               ),
@@ -269,10 +284,7 @@ class _BridgePageState extends State<BridgePage> {
     return Column(
       children: [
         Container(
-          width: MediaQuery
-              .of(context)
-              .size
-              .width,
+          width: MediaQuery.of(context).size.width,
           alignment: Alignment.centerLeft,
           margin: EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 30),
           child: BlockTitle(

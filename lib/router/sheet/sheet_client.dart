@@ -37,7 +37,7 @@ abstract class SheetClient extends RestClient{
   Future<GetSheetDataResponse> getSheetData(@Path('sheetId') sheetId);
 
   @DELETE('/sheets/{sheetId}')
-  Future<DeleteSheetResponse> deleteSheetData(@Path('sheetId') String sheetId);
+  Future<DeleteSheetResponse> deleteSheet(@Path('sheetId') String sheetId);
 
   @PATCH('/sheets/data/{sheetId}')
   Future<PatchSheetDataResponse> patchSheet(@Path('sheetId') String sheetId, @Body() PatchSheetDataRequest patchSheetDataRequest);
