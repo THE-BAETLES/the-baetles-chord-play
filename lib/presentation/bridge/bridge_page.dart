@@ -189,56 +189,68 @@ class _BridgePageState extends State<BridgePage> {
               thickness: 1,
               color: AppColors.grayE9,
             ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.symmetric(horizontal: 15),
-              height: 50,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: Offset(0, 5), // changes position of shadow
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  MiddleHighlightText(
-                    leftText: "총 ",
-                    middleText: viewModel.sheetCount.toString(),
-                    rightText: "개의 악보",
-                  ),
-                  CreateSheetButton(onClick: () {
-                    viewModel.onClickCreateSheetButton(context);
-                  }),
-                ],
-              ),
-            ),
             Expanded(
-              child: TabBarView(
+              child: Stack(
                 children: [
-                  BridgeSheetListView(
-                    sheets: viewModel.mySheets,
-                    videoTitle: viewModel.video?.title ?? "",
-                    onClick: viewModel.onSelectSheet,
-                    onLongClicked: viewModel.onLongClickSheet,
+                  Positioned.fill(
+                    top: 50,
+                    child: TabBarView(
+                      children: [
+                        BridgeSheetListView(
+                          sheets: viewModel.mySheets,
+                          videoTitle: viewModel.video?.title ?? "",
+                          onClick: viewModel.onSelectSheet,
+                          onLongClicked: viewModel.onLongClickSheet,
+                        ),
+                        BridgeSheetListView(
+                          sheets: viewModel.likedSheets,
+                          videoTitle: viewModel.video?.title ?? "",
+                          onClick: viewModel.onSelectSheet,
+                          onLongClicked: viewModel.onLongClickSheet,
+                        ),
+                        BridgeSheetListView(
+                          sheets: viewModel.sharedSheets,
+                          videoTitle: viewModel.video?.title ?? "",
+                          onClick: viewModel.onSelectSheet,
+                          onLongClicked: viewModel.onLongClickSheet,
+                        ),
+                      ],
+                    ),
                   ),
-                  BridgeSheetListView(
-                    sheets: viewModel.likedSheets,
-                    videoTitle: viewModel.video?.title ?? "",
-                    onClick: viewModel.onSelectSheet,
-                    onLongClicked: viewModel.onLongClickSheet,
-                  ),
-                  BridgeSheetListView(
-                    sheets: viewModel.sharedSheets,
-                    videoTitle: viewModel.video?.title ?? "",
-                    onClick: viewModel.onSelectSheet,
-                    onLongClicked: viewModel.onLongClickSheet,
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.05),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: Offset(0, 5), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          MiddleHighlightText(
+                            leftText: "총 ",
+                            middleText: viewModel.sheetCount.toString(),
+                            rightText: "개의 악보",
+                          ),
+                          CreateSheetButton(onClick: () {
+                            viewModel.onClickCreateSheetButton(context);
+                          }),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),
