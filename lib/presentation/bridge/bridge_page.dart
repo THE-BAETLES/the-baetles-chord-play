@@ -37,6 +37,13 @@ class _BridgePageState extends State<BridgePage> {
     Video video = ModalRoute.of(context)!.settings.arguments as Video;
     viewModel.onPageBuild(context, video);
 
+    if (viewModel.shouldRoute) {
+      Navigator.of(context).pushNamed(
+        viewModel!.routeName!,
+        arguments: viewModel!.routeArguments,
+      );
+    }
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,

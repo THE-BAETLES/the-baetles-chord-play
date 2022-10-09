@@ -20,7 +20,6 @@ class LoadingPage extends StatefulWidget {
 class _LoadingPageState extends State<LoadingPage> {
   Video? video;
   SheetInfo? sheetInfo;
-  late LoadingViewModel _viewModel;
 
   @override
   void initState() {
@@ -29,32 +28,32 @@ class _LoadingPageState extends State<LoadingPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Map<String, dynamic> arguments =
           ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+
       video = arguments['video'] as Video;
-      sheetInfo = arguments['sheetInfo'] as SheetInfo;
+      final Function() onCompleteLoading = arguments['onCompleteLoading'] as Function();
 
       LoadingViewModel viewModel = context.read<LoadingViewModel>();
-      viewModel.loadSheet(video!, sheetInfo!);
+      viewModel.loadSheet(video!.id, onCompleteLoading);
     });
-
-    _viewModel = context.read<LoadingViewModel>();
   }
 
   @override
   Widget build(BuildContext context) {
     LoadingViewModel viewModel = context.watch<LoadingViewModel>();
-    if (viewModel.isLoaded) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.of(context).pushReplacementNamed(
-          "/performance-page",
-          arguments: {
-            "video": video,
-            "sheetInfo": viewModel.sheetInfo,
-            "sheetData": viewModel.sheetData,
-          },
-        );
-        viewModel.reset();
-      });
-    }
+
+    // if (viewModel.isLoaded) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     Navigator.of(context).pushReplacementNamed(
+    //       "/performance-page",
+    //       arguments: {
+    //         "video": video,
+    //         "sheetInfo": viewModel.sheetInfo,
+    //         "sheetData": viewModel.sheetData,
+    //       },
+    //     );
+    //     viewModel.reset();
+    //   });
+    // }
 
     return Scaffold(
       extendBodyBehindAppBar: true,

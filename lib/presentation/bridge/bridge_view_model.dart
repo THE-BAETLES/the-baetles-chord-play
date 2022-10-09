@@ -8,24 +8,29 @@ import 'package:the_baetles_chord_play/domain/use_case/get_shared_sheets_of_vide
 import 'package:the_baetles_chord_play/presentation/bridge/sheet_creation_dialog_view_model.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-import '../../domain/model/chord_block.dart';
 import '../../domain/model/instrument.dart';
+import '../../domain/model/sheet_data.dart';
 import '../../domain/model/sheet_info.dart';
 import '../../domain/model/video.dart';
 import '../../domain/use_case/create_sheet_duplication.dart';
 import '../../domain/use_case/generate_video.dart';
 import '../../domain/use_case/get_liked_sheets_of_video.dart';
+import '../../domain/use_case/get_sheet_data.dart';
 
 class BridgeViewModel with ChangeNotifier {
   Video? _video;
   Instrument? _selectedInstrument = Instrument.guitar;
   int _tabBarOffset = 0;
   YoutubePlayerController? _youtubePlayerController;
+  SheetInfo? _sheetToDelete;
+  SheetInfo? _sheetToDuplicate;
+  bool _shouldRoute = false;
+  String? _routeName;
+  Object? _routeArguments;
+
   final ValueNotifier<bool> _isCreatingSheet = ValueNotifier(false);
   final ValueNotifier<bool> _isSettingSheet = ValueNotifier(false);
   final ValueNotifier<bool> _isDeletingSheet = ValueNotifier(false);
-  SheetInfo? _sheetToDelete;
-  SheetInfo? _sheetToDuplicate;
 
   UnmodifiableListView<SheetInfo>? _mySheets;
   UnmodifiableListView<SheetInfo>? _likedSheets;
@@ -38,6 +43,7 @@ class BridgeViewModel with ChangeNotifier {
   final GetSharedSheetsOfVideo _getSharedSheetsOfVideo;
   final CreateSheetDuplication _createSheet;
   final DeleteSheet _deleteSheet;
+  final GetSheetData _getSheetData;
 
   UnmodifiableListView<SheetInfo>? get mySheets => _mySheets;
 
@@ -55,6 +61,12 @@ class BridgeViewModel with ChangeNotifier {
   ValueNotifier<bool> get isSettingSheet => _isSettingSheet;
 
   ValueNotifier<bool> get isDeletingSheet => _isDeletingSheet;
+
+  bool get shouldRoute => _shouldRoute;
+
+  String? get routeName => _routeName;
+
+  Object? get routeArguments => routeArguments;
 
   int get sheetCount {
     switch (_tabBarOffset) {
@@ -74,13 +86,13 @@ class BridgeViewModel with ChangeNotifier {
   int get tabBarOffset => _tabBarOffset;
 
   BridgeViewModel(
-    this._getMySheetsOfVideo,
-    this._getLikedSheetsOfVideo,
-    this._getSharedSheetsOfVideo,
-    this._generateVideo,
-    this._createSheet,
-    this._deleteSheet,
-  );
+      this._getMySheetsOfVideo,
+      this._getLikedSheetsOfVideo,
+      this._getSharedSheetsOfVideo,
+      this._generateVideo,
+      this._createSheet,
+      this._deleteSheet,
+      this._getSheetData);
 
   Future<void> onPageBuild(BuildContext context, Video video) async {
     if (_video != video) {
@@ -134,16 +146,25 @@ class BridgeViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void onSelectSheet(BuildContext context, SheetInfo sheet) {
+  void onSelectSheet(BuildContext context, SheetInfo sheetInfo) async {
     _youtubePlayerController?.pause();
 
-    Navigator.of(context).pushNamed(
-      '/loading-page',
-      arguments: {
-        "video": _video!,
-        "sheetInfo": sheet,
-      },
-    );
+    bool isSuccessful = await _routeToPerformancePage(sheetInfo);
+
+    if (isSuccessful) {
+      return;
+    }
+
+    _routeName = "/loading-page";
+    _routeArguments = {
+      "video": video,
+      "onCompleteLoading": () async {
+        bool isSuccessful = await _routeToPerformancePage(sheetInfo);
+        assert(isSuccessful);
+      }
+    };
+
+    _shouldRoute = true;
   }
 
   void onLongClickSheet(BuildContext context, SheetInfo sheet) {
@@ -181,18 +202,39 @@ class BridgeViewModel with ChangeNotifier {
   }
 
   Future<void> onCompleteSettingSheetDetail(String title) async {
-    await _createSheet(
+    SheetInfo? sheetInfo = await _createSheet(
       sheetId: _sheetToDuplicate?.id ?? "",
       title: title,
     );
 
+    if (sheetInfo != null) {
+      bool isSuccessful = await _routeToPerformancePage(sheetInfo);
+      assert(isSuccessful);
+    } else {
+      _routeName = "/loading-page";
+      _routeArguments = {
+        "video": video,
+        "onCompleteLoading": () async {
+          SheetInfo sheetInfo = (await _createSheet(
+            sheetId: _sheetToDuplicate?.id ?? "",
+            title: title,
+          ))!;
+
+          bool isSuccessful = await _routeToPerformancePage(sheetInfo);
+          assert(isSuccessful);
+        }
+      };
+      _shouldRoute = true;
+    }
+
     _isCreatingSheet.value = false;
     _isSettingSheet.value = false;
-
     _loadSheets(_video!);
   }
 
   void onCancelSettingSheetDetail() {
+    _isCreatingSheet.value = false;
+    _isSettingSheet.value = false;
     notifyListeners();
   }
 
@@ -204,5 +246,23 @@ class BridgeViewModel with ChangeNotifier {
     _isCreatingSheet.value = false;
     _isSettingSheet.value = false;
     _sheetToDuplicate = null;
+  }
+
+  Future<bool> _routeToPerformancePage(SheetInfo sheetInfo) async {
+    SheetData? sheetData = (await _getSheetData(sheetInfo.id))!;
+
+    if (sheetData == null) {
+      return false;
+    }
+
+    _routeName = "/performance-page";
+    _routeArguments = {
+      "video": video,
+      "sheetInfo": sheetInfo,
+      "sheetData": sheetData,
+    };
+    _shouldRoute = true;
+
+    return true;
   }
 }

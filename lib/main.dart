@@ -132,6 +132,7 @@ class MyApp extends StatelessWidget {
             GenerateVideo(VideoRepository()),
             CreateSheetDuplication(SheetRepository()),
             DeleteSheet(SheetRepository()),
+            GetSheetData(SheetRepository()),
           ),
         ),
         ChangeNotifierProvider(

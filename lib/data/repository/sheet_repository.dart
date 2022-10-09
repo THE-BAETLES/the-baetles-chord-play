@@ -60,8 +60,10 @@ class SheetRepository {
     return sheetData;
   }
 
-  Future<bool> createSheetDuplication(
-      String sheetId, String title) async {
+  Future<SheetInfo?> createSheetDuplication(
+    String sheetId,
+    String title,
+  ) async {
     SheetClient client =
         RestClientFactory().getClient(RestClientType.sheet) as SheetClient;
 
@@ -72,7 +74,11 @@ class SheetRepository {
       ),
     );
 
-    return response.code == "200";
+    if (response.code == "201") {
+      return response.data as SheetInfo?;
+    } else {
+      return null;
+    }
   }
 
   Future<bool> patchSheet(String sheetId, int position, String chord) async {
@@ -91,7 +97,8 @@ class SheetRepository {
   }
 
   Future<bool> deleteSheet(String sheetId) async {
-    SheetClient client = RestClientFactory().getClient(RestClientType.sheet) as SheetClient;
+    SheetClient client =
+        RestClientFactory().getClient(RestClientType.sheet) as SheetClient;
 
     DeleteSheetResponse response = await client.deleteSheet(sheetId);
 
