@@ -3,19 +3,8 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_client_sse/flutter_client_sse.dart';
-import 'package:the_baetles_chord_play/router/client.dart';
-import 'package:the_baetles_chord_play/router/rest_client_factory.dart';
-import 'package:the_baetles_chord_play/router/sheet/sheet_client.dart';
 import 'package:the_baetles_chord_play/service/progress_service.dart';
 
-import '../../domain/model/chord.dart';
-import '../../domain/model/chord_block.dart';
-import '../../domain/model/note.dart';
-import '../../domain/model/sheet_data.dart';
-import '../../domain/model/sheet_info.dart';
-import '../../domain/model/triad_type.dart';
-import '../../domain/model/video.dart';
-import '../../domain/use_case/create_sheet_duplication.dart';
 import '../../domain/use_case/get_sheet_data.dart';
 
 class LoadingViewModel extends ChangeNotifier {
@@ -78,6 +67,20 @@ class LoadingViewModel extends ChangeNotifier {
     //
     //   ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 200, 14.535691517, 16.997006694),
     //   ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 250, 17.043446603, 18.11156451),
+    // 'chord': 'A#3:min'
+    //
+    // {코드}{옥타브}:{triad}
+    //
+    // * triads
+    //
+    // 'min'
+    // 'maj'
+    // 'min7'
+    // 'maj7'
+    // ''
+
+
+
     // ]);
     // _setAndNotifyProgressValue(100);
     // return;

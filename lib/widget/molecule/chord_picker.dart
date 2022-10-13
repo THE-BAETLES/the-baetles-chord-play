@@ -44,40 +44,45 @@ class ChordPicker extends StatelessWidget {
                 child: CupertinoPicker(
                   itemExtent: 32,
                   onSelectedItemChanged: (int value) {
-                    print("${Note.pitchNames[value]}3");
+                    log("${Note.pitchNames[value]}3");
                     viewModel.onChangeRoot(
                         Note.fromNoteName("${Note.pitchNames[value]}3"));
                   },
-                  scrollController: FixedExtentScrollController(initialItem: Note.pitchNames.indexOf(initRoot?.noteNameWithoutOctave ?? "C")),
+                  scrollController: FixedExtentScrollController(initialItem: Note.pitchNames.indexOf(initRoot?.flatNoteNameWithoutOctave ?? "C")),
                   selectionOverlay: CupertinoPickerDefaultSelectionOverlay(
                     background: AppColors.transparentF4,
                     capStartEdge: false,
                     capEndEdge: false,
                   ),
-                  children: Note.pitchNames
+                  children: Note.flatPitchNames
                       .map((e) => _pickerItem(e,
-                          viewModel.selectedNote?.noteNameWithoutOctave == e))
+                          viewModel.selectedNote?.flatNoteNameWithoutOctave == e))
                       .toList(),
                 ),
               ),
               Expanded(
-                child: CupertinoPicker(
-                  itemExtent: 32,
-                  onSelectedItemChanged: (int value) {
-                    print(value);
-                    viewModel.onChangeTriadType(TriadType.values[value]);
-                  },
-                  selectionOverlay: CupertinoPickerDefaultSelectionOverlay(
-                    background: AppColors.transparentF4,
-                    capStartEdge: false,
-                    capEndEdge: false,
-                  ),
-                  children: [
-                    _pickerItem("major",
-                        viewModel.selectedTriadType == TriadType.major),
-                    _pickerItem("minor",
-                        viewModel.selectedTriadType == TriadType.minor),
-                  ],
+                child: Builder(
+                  builder: (context) {
+                    final List<Widget> pickerItems = [];
+
+                    TriadType.values.forEach((e) {
+                      pickerItems.add(_pickerItem(e.notation, viewModel.selectedTriadType == e));
+                    });
+
+                    return CupertinoPicker(
+                      itemExtent: 32,
+                      onSelectedItemChanged: (int value) {
+                        print(value);
+                        viewModel.onChangeTriadType(TriadType.values[value]);
+                      },
+                      selectionOverlay: CupertinoPickerDefaultSelectionOverlay(
+                        background: AppColors.transparentF4,
+                        capStartEdge: false,
+                        capEndEdge: false,
+                      ),
+                      children: pickerItems,
+                    );
+                  }
                 ),
               ),
             ],

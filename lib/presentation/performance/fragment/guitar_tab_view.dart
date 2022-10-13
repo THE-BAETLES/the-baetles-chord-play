@@ -24,16 +24,16 @@ class GuitarTabView extends StatelessWidget {
       height: height,
       child: SafeArea(
         child: ListView(
+          physics: const BouncingScrollPhysics(),
           children: [
             const SizedBox(height: topMargin),
-            _tabView(root: "D", postfix: "m", tab: 'x 0 0 2 3 1', size: 8),
-            _tabView(root: "D", postfix: "m", tab: 'x 0 0 2 3 1', size: 5),
-            _tabView(root: "D", postfix: "m", tab: 'x 0 0 2 3 1', size: 5),
-            _tabView(root: "D", postfix: "m", tab: 'x 0 0 2 3 1', size: 5),
-            _tabView(root: "D", postfix: "m", tab: 'x 0 0 2 3 1', size: 5),
+            _tabView(root: "D", keySignature: "♭", postfix: "m", tab: 'x 0 0 2 3 1', size: 8),
+            _tabView(root: "D", keySignature: "♭", postfix: "m", tab: 'x 0 0 2 3 1', size: 5),
+            _tabView(root: "D", keySignature: "♭", postfix: "m", tab: 'x 0 0 2 3 1', size: 5),
+            _tabView(root: "D", keySignature: "♭", postfix: "m", tab: 'x 0 0 2 3 1', size: 5),
+            _tabView(root: "D", keySignature: "♭", postfix: "m", tab: 'x 0 0 2 3 1', size: 5),
             const SizedBox(height: bottomMargin),
           ],
-          physics: BouncingScrollPhysics(),
         ),
       ),
     );
@@ -41,6 +41,7 @@ class GuitarTabView extends StatelessWidget {
 
   Widget _tabView({
     required String root,
+    required String keySignature,
     required String postfix,
     required String tab,
     required int size,
@@ -51,15 +52,16 @@ class GuitarTabView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-              width: 50,
-              alignment: Alignment.center,
-              child: ChordText(
-                root: root,
-                postfix: postfix,
-                rootColor: AppColors.black04,
-                postfixColor: AppColors.black04,
-              )),
+          // Container(
+          //     width: 50,
+          //     alignment: Alignment.center,
+          //     child: ChordText(
+          //       root: root,
+          //       keySignature: keySignature,
+          //       postfix: postfix,
+          //       rootColor: AppColors.black04,
+          //       postfixColor: AppColors.black04,
+          //     )),
           Expanded(
             child: Container(
               child: FlutterGuitarTab(

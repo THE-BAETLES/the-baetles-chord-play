@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:the_baetles_chord_play/presentation/performance/component/tempo_button.dart';
 import 'package:the_baetles_chord_play/presentation/performance/performance_view_model.dart';
 
 import '../../domain/model/play_option.dart';
@@ -58,18 +59,10 @@ class ControlBar extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                    child: ToggleButton(
-                      isToggled: false,
-                      text: "tempo",
-                      icon: Text(
-                        "X 1.0",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: AppFontFamilies.montserrat,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
+                    child: TempoButton(
+                      onChangeTempo: (double newTempo) {
+                        viewModel.onChangeTempo(newTempo);
+                      },
                     ),
                   ),
                   Padding(
@@ -104,11 +97,13 @@ class ControlBar extends StatelessWidget {
                       child: ValueListenableBuilder(
                           valueListenable: viewModel.youtubePlayerController,
                           builder: (context, value, _) {
-                            if (viewModel.youtubePlayerController.value == null) {
+                            if (viewModel.youtubePlayerController.value ==
+                                null) {
                               return Text("동영상을 불러올 수 없습니다.");
                             } else {
                               return YoutubeVideoPlayer(
-                                controller: viewModel.youtubePlayerController.value!,
+                                controller:
+                                    viewModel.youtubePlayerController.value!,
                               );
                             }
                           }),

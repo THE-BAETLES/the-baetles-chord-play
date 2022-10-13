@@ -145,7 +145,7 @@ class _PerformancePageState extends State<PerformancePage>
                         sheetHeight: constraints.maxHeight,
                         sheetWidth: constraints.maxWidth,
                         measureCount: viewModel.measureCount.value,
-                        spaceWidth: 5,
+                        spaceWidth: 4,
                         barWidth: 2,
                       );
 
@@ -368,7 +368,7 @@ class _PerformancePageState extends State<PerformancePage>
                               child: EllipseToggleButton(
                                 text: "취소",
                                 initState: false,
-                                onPressed: (_) => viewModel.onCancleEdit(),
+                                onPressed: (_) => viewModel.onCancelEdit(),
                                 textStyleOnActivated: const TextStyle(
                                   fontFamily: AppFontFamilies.pretendard,
                                   fontWeight: FontWeight.w400,

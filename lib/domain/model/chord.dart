@@ -6,15 +6,20 @@ import 'note.dart';
 class Chord {
   final Note root;
   final TriadType triadType;
+  final Note? on;
 
-  Chord(this.root, this.triadType);
+  Chord(this.root, this.triadType, this.on);
 
   String get chordName {
     return '${root.rootName}${triadType.notation}';
   }
 
   String get fullName {
-    return '${root.noteName}:${triadType.notation}';
+    if (on == null) {
+      return '${root.noteName}:${triadType.notation}';
+    } else {
+      return '${root.noteName}:${triadType.notation}:${on!.rootName}';
+    }
   }
 
   factory Chord.fromString(String chord) {
@@ -23,7 +28,7 @@ class Chord {
     TriadType triadType = TriadType.values
         .singleWhere((triad) => triad.notation == splitString[1]);
 
-    return Chord(root, triadType);
+    return Chord(root, triadType, null);
   }
 
   @override

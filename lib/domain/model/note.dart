@@ -2,6 +2,8 @@ import 'dart:developer';
 
 class Note {
   static final _pitchNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+  static final _flatPitchNames = ['C', 'D♭', 'D', 'E♭', 'E', 'F', 'G♭', 'G', 'A♭', 'A', 'B♭', 'B'];
+  static const String keySignatureChar = '♭';
 
   final int keyNumber;
 
@@ -17,14 +19,42 @@ class Note {
 
   static List<String> get pitchNames => _pitchNames;
 
+  static List<String> get flatPitchNames => _flatPitchNames;
+
   // region getters
   String get noteName {
     return tryConvertKeyNumberToNoteName(keyNumber)!;
   }
 
+  String get flatNoteName {
+    String noteName = this.noteName;
+
+    if (noteName.length >= 3) {
+      int upperPitch = (keyNumber + 9) % 12;
+      String upperPitchName = _pitchNames[upperPitch];
+
+      noteName = "${upperPitchName}♭${noteName[2]}";
+    }
+
+    return noteName;
+  }
+
   String get noteNameWithoutOctave {
     String nameWithOctave = noteName;
     return nameWithOctave.substring(0, nameWithOctave.length - 1);
+  }
+
+  String get flatNoteNameWithoutOctave {
+    String nameWithOctave = flatNoteName;
+    return nameWithOctave.substring(0, nameWithOctave.length - 1);
+  }
+
+  String get noteNameWithoutOctaveAndKeySignature {
+    return noteName[0];
+  }
+
+  String get flatNoteNameWithoutOctaveAndKeySignature {
+    return flatNoteName[0];
   }
 
   int get noteNumber {
@@ -38,6 +68,20 @@ class Note {
 
   int get rootNumber {
     return _pitchNames.indexOf(rootName);
+  }
+
+  bool get hasKeySignature {
+    return noteNameWithoutOctave.length == 2;
+  }
+
+  String get keySignature {
+    String noteNameWithoutOctave = this.noteNameWithoutOctave;
+
+    if (noteNameWithoutOctave.length == 1) {
+      return "";
+    } else {
+      return keySignatureChar;
+    }
   }
   // endregion
 

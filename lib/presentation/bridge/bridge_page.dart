@@ -38,10 +38,15 @@ class _BridgePageState extends State<BridgePage> {
     viewModel.onPageBuild(context, video);
 
     if (viewModel.shouldRoute) {
-      Navigator.of(context).pushNamed(
-        viewModel!.routeName!,
-        arguments: viewModel!.routeArguments,
-      );
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushNamed(
+          context,
+          viewModel.routeName!,
+          arguments: viewModel.routeArguments,
+        );
+
+        viewModel.onCompleteRoute();
+      });
     }
 
     return Scaffold(

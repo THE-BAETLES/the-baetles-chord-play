@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_baetles_chord_play/widget/atom/app_font_families.dart';
 import 'package:the_baetles_chord_play/widget/molecule/beat_tile.dart';
 import 'package:the_baetles_chord_play/widget/atom/marker_stick.dart';
 
@@ -187,13 +188,45 @@ class SheetView extends StatelessWidget {
                 onLongClick?.call(tileIndexOfSheet);
               },
               child: beatState.value.chord != null
-                  ? ChordText(
-                      root: beatState.value.chord!.root.noteNameWithoutOctave,
-                      postfix: beatState.value.chord!.triadType.shortNotation,
-                      rootSize: sheetElementSize.chordRootTextSize,
-                      postfixSize: sheetElementSize.chordPostfixTextSize,
-                      rootColor: textColor,
-                      postfixColor: textColor,
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ChordText(
+                          root: beatState.value.chord!.root
+                              .noteNameWithoutOctaveAndKeySignature,
+                          keySignature:
+                              beatState.value.chord!.root.keySignature,
+                          postfix:
+                              beatState.value.chord!.triadType.shortNotation,
+                          rootSize: sheetElementSize.chordRootTextSize,
+                          postfixSize: sheetElementSize.chordPostfixTextSize,
+                          rootColor: textColor,
+                          postfixColor: textColor,
+                        ),
+                        beatState.value.chord!.on != null
+                            ? Container(
+                                width: sheetElementSize.tileWidth / 2,
+                                height: sheetElementSize.tileHeight / 5,
+                                margin: EdgeInsets.only(bottom: 1),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: AppColors.grayC3,
+                                  borderRadius: BorderRadius.circular(2),
+                                ),
+                                child: Text(
+                                  "on ${beatState.value.chord!.on!.flatNoteNameWithoutOctave}",
+                                  style: TextStyle(
+                                    fontSize:
+                                        sheetElementSize.chordPostfixTextSize *
+                                            0.7,
+                                    fontFamily: AppFontFamilies.pretendard,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.whiteF8,
+                                  ),
+                                ),
+                              )
+                            : Container(),
+                      ],
                     )
                   : null,
             );

@@ -44,10 +44,6 @@ class SheetRepository {
     try {
       response = await client.getSheetData(sheetId);
     } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
-
       return null;
     }
 

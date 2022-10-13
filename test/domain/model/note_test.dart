@@ -84,16 +84,16 @@ void main() {
 
   group('Chord model test', () {
     test('Instance construction', () {
-      Chord chord1 = Chord(Note.fromNoteName("D#4"), TriadType.major);
+      Chord chord1 = Chord(Note.fromNoteName("D#4"), TriadType.major, null);
       expect(chord1.chordName, "D#maj");
 
-      Chord chord2 = Chord(Note.fromNoteName("C2"), TriadType.minor);
+      Chord chord2 = Chord(Note.fromNoteName("C2"), TriadType.minor, null);
       expect(chord2.chordName, "Cmin");
 
-      Chord chord3 = Chord(Note.fromNoteName("G#3"), TriadType.diminished);
+      Chord chord3 = Chord(Note.fromNoteName("G#3"), TriadType.diminished, null);
       expect(chord3.chordName, "G#dim");
 
-      Chord chord4 = Chord(Note.fromNoteName("A#0"), TriadType.augmented);
+      Chord chord4 = Chord(Note.fromNoteName("A#0"), TriadType.augmented, null);
       expect(chord4.chordName, "A#aug");
 
       Chord chord5 = Chord.fromString("D#4:maj");

@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:the_baetles_chord_play/controller/chord_picker_view_model.dart';
 import 'package:the_baetles_chord_play/domain/model/chord_block.dart';
@@ -160,14 +161,14 @@ class PerformanceViewModel with ChangeNotifier {
       capo: 0,
     );
 
+    _sheetState.addListener(() {
+      _beatStates.value = _sheetStateToBeatStates(sheetState.value!);
+    });
+
     _sheetState.value = SheetState(
       sheetInfo: sheetInfo,
       sheetData: sheetData,
     );
-
-    _sheetState.addListener(() {
-      _beatStates.value = _sheetStateToBeatStates(sheetState.value!);
-    });
 
     _youtubeController.value = YoutubePlayerController(
       initialVideoId: video.id,
@@ -215,6 +216,10 @@ class PerformanceViewModel with ChangeNotifier {
     _addConductorPositionListener(_conductorPositionCallback);
 
     _initLoadingNotifier();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      notifyListeners();
+    });
   }
 
   void play() {
@@ -299,7 +304,15 @@ class PerformanceViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void onCancleEdit() {
+  void onChangeTempo(double tempo) {
+    _updatePlayOption(
+      tempo: tempo,
+    );
+
+    log("tempo changed to ${tempo}");
+  }
+
+  void onCancelEdit() {
     _editingPosition.value = null;
     _selectedChord.value = null;
   }
@@ -340,6 +353,10 @@ class PerformanceViewModel with ChangeNotifier {
   }
 
   void onChangeMeasureCount(int measureCount) {
+    if (kDebugMode) {
+      assert(0 < measureCount);
+    }
+
     this.measureCount.value = measureCount;
   }
 

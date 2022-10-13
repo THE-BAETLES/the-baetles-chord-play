@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:the_baetles_chord_play/presentation/performance/component/zoom_button.dart';
 import 'package:the_baetles_chord_play/presentation/performance/performance_view_model.dart';
 
 import '../../widget/atom/app_colors.dart';
@@ -66,28 +67,21 @@ class PerformanceAppBar extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Container(
-                    width: 22,
-                    height: 20.52,
-                    margin: EdgeInsets.symmetric(horizontal: 8),
-                    child: SvgPicture.asset(
-                      "assets/icons/ic_empty_heart.svg",
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      viewModel.onSetTabVisibility(!viewModel.isTabVisible.value);
+                  ZoomButton(
+                    width: 95,
+                    height: 45,
+                    onZoomIn: () {
+                      int currentMeasureCount = viewModel.measureCount.value;
+                      if (currentMeasureCount > 1) {
+                        viewModel.onChangeMeasureCount(currentMeasureCount - 1);
+                      }
                     },
-                    child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 8),
-                      width: 28,
-                      height: 29,
-                      child: SvgPicture.asset(
-                        "assets/icons/ic_expansion.svg",
-                        fit: BoxFit.contain,
-                      ),
-                    ),
+                    onZoomOut: () {
+                      int currentMeasureCount = viewModel.measureCount.value;
+                      if (currentMeasureCount < 6) {
+                        viewModel.onChangeMeasureCount(currentMeasureCount + 1);
+                      }
+                    },
                   ),
                   Container(
                     width: 8,

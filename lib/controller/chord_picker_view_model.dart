@@ -48,7 +48,7 @@ class ChordPickerViewModel extends ChangeNotifier {
     if (_selectedNote == null || _selectedTriadType == null) {
       return null;
     } else {
-      return Chord(_selectedNote!, _selectedTriadType!);
+      return Chord(_selectedNote!, _selectedTriadType!, null);
     }
   }
 }
