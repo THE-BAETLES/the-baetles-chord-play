@@ -71,7 +71,7 @@ class SheetRepository {
     );
 
     if (response.code == "201") {
-      return response.data as SheetInfo?;
+      return response.data!.toSheetInfo();
     } else {
       return null;
     }

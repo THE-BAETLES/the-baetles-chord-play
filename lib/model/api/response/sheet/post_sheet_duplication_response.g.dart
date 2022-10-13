@@ -11,7 +11,7 @@ PostSheetDuplicationResponse _$PostSheetDuplicationResponseFromJson(
     PostSheetDuplicationResponse(
       json['code'] as String,
       json['message'] as String,
-      json['data'] as String,
+      SheetSchema.fromJson(json['data'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PostSheetDuplicationResponseToJson(
