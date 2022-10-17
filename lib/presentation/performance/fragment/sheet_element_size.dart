@@ -42,7 +42,7 @@ class SheetElementSize {
     this.spaceHeight = spaceHeight ?? tileHeight;
     this.barHeight = barHeight ?? tileHeight;
 
-    this.chordRootTextSize = tileHeight / 2;
-    this.chordPostfixTextSize = tileHeight / 4;
+    this.chordRootTextSize = tileHeight / 2.5;
+    this.chordPostfixTextSize = tileHeight / 3.5;
   }
 }
