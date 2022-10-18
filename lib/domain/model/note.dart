@@ -60,7 +60,7 @@ class Note {
   int get noteNumber {
     return keyNumber + 20;
   }
-  
+
   String get rootName {
     String noteNameTmp = noteName;
     return noteNameTmp.substring(0, noteNameTmp.length - 1);
@@ -88,7 +88,7 @@ class Note {
 
   static String? tryConvertKeyNumberToNoteName(int keyNumber) {
     if (keyNumber < 1 || 88 < keyNumber) {
-      assert(false, "Chord Model: keyNumber should be in range [1,88]");
+      assert(false, "Chord Model: keyNumber should be in range [1,88]\ninput key number is ${keyNumber}");
       return null;
     }
 

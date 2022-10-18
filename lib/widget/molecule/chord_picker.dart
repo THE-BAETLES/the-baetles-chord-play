@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:the_baetles_chord_play/widget/atom/app_font_families.dart';
 
@@ -48,41 +47,67 @@ class ChordPicker extends StatelessWidget {
                     viewModel.onChangeRoot(
                         Note.fromNoteName("${Note.pitchNames[value]}3"));
                   },
-                  scrollController: FixedExtentScrollController(initialItem: Note.pitchNames.indexOf(initRoot?.flatNoteNameWithoutOctave ?? "C")),
+                  scrollController: FixedExtentScrollController(
+                      initialItem: Note.pitchNames
+                          .indexOf(initRoot?.flatNoteNameWithoutOctave ?? "C")),
                   selectionOverlay: CupertinoPickerDefaultSelectionOverlay(
                     background: AppColors.transparentF4,
                     capStartEdge: false,
                     capEndEdge: false,
                   ),
                   children: Note.flatPitchNames
-                      .map((e) => _pickerItem(e,
-                          viewModel.selectedNote?.flatNoteNameWithoutOctave == e))
+                      .map((e) => _pickerItem(
+                          e,
+                          viewModel.selectedNote?.flatNoteNameWithoutOctave ==
+                              e))
                       .toList(),
                 ),
               ),
               Expanded(
-                child: Builder(
-                  builder: (context) {
-                    final List<Widget> pickerItems = [];
+                child: Builder(builder: (context) {
+                  final List<Widget> pickerItems = [];
 
-                    TriadType.values.forEach((e) {
-                      pickerItems.add(_pickerItem(e.notation, viewModel.selectedTriadType == e));
-                    });
+                  TriadType.values.forEach((e) {
+                    pickerItems.add(_pickerItem(
+                        e.notation, viewModel.selectedTriadType == e));
+                  });
 
-                    return CupertinoPicker(
-                      itemExtent: 32,
-                      onSelectedItemChanged: (int value) {
-                        print(value);
-                        viewModel.onChangeTriadType(TriadType.values[value]);
-                      },
-                      selectionOverlay: CupertinoPickerDefaultSelectionOverlay(
-                        background: AppColors.transparentF4,
-                        capStartEdge: false,
-                        capEndEdge: false,
-                      ),
-                      children: pickerItems,
+                  return CupertinoPicker(
+                    itemExtent: 32,
+                    onSelectedItemChanged: (int value) {
+                      print(value);
+                      viewModel.onChangeTriadType(TriadType.values[value]);
+                    },
+                    selectionOverlay: CupertinoPickerDefaultSelectionOverlay(
+                      background: AppColors.transparentF4,
+                      capStartEdge: false,
+                      capEndEdge: false,
+                    ),
+                    children: pickerItems,
+                  );
+                }),
+              ),
+              Expanded(
+                child: CupertinoPicker(
+                  itemExtent: 32,
+                  onSelectedItemChanged: (int value) {
+                    log("${Note.pitchNames[value]}3");
+                    viewModel.onChangeRoot(
+                      Note.fromNoteName("${Note.pitchNames[value]}3"),
                     );
-                  }
+                  },
+                  scrollController: FixedExtentScrollController(
+                    initialItem: Note.pitchNames
+                        .indexOf(initRoot?.flatNoteNameWithoutOctave ?? "C"),
+                  ),
+                  selectionOverlay: CupertinoPickerDefaultSelectionOverlay(
+                    background: AppColors.transparentF4,
+                    capStartEdge: false,
+                    capEndEdge: false,
+                  ),
+                  children: Note.flatPitchNames
+                      .map((e) => _pickerItem(e, viewModel.selectedNote?.flatNoteNameWithoutOctave == e))
+                      .toList(),
                 ),
               ),
             ],

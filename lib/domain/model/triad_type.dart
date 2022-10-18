@@ -8,7 +8,7 @@ enum TriadType {
   addNine('add9', 'add9'),
   majorSevenNine('maj7(9)', 'M7(9)'),
   sixNine('6(9)', '6(9)'),
-  majorSevenSharpEleven('maj7(♯11)', 'M7(♯11)'),
+  majorSevenSharpEleven('maj7(#11)', 'M7(#11)'),
   augmented('aug', 'aug'),
   majorSevenAugmented('maj7aug', 'M7aug'),
   minorSix('min6', 'm6'),
@@ -21,20 +21,18 @@ enum TriadType {
   sevenFlatFive('7(♭5)', '7(♭5)'),
   sevenNine('7(9)', '7(9)'),
   sevenFlatNine('7(♭9)', '7(♭9)'),
-  sevenSharpNine('7(♯9)', '7(♯9)'),
-  sevenSharpEleven('7(♯11)', '7(♯11)'),
+  sevenSharpNine('7(#9)', '7(#9)'),
+  sevenSharpEleven('7(#11)', '7(#11)'),
   sevenThirteen('7(13)', '7(13)'),
   sevenFlatThirteen('7(♭13)', '7(♭13)'),
   sevenAugmented('7aug', '7aug'),
   suspendedFour('sus4', 'sus4'),
   sevenSuspendedFour('7sus4', '7sus4'),
   suspendedTwo('sus2', 'sus2'),
-
   diminished('dim', 'dim'),
   diminishedSeven('dim7', 'dim7'),
 
-  none('', '');
-
+  none('none', '');
 
   const TriadType(this.notation, this.shortNotation);
   final String notation;

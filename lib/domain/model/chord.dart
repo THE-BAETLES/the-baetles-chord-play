@@ -6,19 +6,19 @@ import 'note.dart';
 class Chord {
   final Note root;
   final TriadType triadType;
-  final Note? on;
+  final Note? bass;
 
-  Chord(this.root, this.triadType, this.on);
+  Chord(this.root, this.triadType, this.bass);
 
   String get chordName {
     return '${root.rootName}${triadType.notation}';
   }
 
   String get fullName {
-    if (on == null) {
+    if (bass == null) {
       return '${root.noteName}:${triadType.notation}';
     } else {
-      return '${root.noteName}:${triadType.notation}:${on!.rootName}';
+      return '${root.noteName}:${triadType.notation}:${bass!.noteName}';
     }
   }
 
@@ -28,14 +28,20 @@ class Chord {
     TriadType triadType = TriadType.values
         .singleWhere((triad) => triad.notation == splitString[1]);
 
-    return Chord(root, triadType, null);
+    Note? bass;
+
+    if (splitString.length == 3 && splitString[2] != "") {
+      bass = Note.fromNoteName(splitString[2]);
+    }
+
+    return Chord(root, triadType, bass);
   }
 
   @override
   String toString() {
     String rootString = root.toString();
     String result =
-        '${rootString.substring(0, rootString.length - 1)}:${triadType.notation}';
+        '${rootString.substring(0, rootString.length - 1)}:${triadType.notation}:${bass?.toString()}';
     return result;
   }
 
@@ -45,13 +51,16 @@ class Chord {
       other is Chord &&
           runtimeType == other.runtimeType &&
           root == other.root &&
-          triadType == other.triadType;
+          triadType == other.triadType &&
+          bass == other.bass;
 
   @override
-  int get hashCode => root.hashCode ^ triadType.hashCode;
+  int get hashCode {
+    return root.hashCode ^ triadType.hashCode ^ (bass != null ? bass!.hashCode : 0);
+  }
 
   List<Note> getNotes() {
-    switch (this.triadType) {
+    switch (triadType) {
       case TriadType.major:
         return [root, Note(root.keyNumber + 4), Note(root.keyNumber + 7)];
       case TriadType.minor:

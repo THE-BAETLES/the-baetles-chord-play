@@ -192,10 +192,8 @@ class SheetView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ChordText(
-                          root: beatState.value.chord!.root
-                              .noteNameWithoutOctaveAndKeySignature,
-                          keySignature:
-                              beatState.value.chord!.root.keySignature,
+                          root: beatState.value.chord!.root.flatNoteNameWithoutOctaveAndKeySignature,
+                          keySignature: beatState.value.chord!.root.keySignature,
                           postfix:
                               beatState.value.chord!.triadType.shortNotation,
                           rootSize: sheetElementSize.chordRootTextSize,
@@ -203,7 +201,7 @@ class SheetView extends StatelessWidget {
                           rootColor: textColor,
                           postfixColor: textColor,
                         ),
-                        beatState.value.chord!.on != null
+                        beatState.value.chord!.bass != null
                             ? Container(
                                 width: sheetElementSize.tileWidth / 2,
                                 height: sheetElementSize.tileHeight / 5,
@@ -214,7 +212,7 @@ class SheetView extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(2),
                                 ),
                                 child: Text(
-                                  "on ${beatState.value.chord!.on!.flatNoteNameWithoutOctave}",
+                                  "on ${beatState.value.chord!.bass!.flatNoteNameWithoutOctave}",
                                   style: TextStyle(
                                     fontSize:
                                         sheetElementSize.chordPostfixTextSize *
