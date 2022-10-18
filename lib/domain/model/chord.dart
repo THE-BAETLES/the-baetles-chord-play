@@ -22,6 +22,14 @@ class Chord {
     }
   }
 
+  String get fullNameWithoutOctave {
+    if (bass == null) {
+      return '${root.noteNameWithoutOctave}:${triadType.notation}';
+    } else {
+      return '${root.noteNameWithoutOctave}:${triadType.notation}:${bass!.noteName}';
+    }
+  }
+
   factory Chord.fromString(String chord) {
     List<String> splitString = chord.split(":");
     Note root = Note.fromNoteName(splitString[0]);

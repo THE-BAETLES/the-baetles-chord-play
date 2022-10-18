@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:the_baetles_chord_play/domain/model/note.dart';
 
 import '../../../domain/model/chord.dart';
 import '../../../domain/model/chord_block.dart';
@@ -33,9 +34,8 @@ class ChordInfoSchema {
   Map<String, dynamic> toJson() => _$ChordInfoSchemaToJson(this);
 
   ChordBlock toChordBlock() {
-    List<String> splitString = chord.split(':');
     return ChordBlock(
-      Chord.fromString("${splitString[0]}3:${splitString[1]}"),
+      Chord.fromString(chord),
       position,
       start,
       end,

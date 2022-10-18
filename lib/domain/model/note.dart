@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
+
 class Note {
   static final _pitchNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
   static final _flatPitchNames = ['C', 'D♭', 'D', 'E♭', 'E', 'F', 'G♭', 'G', 'A♭', 'A', 'B♭', 'B'];
@@ -101,27 +103,51 @@ class Note {
 
 
   static int? tryConvertNoteNameToKeyNumber(String noteName) {
-    if (noteName.length < 2 || 3 < noteName.length) {
-      // noteName은 알파벳 1개 혹은 2개 뒤에 옥타브를 나타내는 숫자가 붙은 3자리 문자열임
+    if (noteName.length < 1 || 3 < noteName.length) {
+      // noteName은 알파벳 1개 혹은 2개 뒤에 옥타브를 나타내는 숫자가 나타날 수 있는 문자열임
       log("Chord Model: unexpected note name");
       return null;
     }
 
-    String pitchName = noteName.substring(0, noteName.length - 1);
-    int pitchIndex = _pitchNames.indexOf(pitchName);
+    int pitchIndex;
+    int? octave;
+
+    if (_isNumber(noteName[noteName.length - 1])) {
+      String pitchName = noteName.substring(0, noteName.length - 1);
+      pitchIndex = _pitchNames.indexOf(pitchName);
+
+      octave = int.tryParse(noteName[noteName.length - 1]);
+
+      if (octave == null) {
+        return null;
+      }
+    } else {
+      String pitchName = noteName.substring(0, noteName.length);
+      pitchIndex = _pitchNames.indexOf(pitchName);
+
+      octave = 3;
+    }
 
     if (pitchIndex == -1) {
       log('Chord Model: unexpected note name');
       return null;
     }
 
-    int? octave = int.tryParse(noteName[noteName.length - 1]);
+    return 12 * (octave! - 1) + pitchIndex + 4;
+  }
 
-    if (octave == null) {
-      return null;
+
+  static bool _isNumber(String char) {
+    if (char.length != 1) {
+      return false;
     }
 
-    return 12 * (octave - 1) + pitchIndex + 4;
+    const int startCode = 48;
+    const int endCode = 57;
+
+    int currentCode = char.codeUnitAt(0);
+
+    return startCode <= currentCode && currentCode <= endCode;
   }
 
 

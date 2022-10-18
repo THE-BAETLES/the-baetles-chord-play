@@ -345,7 +345,7 @@ class PerformanceViewModel with ChangeNotifier {
     _patchSheetData(
       sheetId: sheetState.value!.sheetInfo.id,
       position: _editingPosition.value!,
-      chord: newChord.chord.fullName,
+      chord: newChord.chord.fullNameWithoutOctave,
     );
 
     _sheetState.notifyListeners();
