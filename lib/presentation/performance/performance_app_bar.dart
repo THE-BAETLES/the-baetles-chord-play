@@ -78,7 +78,7 @@ class PerformanceAppBar extends StatelessWidget {
                     },
                     onZoomOut: () {
                       int currentMeasureCount = viewModel.measureCount.value;
-                      if (currentMeasureCount < 6) {
+                      if (currentMeasureCount < 4) {
                         viewModel.onChangeMeasureCount(currentMeasureCount + 1);
                       }
                     },

@@ -11,6 +11,8 @@ class EllipseToggleButton extends StatefulWidget {
   final TextStyle textStyleOnInActivated;
   final BorderRadius borderRadius;
   final bool autoToggle;
+  final Color? backgroundColorOnActivated;
+  final Color? backgroundColorOnInActivated;
 
   EllipseToggleButton({
     Key? key,
@@ -20,6 +22,8 @@ class EllipseToggleButton extends StatefulWidget {
     required this.textStyleOnActivated,
     required this.textStyleOnInActivated,
     required this.borderRadius,
+    this.backgroundColorOnActivated = AppColors.mainPointColor,
+    this.backgroundColorOnInActivated = Colors.white,
     this.autoToggle = true,
   }) : super(key: key);
 
@@ -50,7 +54,9 @@ class _EllipseToggleButtonState extends State<EllipseToggleButton> {
             widget.onPressed(_isActivated);
           },
           style: ElevatedButton.styleFrom(
-            primary: _isActivated ? AppColors.mainPointColor : Colors.white,
+            backgroundColor: _isActivated
+                ? widget.backgroundColorOnActivated
+                : widget.backgroundColorOnInActivated,
             side: BorderSide(
               color: _isActivated ? AppColors.mainPointColor : AppColors.grayD2,
             ),

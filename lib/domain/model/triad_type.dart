@@ -1,4 +1,6 @@
 enum TriadType {
+  none('none', ''),
+
   major('maj', 'M'),
   majorSeven('maj7', 'M7'),
   minor('min', 'm'),
@@ -30,9 +32,7 @@ enum TriadType {
   sevenSuspendedFour('7sus4', '7sus4'),
   suspendedTwo('sus2', 'sus2'),
   diminished('dim', 'dim'),
-  diminishedSeven('dim7', 'dim7'),
-
-  none('none', '');
+  diminishedSeven('dim7', 'dim7');
 
   const TriadType(this.notation, this.shortNotation);
   final String notation;

@@ -65,7 +65,7 @@ class PerformanceViewModel with ChangeNotifier {
   late final MeasureScaleAdapter _scaleAdapter;
   late final ChordPickerViewModel _chordPickerViewModel;
 
-  PlayOptionCallbackPerformer _callbackPerformer =
+  final PlayOptionCallbackPerformer _callbackPerformer =
       PlayOptionCallbackPerformer();
   ChordChecker? _chordChecker;
   Video? _video;
@@ -94,8 +94,10 @@ class PerformanceViewModel with ChangeNotifier {
 
   Chord? get editedChord =>
       (_sheetState.value?.sheetData.chords.cast<ChordBlock?>())
-          ?.firstWhere((element) => element?.position == _editingPosition,
-              orElse: () => null)
+          ?.firstWhere(
+            (element) => element?.position == _editingPosition.value,
+            orElse: () => null,
+          )
           ?.chord;
 
   ValueNotifier<YoutubePlayerController?> get youtubePlayerController =>

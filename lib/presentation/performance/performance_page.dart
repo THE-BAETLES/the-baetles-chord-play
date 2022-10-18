@@ -337,7 +337,7 @@ class _PerformancePageState extends State<PerformancePage>
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Container(
-                  width: 270,
+                  width: 330,
                   height: 280,
                   padding: const EdgeInsets.symmetric(
                     vertical: 15,
@@ -352,13 +352,14 @@ class _PerformancePageState extends State<PerformancePage>
                           onChangeChord: viewModel.onChangeChord,
                           initRoot: viewModel.editedChord?.root,
                           initTriadType: viewModel.editedChord?.triadType,
+                          initBass: viewModel.editedChord?.bass,
                         ),
                       ),
                       const SizedBox(
                         height: 15,
                       ),
                       SizedBox(
-                        width: 280,
+                        width: 330,
                         height: 44,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -367,6 +368,30 @@ class _PerformancePageState extends State<PerformancePage>
                               flex: 1,
                               child: EllipseToggleButton(
                                 text: "취소",
+                                initState: false,
+                                onPressed: (_) => viewModel.onCancelEdit(),
+                                textStyleOnActivated: const TextStyle(
+                                  fontFamily: AppFontFamilies.pretendard,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                ),
+                                textStyleOnInActivated: const TextStyle(
+                                  fontFamily: AppFontFamilies.pretendard,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.black04,
+                                  fontSize: 14,
+                                ),
+                                borderRadius: BorderRadius.circular(23),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: EllipseToggleButton(
+                                text: "지우기",
                                 initState: false,
                                 onPressed: (_) => viewModel.onCancelEdit(),
                                 textStyleOnActivated: const TextStyle(

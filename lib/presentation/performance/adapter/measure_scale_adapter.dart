@@ -9,7 +9,7 @@ class MeasureScaleAdapter implements ScaleAdapter {
   static const increaseInclination = 0.3;
 
   static const minMeasureCount = 1;
-  static const maxMeasureCount = 6;
+  static const maxMeasureCount = 4;
 
   final int Function() getCurrentMeasureCount;
   final Function(int) onChangeMeasureCount;

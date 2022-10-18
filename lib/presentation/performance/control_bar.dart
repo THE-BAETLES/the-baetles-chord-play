@@ -149,7 +149,7 @@ class ControlBar extends StatelessWidget {
     PlayOption playOption,
   ) {
     return SizedBox(
-      width: 136,
+      width: 144,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -163,7 +163,7 @@ class ControlBar extends StatelessWidget {
                   move(-changeAmount);
                 },
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                   child: SvgPicture.asset(
                     "assets/icons/ic_prev_2.svg",
                     width: 26,

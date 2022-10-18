@@ -203,24 +203,26 @@ class SheetView extends StatelessWidget {
                         ),
                         beatState.value.chord!.bass != null
                             ? Container(
-                                width: sheetElementSize.tileWidth / 2,
-                                height: sheetElementSize.tileHeight / 5,
-                                margin: EdgeInsets.only(bottom: 1),
+                                width: sheetElementSize.tileWidth / 1.7,
+                                height: sheetElementSize.tileHeight / 4.5,
+                                margin: EdgeInsets.only(top: sheetElementSize.tileHeight / 200),
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                   color: AppColors.grayC3,
-                                  borderRadius: BorderRadius.circular(2),
+                                  borderRadius: BorderRadius.circular(3),
                                 ),
                                 child: Text(
                                   "on ${beatState.value.chord!.bass!.flatNoteNameWithoutOctave}",
                                   style: TextStyle(
                                     fontSize:
                                         sheetElementSize.chordPostfixTextSize *
-                                            0.7,
+                                            0.75,
                                     fontFamily: AppFontFamilies.pretendard,
                                     fontWeight: FontWeight.w500,
                                     color: AppColors.whiteF8,
+                                    height: 1.1,
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
                               )
                             : Container(),
