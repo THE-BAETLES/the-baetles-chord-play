@@ -15,8 +15,11 @@ class VideoBlock extends StatelessWidget {
   final Video video;
   final Function(Video)? onClick;
 
-  const VideoBlock({Key? key, required this.video, this.onClick})
-      : super(key: key);
+  const VideoBlock({
+    Key? key,
+    required this.video,
+    this.onClick,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,20 +29,25 @@ class VideoBlock extends StatelessWidget {
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-        height: 90,
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        height: 92,
+        color: Colors.white,
         child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints contstraints) {
+          builder: (BuildContext context, BoxConstraints constraints) {
             return Row(
               children: [
                 Stack(
                   children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: VideoThumbnail(
-                        thumbnailPath: video.thumbnailPath,
-                        width: 72,
-                        height: 72,
+                      borderRadius: BorderRadius.circular(5),
+                      child: Container(
+                        color: Colors.black,
+                        child: VideoThumbnail(
+                          thumbnailPath: video.thumbnailPath,
+                          width: 75,
+                          height: 75,
+                          fit: BoxFit.fill,
+                        ),
                       ),
                     ),
                     Positioned(
@@ -56,10 +64,18 @@ class VideoBlock extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 1,
-                  child: VideoSummary(
-                    video: video,
-                    titleMaxLines: 2,
-                    width: 10,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: VideoSummary(
+                      video: video,
+                      titleMaxLines: 2,
+                      width: 10,
+                      titleTextStyle: const TextStyle(
+                        fontSize: 15,
+                        fontFamily: AppFontFamilies.pretendard,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ),
               ],
