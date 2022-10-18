@@ -29,6 +29,7 @@ class VideoListView extends StatelessWidget {
         }
 
         return ListView(
+          physics: const BouncingScrollPhysics(),
           children: videoBlocks,
         );
       }

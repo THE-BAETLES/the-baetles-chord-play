@@ -10,12 +10,18 @@ class VideoSummary extends StatelessWidget {
   final Video video;
   final int titleMaxLines;
   final double width;
+  final TextStyle titleTextStyle;
 
   const VideoSummary({
     Key? key,
     required this.video,
     required this.titleMaxLines,
     required this.width,
+    this.titleTextStyle = const TextStyle(
+      fontSize: 18,
+      fontFamily: AppFontFamilies.pretendard,
+      fontWeight: FontWeight.w600,
+    ),
   }) : super(key: key);
 
   @override
@@ -31,11 +37,7 @@ class VideoSummary extends StatelessWidget {
                 width: constraints.maxWidth,
                 child: Text(
                   video.title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontFamily: AppFontFamilies.pretendard,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: titleTextStyle,
                   overflow: TextOverflow.ellipsis,
                   maxLines: titleMaxLines,
                 ),
