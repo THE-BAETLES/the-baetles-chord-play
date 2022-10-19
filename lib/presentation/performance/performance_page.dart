@@ -6,6 +6,7 @@ import 'package:the_baetles_chord_play/presentation/performance/fragment/sheet_e
 import 'package:the_baetles_chord_play/presentation/performance/control_bar.dart';
 import 'package:the_baetles_chord_play/presentation/performance/performance_app_bar.dart';
 import 'package:the_baetles_chord_play/presentation/performance/performance_view_model.dart';
+import 'package:the_baetles_chord_play/presentation/performance/state/beat_state.dart';
 
 import '../../domain/model/sheet_data.dart';
 import '../../domain/model/sheet_info.dart';
@@ -136,6 +137,7 @@ class _PerformancePageState extends State<PerformancePage>
                   if (viewModel.sheetState.value?.sheetData == null) {
                     return Container();
                   }
+
                   return SafeArea(
                     child: LayoutBuilder(builder: (
                       BuildContext context,
@@ -157,21 +159,9 @@ class _PerformancePageState extends State<PerformancePage>
                             viewModel.feedbackState.correctIndexes.toList(),
                         wrongIndexes:
                             viewModel.feedbackState.wrongIndexes.toList(),
-                        scrollController: SheetAutoScrollController(
-                          topMargin: SheetView.topMargin,
-                          bottomMargin: SheetView.bottomMargin,
-                          lineHeight: sheetElementSize.tileHeight +
-                              SheetView.spaceBetweenRow,
-                          screenHeight: MediaQuery.of(context).size.height,
-                          measureCount: viewModel.measureCount.value,
-                          msPerBeat: 1000 ~/
-                              (viewModel.sheetState.value!.sheetData.bpm /
-                                  60.0),
-                          lineCount:
-                              (viewModel.beatStates.value.beatStates.length /
-                                      viewModel.measureCount.value.toDouble())
-                                  .ceil(),
-                          positionInMs: viewModel.currentPosition,
+                        scrollController: _sheetAutoScrollController(
+                          sheetElementSize: sheetElementSize,
+                          viewModel: viewModel,
                         ),
                         onClick: (int tileIndex) {
                           viewModel.onTileClick(tileIndex);
@@ -190,6 +180,26 @@ class _PerformancePageState extends State<PerformancePage>
           );
         },
       ),
+    );
+  }
+
+  ScrollController _sheetAutoScrollController({
+    required SheetElementSize sheetElementSize,
+    required PerformanceViewModel viewModel,
+  }) {
+    final int beatPerMeasure = 4;
+    List<ValueNotifier<BeatState>> beatStates =
+        viewModel.beatStates.value.beatStates;
+
+    return SheetAutoScrollController(
+      topMargin: SheetView.topMargin,
+      bottomMargin: SheetView.bottomMargin,
+      lineHeight: sheetElementSize.tileHeight + SheetView.spaceBetweenRow,
+      screenHeight: MediaQuery.of(context).size.height,
+      measureCount: viewModel.measureCount.value,
+      msPerBeat: 1000 ~/ (viewModel.sheetState.value!.sheetData.bpm / 60.0),
+      lineCount: (beatStates.length / (viewModel.measureCount.value * beatPerMeasure).toDouble()).ceil(),
+      positionInMs: viewModel.currentPosition,
     );
   }
 

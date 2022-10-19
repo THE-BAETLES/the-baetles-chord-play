@@ -1,4 +1,4 @@
-
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -25,26 +25,29 @@ class SheetAutoScrollController extends ScrollController {
     _positionInMs = positionInMs;
     int msPerRow = measureCount * beatPerMeasure * msPerBeat;
     double sheetHeight = topMargin + lineHeight * lineCount + bottomMargin;
+    double maxPosition = sheetHeight - screenHeight;
 
     _positionChangeListener = () {
       int newLineIdx = positionInMs.value ~/ msPerRow;
 
-      if (newLineIdx != _priorLineIdx) {
-        double newPosition =
-            topMargin + newLineIdx * lineHeight - additionalTopMargin;
+      if (newLineIdx == _priorLineIdx) {
+        return;
+      }
 
-        if (newPosition <= sheetHeight - screenHeight) {
-          try {
-            super.animateTo(
-              newPosition,
-              duration: animationDuration,
-              curve: Curves.ease,
-            );
-          } catch(e) {
-            print(e);
-            removeListener(_positionChangeListener);
-          }
-        }
+      double newPosition = min(
+        topMargin + newLineIdx * lineHeight - additionalTopMargin,
+        maxPosition,
+      );
+
+      try {
+        super.animateTo(
+          newPosition,
+          duration: animationDuration,
+          curve: Curves.ease,
+        );
+      } catch (e) {
+        print(e);
+        removeListener(_positionChangeListener);
       }
 
       _priorLineIdx = newLineIdx;
@@ -52,7 +55,6 @@ class SheetAutoScrollController extends ScrollController {
 
     positionInMs.addListener(_positionChangeListener);
   }
-
 
   @override
   void dispose() {
