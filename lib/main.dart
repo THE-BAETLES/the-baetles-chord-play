@@ -139,9 +139,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         ChangeNotifierProvider(
-          create: (_) => LoadingViewModel(
-            GetSheetData(SheetRepository()),
-          ),
+          create: (_) => LoadingViewModel(),
         ),
         ChangeNotifierProvider(
           create: (_) {

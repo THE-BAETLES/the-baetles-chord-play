@@ -41,19 +41,10 @@ class _LoadingPageState extends State<LoadingPage> {
   Widget build(BuildContext context) {
     LoadingViewModel viewModel = context.watch<LoadingViewModel>();
 
-    // if (viewModel.isLoaded) {
-    //   WidgetsBinding.instance.addPostFrameCallback((_) {
-    //     Navigator.of(context).pushReplacementNamed(
-    //       "/performance-page",
-    //       arguments: {
-    //         "video": video,
-    //         "sheetInfo": viewModel.sheetInfo,
-    //         "sheetData": viewModel.sheetData,
-    //       },
-    //     );
-    //     viewModel.reset();
-    //   });
-    // }
+    if (viewModel.isComplete) {
+      Navigator.of(context).pop();
+      viewModel.reset();
+    }
 
     return Scaffold(
       extendBodyBehindAppBar: true,
