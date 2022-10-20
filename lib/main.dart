@@ -31,6 +31,7 @@ import 'package:the_baetles_chord_play/domain/use_case/set_youtube_player_contro
 import 'package:the_baetles_chord_play/domain/use_case/sign_in_with_id_token.dart';
 import 'package:the_baetles_chord_play/presentation/bridge/bridge_view_model.dart';
 import 'package:the_baetles_chord_play/presentation/bridge/sheet_creation_dialog_view_model.dart';
+import 'package:the_baetles_chord_play/presentation/collection/collection_view_model.dart';
 import 'package:the_baetles_chord_play/presentation/home/home_view_model.dart';
 import 'package:the_baetles_chord_play/presentation/loading/loading_view_model.dart';
 import 'package:the_baetles_chord_play/presentation/performance/performance_view_model.dart';
@@ -45,10 +46,12 @@ import 'package:the_baetles_chord_play/service/progress_service.dart';
 import 'package:the_baetles_chord_play/widget/molecule/chord_picker.dart';
 
 import 'controller/chord_picker_view_model.dart';
+import 'data/repository/user_repository.dart';
 import 'domain/model/loop.dart';
 import 'domain/model/play_option.dart';
 import 'domain/use_case/create_sheet_duplication.dart';
 import 'domain/use_case/generate_video.dart';
+import 'domain/use_case/get_my_collection.dart';
 import 'domain/use_case/get_my_sheets_of_video.dart';
 import 'domain/use_case/get_nickname_suggestion.dart';
 import 'domain/use_case/get_user_id_token.dart';
@@ -91,7 +94,7 @@ class MyApp extends StatelessWidget {
   MyApp(bool hadSignedIn) {
     // 이전에 로그인을 했던 기록이 남아있다면 홈 페이지로 바로 넘어감.
     // TODO : 이전 id token refresh 및 signWithIdToken
-    _initialRoute = hadSignedIn ? 'home-page' : 'sign-in-page';
+    _initialRoute = hadSignedIn ? 'main-page' : 'sign-in-page';
   }
 
   @override
@@ -169,6 +172,14 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) {
             return SheetCreationDialogViewModel();
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (_) {
+            return CollectionViewModel(
+              CollectionRepository(),
+              GetMyCollection(CollectionRepository()),
+            );
           },
         )
       ],

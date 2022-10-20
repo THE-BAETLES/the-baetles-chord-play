@@ -36,32 +36,12 @@ class VideoBlock extends StatelessWidget {
           builder: (BuildContext context, BoxConstraints constraints) {
             return Row(
               children: [
-                Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(5),
-                      child: Container(
-                        color: Colors.black,
-                        child: VideoThumbnail(
-                          thumbnailPath: video.thumbnailPath,
-                          width: 75,
-                          height: 75,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      child: DurationBadge(
-                        duration: Duration(milliseconds: video.length),
-                      ),
-                      bottom: 4,
-                      right: 4,
-                    ),
-                  ],
-                ),
+                _videoThumbnail(context),
+
                 Container(
                   width: 14,
                 ),
+
                 Expanded(
                   flex: 1,
                   child: Padding(
@@ -83,6 +63,33 @@ class VideoBlock extends StatelessWidget {
           },
         ),
       ),
+    );
+  }
+
+  Widget _videoThumbnail(BuildContext context) {
+    return Stack(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(5),
+          child: Container(
+            color: Colors.black,
+            child: VideoThumbnail(
+              thumbnailPath: video.thumbnailPath,
+              width: 75,
+              height: 75,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+
+        Positioned(
+          child: DurationBadge(
+            duration: Duration(milliseconds: video.length),
+          ),
+          bottom: 4,
+          right: 4,
+        ),
+      ],
     );
   }
 }

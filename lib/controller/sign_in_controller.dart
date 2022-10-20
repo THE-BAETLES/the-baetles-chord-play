@@ -42,8 +42,8 @@ class SignInController {
     AuthRepository authRepository = AuthRepository();
 
     if (await authRepository.login(idToken)) {
-      Navigator.pushNamedAndRemoveUntil(context, 'home-page', (route) => false);
-      print("to home page!");
+      Navigator.pushNamedAndRemoveUntil(context, 'main-page', (route) => false);
+      print("to main page!");
     } else {
       Navigator.pushNamed(context, '/sign-up-page');
       print("to sign up page!");

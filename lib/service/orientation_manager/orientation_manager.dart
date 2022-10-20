@@ -10,7 +10,7 @@ class OrientationManager extends NavigatorObserver {
   final HashSet<String> _portraitOnlyPage = HashSet.of({
     'sign-in-page',
     '/sign-up-page',
-    'home-page',
+    'main-page',
     '/bridge-page',
     '/search-page',
   });

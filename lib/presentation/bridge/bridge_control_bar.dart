@@ -36,7 +36,7 @@ class BridgeControlBar extends StatelessWidget {
             direction: Axis.vertical,
             children: [
               SvgPicture.asset(
-                "assets/icons/ic_folder.svg",
+                "assets/icons/ic_folder_plus.svg",
                 width: 28,
                 height: 28,
                 fit: BoxFit.cover,

@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:the_baetles_chord_play/data/repository/user_repository.dart';
 import 'package:the_baetles_chord_play/domain/use_case/delete_sheet.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_my_sheets_of_video.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_shared_sheets_of_video.dart';
@@ -35,6 +36,7 @@ class BridgeViewModel with ChangeNotifier {
   final ValueNotifier<bool> _isCreatingSheet = ValueNotifier(false);
   final ValueNotifier<bool> _isSettingSheet = ValueNotifier(false);
   final ValueNotifier<bool> _isDeletingSheet = ValueNotifier(false);
+  final ValueNotifier<bool> _isVideoIncludedInCollection = ValueNotifier(false);
 
   UnmodifiableListView<SheetInfo>? _mySheets;
   UnmodifiableListView<SheetInfo>? _likedSheets;
@@ -66,6 +68,8 @@ class BridgeViewModel with ChangeNotifier {
 
   ValueNotifier<bool> get isDeletingSheet => _isDeletingSheet;
 
+  ValueNotifier<bool> get isVideoIncludedInCollection => _isVideoIncludedInCollection;
+
   bool get shouldRoute => _shouldRoute;
 
   String? get routeName => _routeName;
@@ -90,13 +94,14 @@ class BridgeViewModel with ChangeNotifier {
   int get tabBarOffset => _tabBarOffset;
 
   BridgeViewModel(
-      this._getMySheetsOfVideo,
-      this._getLikedSheetsOfVideo,
-      this._getSharedSheetsOfVideo,
-      this._generateVideo,
-      this._createSheet,
-      this._deleteSheet,
-      this._getSheetData);
+    this._getMySheetsOfVideo,
+    this._getLikedSheetsOfVideo,
+    this._getSharedSheetsOfVideo,
+    this._generateVideo,
+    this._createSheet,
+    this._deleteSheet,
+    this._getSheetData,
+  );
 
   Future<void> onPageBuild(BuildContext context, Video video) async {
     if (_video != video) {
@@ -120,6 +125,10 @@ class BridgeViewModel with ChangeNotifier {
       await _loadSheets(video);
 
       _tabBarOffset = _findNotEmptyTabIndex();
+
+      _isVideoIncludedInCollection.value = false;
+      // _isVideoIncludedInCollection = video.isIncludedInCollection;
+
       notifyListeners();
     }
   }
@@ -172,6 +181,18 @@ class BridgeViewModel with ChangeNotifier {
 
     _shouldRoute = true;
     notifyListeners();
+  }
+
+  void onClickCollectionButton() {
+    assert (video != null);
+
+    if (_isVideoIncludedInCollection.value) {
+      _isVideoIncludedInCollection.value = false;
+      CollectionRepository().deleteFromMyCollection(video!.id);
+    } else {
+      _isVideoIncludedInCollection.value = true;
+      CollectionRepository().addToMyCollection(video!.id);
+    }
   }
 
   void onLongClickSheet(BuildContext context, SheetInfo sheet) {

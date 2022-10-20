@@ -254,7 +254,7 @@ class SignUpPage extends StatelessWidget {
                   bottom: 0,
                   child: SignUpNextButton(() async {
                     Navigator.of(context)
-                        .pushNamedAndRemoveUntil('home-page', (route) => false);
+                        .pushNamedAndRemoveUntil('main-page', (route) => false);
                   }),
                 ),
               ],

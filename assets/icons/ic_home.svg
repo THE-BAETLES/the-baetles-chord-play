@@ -1,3 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="23.568" height="23.018" viewBox="0 0 23.568 23.018">
-  <path id="합치기_4" data-name="합치기 4" d="M15.644,22V13.793a.77.77,0,0,0-.77-.77H7.694a.77.77,0,0,0-.77.77V22H0V6.835A2.053,2.053,0,0,1,1.108,5.012L10.34.23a2.049,2.049,0,0,1,1.887,0l9.233,4.782a2.051,2.051,0,0,1,1.108,1.822V22ZM8.463,22V14.563H14.1V22Z" transform="translate(0.5 0.518)" fill="#9d9faf" stroke="rgba(0,0,0,0)" stroke-miterlimit="10" stroke-width="1"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="22.568" height="22" viewBox="0 0 22.568 22">
+  <g id="그룹_76" data-name="그룹 76" transform="translate(0 0)">
+    <path id="합치기_4" data-name="합치기 4" d="M15.644,22V13.793a.769.769,0,0,0-.769-.769H7.693a.769.769,0,0,0-.769.769V22H0V6.834A2.052,2.052,0,0,1,1.108,5.012L10.34.23a2.05,2.05,0,0,1,1.887,0L21.46,5.012a2.05,2.05,0,0,1,1.108,1.822V22ZM8.462,22V14.563H14.1V22Z" transform="translate(0 0)" fill="#9d9faf"/>
+  </g>
 </svg>

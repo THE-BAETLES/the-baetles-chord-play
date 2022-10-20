@@ -30,6 +30,7 @@ class VideoSummary extends StatelessWidget {
       width: width,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
@@ -44,24 +45,21 @@ class VideoSummary extends StatelessWidget {
               );
             },
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "${video.singer} | ${video.genre}",
-                style: const TextStyle(
-                  fontSize: 11,
-                  fontFamily: AppFontFamilies.notosanskr,
-                  color: AppColors.gray80,
-                ),
-              ),
-              PlayCount(
-                count: video.playCount,
-                formatter: NumberFormat("#,###"),
-                presentPostfix: true,
-              ),
-            ],
-          )
+
+          Text(
+            "${video.singer} | ${video.genre}",
+            style: const TextStyle(
+              fontSize: 11,
+              fontFamily: AppFontFamilies.notosanskr,
+              color: AppColors.gray80,
+            ),
+          ),
+
+          PlayCount(
+            count: video.playCount,
+            formatter: NumberFormat("#,###"),
+            presentPostfix: true,
+          ),
         ],
       ),
     );

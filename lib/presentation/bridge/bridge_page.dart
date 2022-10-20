@@ -16,6 +16,7 @@ import '../../domain/model/instrument.dart';
 import '../../domain/model/sheet_info.dart';
 import '../../domain/model/video.dart';
 import '../../widget/atom/app_colors.dart';
+import '../../widget/molecule/collection_button.dart';
 import '../../widget/molecule/create_sheet_button.dart';
 import 'bridge_control_bar.dart';
 import 'bridge_sheet_list_view.dart';
@@ -90,6 +91,16 @@ class _BridgePageState extends State<BridgePage> {
                     onChangeInstrument: (Instrument? instrument) {
                       viewModel.onChangeInstrument(instrument);
                     },
+                    collectionButton: ValueListenableBuilder(
+                        valueListenable: viewModel.isVideoIncludedInCollection,
+                        builder: (context, value, _) {
+                          return _collectionButton(
+                            onClickCollectionButton:
+                                viewModel.onClickCollectionButton,
+                            isIncluded:
+                                viewModel.isVideoIncludedInCollection.value,
+                          );
+                        }),
                   ),
                   const Divider(
                     color: AppColors.grayF8,
@@ -117,25 +128,27 @@ class _BridgePageState extends State<BridgePage> {
             ),
           ),
           Positioned.fill(
-              child: ValueListenableBuilder(
-                  valueListenable: viewModel.isDeletingSheet,
-                  builder: (context, value, _) {
-                    return Visibility(
-                        visible: viewModel.isDeletingSheet.value,
-                        child: Container(
-                          color: AppColors.shadow00,
-                          child: ConfirmDialog(
-                            title: "악보 삭제",
-                            body: Text("이 작업은 되돌릴 수 없습니다."),
-                            onClickConfirmButton: () {
-                              viewModel.onClickDeleteButton();
-                            },
-                            onClickCancelButton: () {
-                              viewModel.onClickCancelDeletingButton();
-                            },
-                          ),
-                        ));
-                  }))
+            child: ValueListenableBuilder(
+              valueListenable: viewModel.isDeletingSheet,
+              builder: (context, value, _) {
+                return Visibility(
+                    visible: viewModel.isDeletingSheet.value,
+                    child: Container(
+                      color: AppColors.shadow00,
+                      child: ConfirmDialog(
+                        title: "악보 삭제",
+                        body: Text("이 작업은 되돌릴 수 없습니다."),
+                        onClickConfirmButton: () {
+                          viewModel.onClickDeleteButton();
+                        },
+                        onClickCancelButton: () {
+                          viewModel.onClickCancelDeletingButton();
+                        },
+                      ),
+                    ));
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -143,6 +156,7 @@ class _BridgePageState extends State<BridgePage> {
 
   @override
   void didChangeDependencies() {
+    super.didChangeDependencies();
     _viewModel = context.read<BridgeViewModel>();
   }
 
@@ -327,6 +341,41 @@ class _BridgePageState extends State<BridgePage> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _collectionButton({
+    required final Function() onClickCollectionButton,
+    required final bool isIncluded,
+  }) {
+    return InkWell(
+      onTap: onClickCollectionButton,
+      child: Container(
+        width: 50,
+        height: 70,
+        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 2),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CollectionButton(
+              width: 25,
+              height: 25,
+              isIncluded: isIncluded,
+            ),
+            Container(height: 6.4),
+            Text(
+              isIncluded ? "목록 제거" : "목록 담기",
+              style: TextStyle(
+                fontWeight: FontWeight.w400,
+                fontFamily: AppFontFamilies.notosanskr,
+                fontSize: 10,
+                color: AppColors.gray80,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

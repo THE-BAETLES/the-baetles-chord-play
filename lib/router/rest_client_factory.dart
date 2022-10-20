@@ -10,6 +10,7 @@ import 'package:the_baetles_chord_play/router/client.dart';
 import 'package:the_baetles_chord_play/router/recommendation/recommendation_client.dart';
 import 'package:the_baetles_chord_play/router/search/search_client.dart';
 import 'package:the_baetles_chord_play/router/sheet/sheet_client.dart';
+import 'package:the_baetles_chord_play/router/user/user_client.dart';
 import 'package:the_baetles_chord_play/router/video/video_client.dart';
 
 
@@ -51,16 +52,14 @@ class RestClientFactory {
     switch (clientType) {
       case RestClientType.recommendation:
         return RecommendationClient(dio, baseUrl: baseUrl);
-        break;
       case RestClientType.search:
         return SearchClient(dio, baseUrl: baseUrl);
-        break;
       case RestClientType.sheet:
         return SheetClient(dio, baseUrl: baseUrl);
-        break;
       case RestClientType.video:
         return VideoClient(dio, baseUrl: baseUrl);
-        break;
+      case RestClientType.user:
+        return UserClient(dio, baseUrl: baseUrl);
     }
   }
 }

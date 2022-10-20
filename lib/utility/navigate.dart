@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_baetles_chord_play/presentation/main/main_page.dart';
 
 import '../presentation/bridge/bridge_page.dart';
 import '../presentation/home/home_page.dart';
@@ -12,7 +13,8 @@ class Navigate {
   static Map<String, Widget Function(BuildContext)> routes = {
     'sign-in-page' : (context) => SignInPage(),
     '/sign-up-page' : (context) => SignUpPage(),
-    'home-page' : (context) => HomePage(),
+    'main-page' : (context) => MainPage(),
+    // 'home-page' : (context) => HomePage(),
     '/bridge-page' : (context) => BridgePage(),
     '/performance-page' : (context) => PerformancePage(key: UniqueKey()),
     '/loading-page' : (context) => LoadingPage(key: UniqueKey()),
