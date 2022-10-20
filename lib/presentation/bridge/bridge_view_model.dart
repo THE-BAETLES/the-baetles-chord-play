@@ -68,7 +68,8 @@ class BridgeViewModel with ChangeNotifier {
 
   ValueNotifier<bool> get isDeletingSheet => _isDeletingSheet;
 
-  ValueNotifier<bool> get isVideoIncludedInCollection => _isVideoIncludedInCollection;
+  ValueNotifier<bool> get isVideoIncludedInCollection =>
+      _isVideoIncludedInCollection;
 
   bool get shouldRoute => _shouldRoute;
 
@@ -104,33 +105,36 @@ class BridgeViewModel with ChangeNotifier {
   );
 
   Future<void> onPageBuild(BuildContext context, Video video) async {
-    if (_video != video) {
-      _video = video;
-      _tabBarOffset = 0;
-
-      _youtubePlayerController = YoutubePlayerController(
-        initialVideoId: video.id,
-        flags: const YoutubePlayerFlags(
-          autoPlay: true,
-          enableCaption: false,
-        ),
-      );
-
-      SheetCreationDialogViewModel viewModel =
-          context.read<SheetCreationDialogViewModel>();
-      viewModel.addOnCompleteCallback(onCompleteSettingSheetDetail);
-      viewModel.addOnCancelCallback(onCancelCreatingSheet);
-
-      await _generateVideo(video);
-      await _loadSheets(video);
-
-      _tabBarOffset = _findNotEmptyTabIndex();
-
-      _isVideoIncludedInCollection.value = false;
-      // _isVideoIncludedInCollection = video.isIncludedInCollection;
-
-      notifyListeners();
+    if (_video?.id == video.id) {
+      return;
     }
+
+    video = await _generateVideo(video);
+    _video = video;
+
+    _tabBarOffset = 0;
+
+    _youtubePlayerController = YoutubePlayerController(
+      initialVideoId: video.id,
+      flags: const YoutubePlayerFlags(
+        autoPlay: true,
+        enableCaption: false,
+      ),
+    );
+
+    SheetCreationDialogViewModel viewModel =
+        context.read<SheetCreationDialogViewModel>();
+    viewModel.addOnCompleteCallback(onCompleteSettingSheetDetail);
+    viewModel.addOnCancelCallback(onCancelCreatingSheet);
+
+    await _loadSheets(video);
+
+    _tabBarOffset = _findNotEmptyTabIndex();
+
+    _isVideoIncludedInCollection.value = false;
+    // _isVideoIncludedInCollection = video.isIncludedInCollection;
+
+    notifyListeners();
   }
 
   void onChangeInstrument(Instrument? instrument) {
@@ -184,7 +188,7 @@ class BridgeViewModel with ChangeNotifier {
   }
 
   void onClickCollectionButton() {
-    assert (video != null);
+    assert(video != null);
 
     if (_isVideoIncludedInCollection.value) {
       _isVideoIncludedInCollection.value = false;

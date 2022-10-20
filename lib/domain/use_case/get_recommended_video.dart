@@ -13,6 +13,6 @@ class GetRecommendedVideo {
 
   Future<UnmodifiableListView<Video>> call() async {
     String idToken = (await _authRepository.fetchIdToken())! as String;
-    return await _videoRepository.fetchRecommededVideos();
+    return await _videoRepository.fetchRecommendedVideos();
   }
 }
