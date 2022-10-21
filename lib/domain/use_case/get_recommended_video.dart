@@ -16,6 +16,6 @@ class GetRecommendedVideo {
     int limit = 20,
   }) async {
     String idToken = (await _authRepository.fetchIdToken())! as String;
-    return await _videoRepository.fetchRecommededVideos(offset: offset, limit: limit);
+    return await _videoRepository.fetchRecommendedVideos(offset: offset, limit: limit);
   }
 }

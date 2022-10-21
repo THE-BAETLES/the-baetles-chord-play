@@ -9,16 +9,16 @@ import '../../widget/molecule/block_title.dart';
 class VideoListBlock extends StatelessWidget {
   final List<Video> videos;
   final String userName;
-  late final void Function(Video)? _onVideoClicked;
+  final Function(Video)? onVideoClicked;
+  final Function(double offset, double maxScrollExtent)? scrollListener;
 
   VideoListBlock({
     Key? key,
     required this.videos,
     required this.userName,
-    void Function(Video)? onVideoClicked,
-  }) : super(key: key) {
-    _onVideoClicked = onVideoClicked;
-  }
+    this.onVideoClicked,
+    this.scrollListener,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,8 @@ class VideoListBlock extends StatelessWidget {
         ),
         VideoList(
           video: videos,
-          onVideoClicked: _onVideoClicked,
+          onVideoClicked: onVideoClicked,
+          scrollListener: scrollListener,
         ),
       ],
     );

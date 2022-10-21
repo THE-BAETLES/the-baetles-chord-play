@@ -162,7 +162,7 @@ class VideoRepository {
     })();
   }
 
-  Future<UnmodifiableListView<Video>> fetchRecommededVideos({
+  Future<UnmodifiableListView<Video>> fetchRecommendedVideos({
     int offset = 0,
     int limit = 25,
   }) async {

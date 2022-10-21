@@ -6,19 +6,30 @@ import '../../domain/model/video.dart';
 
 class VideoList extends StatelessWidget {
   late final List<Video> _videos;
-  late final void Function(Video)? _onVideoClicked;
+  late final Function(Video)? _onVideoClicked;
+  late final Function(double offset, double maxScrollExtent)? _scrollListener;
 
   VideoList({
     Key? key,
     required List<Video> video,
     void Function(Video)? onVideoClicked,
+    void Function(double, double)? scrollListener,
   }) : super(key: key) {
     _videos = video;
     _onVideoClicked = onVideoClicked;
+    _scrollListener = scrollListener;
   }
 
   @override
   Widget build(BuildContext context) {
+    ScrollController? controller = ScrollController();
+
+    if (_scrollListener != null) {
+      controller.addListener(() {
+        _scrollListener!.call(controller.offset, controller.position.maxScrollExtent);
+      });
+    }
+
     List<Widget> videoCards = [];
 
     // 맨 앞 공백
@@ -28,7 +39,7 @@ class VideoList extends StatelessWidget {
       Video video = _videos[i];
 
       videoCards.add(Container(
-        margin: EdgeInsets.symmetric(vertical: 12, horizontal: 5),
+        margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 5),
         child: VideoCard(
           video: video,
           onVideoClicked: _onVideoClicked,
@@ -39,10 +50,12 @@ class VideoList extends StatelessWidget {
     // 맨 뒤 공백
     videoCards.add(Container(width: 10));
 
-    return Container(
+    return SizedBox(
       height: 274,
       child: ListView(
         scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        controller: controller,
         children: videoCards,
       ),
     );

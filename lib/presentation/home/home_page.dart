@@ -43,9 +43,12 @@ class HomePage extends StatelessWidget {
 
           VideoListBlock(
             userName: viewModel.userName,
-            videos: viewModel.collectionVideos ?? [],
+            videos: viewModel.watchHistory ?? [],
             onVideoClicked: (Video video) {
               viewModel.onVideoClicked(context, video);
+            },
+            scrollListener: (double offset, double maxScrollExtent) {
+              viewModel.onScrollWatchHistory(offset, maxScrollExtent);
             },
           ),
 
