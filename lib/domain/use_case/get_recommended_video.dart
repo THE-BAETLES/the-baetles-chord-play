@@ -11,8 +11,11 @@ class GetRecommendedVideo {
 
   GetRecommendedVideo(this._videoRepository, this._authRepository);
 
-  Future<UnmodifiableListView<Video>> call() async {
+  Future<UnmodifiableListView<Video>> call({
+    int offset = 0,
+    int limit = 20,
+  }) async {
     String idToken = (await _authRepository.fetchIdToken())! as String;
-    return await _videoRepository.fetchRecommededVideos();
+    return await _videoRepository.fetchRecommededVideos(offset: offset, limit: limit);
   }
 }

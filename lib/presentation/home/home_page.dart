@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -51,9 +52,12 @@ class HomePage extends StatelessWidget {
           Container(height: 40),
 
           VideoGridBlock(
-            videos: viewModel.recommendedVideos ?? UnmodifiableListView([]),
+            videos: viewModel.recommendedVideos,
             onVideoClicked: (Video video) {
               viewModel.onVideoClicked(context, video);
+            },
+            scrollListener: (double offset, double maxScrollExtent) {
+              viewModel.onScrollRecommendVideos(offset, maxScrollExtent);
             },
           ),
 

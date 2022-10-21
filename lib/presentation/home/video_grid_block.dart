@@ -7,16 +7,16 @@ import '../../domain/model/video.dart';
 import '../../widget/molecule/block_title.dart';
 
 class VideoGridBlock extends StatelessWidget {
-  final UnmodifiableListView<Video> videos;
-  late final void Function(Video)? _onVideoClicked;
+  final List<Video> videos;
+  final void Function(double offset, double maxScrollExtent)? scrollListener;
+  final void Function(Video)? onVideoClicked;
 
   VideoGridBlock({
     Key? key,
     required this.videos,
-    void Function(Video)? onVideoClicked,
-  }) : super(key: key) {
-    _onVideoClicked = onVideoClicked;
-  }
+    this.scrollListener,
+    this.onVideoClicked,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +27,9 @@ class VideoGridBlock extends StatelessWidget {
           child: BlockTitle(title: "추천 악보영상", subTitle: "이런 곡 연습은 어떠세요?"),
         ),
         VideoGrid(
-          video: videos,
-          onVideoClicked: _onVideoClicked,
+          videos: videos,
+          onVideoClicked: onVideoClicked,
+          scrollListener: scrollListener,
         ),
       ],
     );
