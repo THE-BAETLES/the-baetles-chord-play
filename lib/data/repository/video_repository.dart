@@ -183,14 +183,14 @@ class VideoRepository {
     return searchResult;
   }
 
-  Future<void> generateVideo(Video video) async {
+  Future<Video> generateVideo(Video video) async {
     VideoClient client =
         RestClientFactory().getClient(RestClientType.video) as VideoClient;
     PostVideoResponse response = await client.postVideo(
       video.id,
       PostVideoRequest(video: VideoSchema.fromVideo(video)),
     );
-    return;
+    return response.data!.toVideo();
   }
 
   Future<List<Video>> getWatchHistory({int offset = 0, int limit = 25}) async {

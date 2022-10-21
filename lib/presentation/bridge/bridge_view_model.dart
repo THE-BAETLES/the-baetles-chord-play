@@ -68,7 +68,8 @@ class BridgeViewModel with ChangeNotifier {
 
   ValueNotifier<bool> get isDeletingSheet => _isDeletingSheet;
 
-  ValueNotifier<bool> get isVideoIncludedInCollection => _isVideoIncludedInCollection;
+  ValueNotifier<bool> get isVideoIncludedInCollection =>
+      _isVideoIncludedInCollection;
 
   bool get shouldRoute => _shouldRoute;
 
@@ -104,33 +105,36 @@ class BridgeViewModel with ChangeNotifier {
   );
 
   Future<void> onPageBuild(BuildContext context, Video video) async {
-    if (_video != video) {
-      _video = video;
-      _tabBarOffset = 0;
-
-      _youtubePlayerController = YoutubePlayerController(
-        initialVideoId: video.id,
-        flags: const YoutubePlayerFlags(
-          autoPlay: true,
-          enableCaption: false,
-        ),
-      );
-
-      SheetCreationDialogViewModel viewModel =
-          context.read<SheetCreationDialogViewModel>();
-      viewModel.addOnCompleteCallback(onCompleteSettingSheetDetail);
-      viewModel.addOnCancelCallback(onCancelCreatingSheet);
-
-      await _generateVideo(video);
-      await _loadSheets(video);
-
-      _tabBarOffset = _findNotEmptyTabIndex();
-
-      _isVideoIncludedInCollection.value = false;
-      // _isVideoIncludedInCollection = video.isIncludedInCollection;
-
-      notifyListeners();
+    if (_video?.id == video.id) {
+      return;
     }
+
+    video = await _generateVideo(video);
+    _video = video;
+
+    _tabBarOffset = 0;
+
+    _youtubePlayerController = YoutubePlayerController(
+      initialVideoId: video.id,
+      flags: const YoutubePlayerFlags(
+        autoPlay: true,
+        enableCaption: false,
+      ),
+    );
+
+    SheetCreationDialogViewModel viewModel =
+        context.read<SheetCreationDialogViewModel>();
+    viewModel.addOnCompleteCallback(onCompleteSettingSheetDetail);
+    viewModel.addOnCancelCallback(onCancelCreatingSheet);
+
+    await _loadSheets(video);
+
+    _tabBarOffset = _findNotEmptyTabIndex();
+
+    _isVideoIncludedInCollection.value = false;
+    // _isVideoIncludedInCollection = video.isIncludedInCollection;
+
+    notifyListeners();
   }
 
   void onChangeInstrument(Instrument? instrument) {
@@ -184,7 +188,7 @@ class BridgeViewModel with ChangeNotifier {
   }
 
   void onClickCollectionButton() {
-    assert (video != null);
+    assert(video != null);
 
     if (_isVideoIncludedInCollection.value) {
       _isVideoIncludedInCollection.value = false;
@@ -278,25 +282,6 @@ class BridgeViewModel with ChangeNotifier {
 
   Future<bool> _routeToPerformancePage(SheetInfo sheetInfo) async {
     SheetData? sheetData = await _getSheetData(sheetInfo.id);
-
-    // data for test below
-    // sheetData = SheetData(id: 'imdummy', bpm: 60, chords: [
-    //       ChordBlock(Chord(Note.fromNoteName('C3'), TriadType.major), 12, 12, 13),
-    //       ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 25, 12.213696067, 13.560453428),
-    //       ChordBlock(Chord(Note.fromNoteName('G#3'), TriadType.major), 28, 13.606893337, 14.489251608),
-    //       ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 30, 14.535691517, 16.997006694),
-    //       ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 35, 17.043446603, 18.11156451),
-    //
-    //       ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 50, 14.535691517, 16.997006694),
-    //       ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 70, 17.043446603, 18.11156451),
-    //       ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 90, 14.535691517, 16.997006694),
-    //       ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 100, 17.043446603, 18.11156451),
-    //       ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 110, 14.535691517, 16.997006694),
-    //       ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 120, 17.043446603, 18.11156451),
-    //
-    //       ChordBlock(Chord(Note.fromNoteName('A#3'), TriadType.major), 200, 14.535691517, 16.997006694),
-    //       ChordBlock(Chord(Note.fromNoteName('F#3'), TriadType.major), 250, 17.043446603, 18.11156451),
-    //     ]);
 
     if (sheetData == null) {
       return false;

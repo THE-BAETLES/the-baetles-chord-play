@@ -83,8 +83,20 @@ class _BridgePageState extends State<BridgePage> {
                   }),
               body: Column(
                 children: [
-                  YoutubeVideoPlayer(
-                    controller: viewModel.youtubePlayerController!,
+                  Builder(
+                    builder: (context) {
+                      if (viewModel.youtubePlayerController == null) {
+                        return Container(
+                          color: AppColors.black04,
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.width * (9/16),
+                        );
+                      }
+
+                      return YoutubeVideoPlayer(
+                        controller: viewModel.youtubePlayerController!,
+                      );
+                    }
                   ),
                   VideoInfoCard(
                     video: video,
