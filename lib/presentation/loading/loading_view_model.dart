@@ -14,7 +14,7 @@ class LoadingViewModel extends ChangeNotifier {
   static const onCompleteGeneration = "3";
 
   double _progress = 0;
-  bool _isComplete = false;
+  ValueNotifier<bool> _isComplete = ValueNotifier(false);
 
   Function()? _onCompleteLoading;
 
@@ -22,7 +22,7 @@ class LoadingViewModel extends ChangeNotifier {
 
   bool get isLoaded => progress == 100;
 
-  bool get isComplete => _isComplete;
+  ValueNotifier<bool> get isComplete => _isComplete;
 
   LoadingViewModel();
 
@@ -35,7 +35,7 @@ class LoadingViewModel extends ChangeNotifier {
   }
 
   void reset() {
-    _isComplete = false;
+    _isComplete.value = false;
     _progress = 0;
   }
 
@@ -57,9 +57,8 @@ class LoadingViewModel extends ChangeNotifier {
 
       (() async {
         _setAndNotifyProgressValue(100);
-        Timer(Duration(milliseconds: 200), () {
-          _isComplete = true;
-          notifyListeners();
+        Timer(const Duration(milliseconds: 200), () {
+          _isComplete.value = true;
           _onCompleteLoading!.call();
         });
       })();
