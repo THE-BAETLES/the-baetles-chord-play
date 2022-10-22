@@ -46,6 +46,8 @@ class VideoRepository {
           length: 340,
           difficultyAvg: 2,
           playCount: 32222432,
+          sheetCount: 3,
+          isInMyCollection: false,
         ),
         Video(
           id: '--FmExEAsM8',
@@ -57,6 +59,8 @@ class VideoRepository {
           length: 340,
           difficultyAvg: 2,
           playCount: 41042,
+          sheetCount: 3,
+          isInMyCollection: false,
         ),
         Video(
           id: 'aZCfbL5oIeI',
@@ -68,6 +72,8 @@ class VideoRepository {
           length: 340,
           difficultyAvg: 2,
           playCount: 42333333332,
+          sheetCount: 3,
+          isInMyCollection: false,
         ),
         Video(
           id: 'pnaQ9CbE6P0',
@@ -79,6 +85,8 @@ class VideoRepository {
           singer: '장범준',
           difficultyAvg: 5,
           playCount: 7671806,
+          sheetCount: 3,
+          isInMyCollection: false,
         ),
         Video(
           id: 'YwC0m0XaD2E',
@@ -90,77 +98,13 @@ class VideoRepository {
           singer: '침착맨',
           difficultyAvg: 2,
           playCount: 42352,
+          sheetCount: 3,
+          isInMyCollection: false,
         ),
       ]);
     })();
   }
 
-  Future<UnmodifiableListView<Video>> fetchVideoCollection(
-    String idToken,
-  ) async {
-    // TODO : source 연결
-
-    // dummy data
-    return await (() async {
-      return UnmodifiableListView<Video>([
-        Video(
-          id: 'f6YDKF0LVWw',
-          thumbnailPath: 'https://img.youtube.com/vi/f6YDKF0LVWw/0.jpg',
-          title: 'NAYEON "POP!" M/V',
-          genre: 'idol',
-          tags: ['sadf'],
-          length: 340,
-          singer: 'JYP Entertainment',
-          difficultyAvg: 2,
-          playCount: 32222432,
-        ),
-        Video(
-          id: '--FmExEAsM8',
-          thumbnailPath: 'https://img.youtube.com/vi/--FmExEAsM8/0.jpg',
-          title: 'IVE 아이브 \'ELEVEN\' MV',
-          genre: 'idol',
-          tags: ['sadf'],
-          length: 340,
-          singer: 'starshipTV',
-          difficultyAvg: 2,
-          playCount: 41042,
-        ),
-        Video(
-          id: 'aZCfbL5oIeI',
-          thumbnailPath: 'https://img.youtube.com/vi/aZCfbL5oIeI/0.jpg',
-          title: 'Eul (Feat. BIG Naughty) (을 (Feat. BIG Naughty (서동현)))',
-          genre: 'hip-hop',
-          tags: ['sadf'],
-          length: 340,
-          singer: 'GIRIBOY',
-          difficultyAvg: 2,
-          playCount: 42333333332,
-        ),
-        Video(
-          id: 'pnaQ9CbE6P0',
-          thumbnailPath: 'https://img.youtube.com/vi/pnaQ9CbE6P0/0.jpg',
-          title: '자우림 \'스물다섯, 스물하나\' 어쿠스틱커버 by 장범준 Acoustic COVER',
-          genre: 'performance',
-          singer: '장범준',
-          difficultyAvg: 5,
-          tags: ['sadf'],
-          length: 340,
-          playCount: 7671806,
-        ),
-        Video(
-          id: 'YwC0m0XaD2E',
-          thumbnailPath: 'https://img.youtube.com/vi/YwC0m0XaD2E/0.jpg',
-          title: '최고의 피카츄 월드컵 (※동심파괴 주의)',
-          tags: ['sadf'],
-          length: 340,
-          genre: 'idol',
-          singer: '침착맨',
-          difficultyAvg: 2,
-          playCount: 42352,
-        ),
-      ]);
-    })();
-  }
 
   Future<UnmodifiableListView<Video>> fetchRecommendedVideos({
     int offset = 0,

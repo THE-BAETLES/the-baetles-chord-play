@@ -8,6 +8,8 @@ class Video {
   final int length;
   final int difficultyAvg;
   final int playCount;
+  final int sheetCount;
+  final bool isInMyCollection;
 
   Video({
     required this.id,
@@ -19,6 +21,8 @@ class Video {
     required this.length,
     required this.difficultyAvg,
     required this.playCount,
+    required this.sheetCount,
+    required this.isInMyCollection,
   });
 
   factory Video.fromJson(Map<String, dynamic> json) {
@@ -32,6 +36,8 @@ class Video {
       tags: json['tags'],
       difficultyAvg: json['difficulty_avg'],
       playCount: json['play_count'],
+      sheetCount: json['sheet_count'],
+      isInMyCollection: json['is_in_my_collection'],
     );
   }
 
@@ -44,6 +50,8 @@ class Video {
     'duration': length,
     'difficulty_avg': difficultyAvg,
     'play_count': playCount,
+    'sheet_count': sheetCount,
+    'is_in_my_collection': isInMyCollection,
   };
 
   @override
@@ -51,21 +59,9 @@ class Video {
       identical(this, other) ||
       other is Video &&
           runtimeType == other.runtimeType &&
-          id == other.id &&
-          thumbnailPath == other.thumbnailPath &&
-          title == other.title &&
-          genre == other.genre &&
-          singer == other.singer &&
-          difficultyAvg == other.difficultyAvg &&
-          playCount == other.playCount;
+          id == other.id;
 
   @override
   int get hashCode =>
-      id.hashCode ^
-      thumbnailPath.hashCode ^
-      title.hashCode ^
-      genre.hashCode ^
-      singer.hashCode ^
-      difficultyAvg.hashCode ^
-      playCount.hashCode;
+      id.hashCode;
 }

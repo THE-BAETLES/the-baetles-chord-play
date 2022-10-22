@@ -33,8 +33,11 @@ class VideoSchema {
   @JsonKey(name: 'play_count')
   int playCount;
 
-  // @JsonKey(name: 'sheet_count')
-  // int sheetCount;
+  @JsonKey(name: 'sheet_count')
+  int sheetCount;
+
+  @JsonKey(name: 'is_in_my_collection')
+  bool isInMyCollection;
 
   VideoSchema({
     required this.id,
@@ -46,6 +49,8 @@ class VideoSchema {
     required this.length,
     required this.difficultyAvg,
     required this.playCount,
+    required this.sheetCount,
+    required this.isInMyCollection,
   });
 
   factory VideoSchema.fromJson(Map<String, dynamic> json) =>
@@ -65,6 +70,8 @@ class VideoSchema {
       length: video.length,
       difficultyAvg: video.difficultyAvg,
       playCount: video.playCount,
+      sheetCount: video.sheetCount,
+      isInMyCollection: video.isInMyCollection,
     );
   }
 
@@ -79,6 +86,8 @@ class VideoSchema {
       length: length,
       difficultyAvg: difficultyAvg,
       playCount: playCount,
+      sheetCount: sheetCount,
+      isInMyCollection: isInMyCollection,
     );
   }
 }

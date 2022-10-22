@@ -131,8 +131,7 @@ class BridgeViewModel with ChangeNotifier {
 
     _tabBarOffset = _findNotEmptyTabIndex();
 
-    _isVideoIncludedInCollection.value = false;
-    // _isVideoIncludedInCollection = video.isIncludedInCollection;
+    _isVideoIncludedInCollection.value = video.isInMyCollection;
 
     notifyListeners();
   }

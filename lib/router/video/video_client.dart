@@ -1,6 +1,5 @@
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
-import 'package:the_baetles_chord_play/domain/use_case/get_video_collection.dart';
 import 'package:the_baetles_chord_play/model/api/request/video/post_video_request.dart';
 import 'package:the_baetles_chord_play/model/api/response/video/get_video_grade_collection_response.dart';
 import 'package:the_baetles_chord_play/router/client.dart';

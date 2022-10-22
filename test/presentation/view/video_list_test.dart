@@ -26,6 +26,8 @@ void main() {
                     length: 188000,
                     difficultyAvg: 2,
                     playCount: 3524,
+                    sheetCount: 3,
+                    isInMyCollection: false,
                   ),
                 ],
               ),
@@ -59,6 +61,8 @@ void main() {
             length: 188000,
             difficultyAvg: 2,
             playCount: 3524,
+            sheetCount: 3,
+            isInMyCollection: false,
           ),
           Video(
             id: "F0B7HDiY-10",
@@ -70,6 +74,8 @@ void main() {
             length: 180000,
             difficultyAvg: 3,
             playCount: 255245912,
+            sheetCount: 3,
+            isInMyCollection: false,
           ),
           Video(
             id: "KsznX5j2oQ0",
@@ -81,6 +87,8 @@ void main() {
             length: 250000,
             difficultyAvg: 1,
             playCount: 34,
+            sheetCount: 3,
+            isInMyCollection: false,
           ),
         ];
 

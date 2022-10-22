@@ -83,7 +83,7 @@ class VideoCard extends StatelessWidget {
                       ),
                       Container(width: 20),
                       MusicSheetCount(
-                        count: 0,
+                        count: video.sheetCount,
                         formatter: NumberFormat.compact(),
                       ),
                     ],
