@@ -5,6 +5,7 @@ import 'package:the_baetles_chord_play/widget/organism/video_list_view.dart';
 
 import '../../domain/model/video.dart';
 import '../../widget/atom/app_colors.dart';
+import '../../widget/molecule/middle_hightlight_text.dart';
 import 'collection_view_model.dart';
 
 class CollectionPage extends StatefulWidget {
@@ -15,7 +16,6 @@ class CollectionPage extends StatefulWidget {
 }
 
 class _CollectionPageState extends State<CollectionPage> {
-  
   @override
   Widget build(BuildContext context) {
     CollectionViewModel viewModel = context.watch<CollectionViewModel>();
@@ -27,15 +27,25 @@ class _CollectionPageState extends State<CollectionPage> {
         children: [
           Expanded(
             child: Scrollbar(
-              child: VideoListView(
-                videos: viewModel.myCollection ?? [],
-                onVideoBlockClicked: (Video video) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    Navigator.pushNamed(context, "/bridge-page", arguments: video);
-                  });
+              child: Container(
+                color: Colors.white,
+                child: VideoListView(
+                  videos: viewModel.myCollection ?? [],
+                  onVideoBlockClicked: (Video video) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      Navigator.pushNamed(context, "/bridge-page",
+                          arguments: video);
+                    });
 
-                  setState(() {});
-                },
+                    setState(() {});
+                  },
+                  head: Container(
+                    margin: const EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 12),
+                    child: _itemCountIndicator(
+                      viewModel.myCollection?.length ?? 0,
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
@@ -62,6 +72,14 @@ class _CollectionPageState extends State<CollectionPage> {
         fontSize: 19,
         fontWeight: FontWeight.w600,
       ),
+    );
+  }
+
+  Widget _itemCountIndicator(int videoCount) {
+    return MiddleHighlightText(
+      leftText: "총 ",
+      middleText: videoCount.toString(),
+      rightText: "건",
     );
   }
 }

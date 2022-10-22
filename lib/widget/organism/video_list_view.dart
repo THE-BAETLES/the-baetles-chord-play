@@ -6,33 +6,35 @@ import '../molecule/video_block.dart';
 class VideoListView extends StatelessWidget {
   final List<Video> videos;
   final Function(Video video)? onVideoBlockClicked;
+  final Widget? head;
 
   VideoListView({
     Key? key,
     required this.videos,
+    this.head,
     this.onVideoBlockClicked,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Builder(
-      builder: (context) {
-        final List<Widget> videoBlocks = [];
+    return Builder(builder: (context) {
+      final List<Widget> listItems = [];
 
-        for (Video video in videos) {
-          videoBlocks.add(
-            VideoBlock(
-              video: video,
-              onClick: onVideoBlockClicked,
-            ),
-          );
-        }
-
-        return ListView(
-          physics: const BouncingScrollPhysics(),
-          children: videoBlocks,
-        );
+      if (head != null) {
+        listItems.add(head!);
       }
-    );
+
+      for (Video video in videos) {
+        listItems.add(VideoBlock(
+          video: video,
+          onClick: onVideoBlockClicked,
+        ));
+      }
+
+      return ListView(
+        physics: const BouncingScrollPhysics(),
+        children: listItems,
+      );
+    });
   }
 }
