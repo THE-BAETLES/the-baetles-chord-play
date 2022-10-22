@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -187,7 +188,10 @@ class BridgeViewModel with ChangeNotifier {
   }
 
   void onClickCollectionButton() {
-    assert(video != null);
+    if(video == null) {
+      log("E/BridgeViewModel: collection button clicked before init view model");
+      return;
+    }
 
     if (_isVideoIncludedInCollection.value) {
       _isVideoIncludedInCollection.value = false;
