@@ -10,10 +10,12 @@ import '../../widget/molecule/sheet_info_card.dart';
 import 'bridge_view_model.dart';
 
 class BridgeSheetListView extends StatefulWidget {
-  final UnmodifiableListView<SheetInfo>? sheets;
+  final List<SheetInfo>? sheets;
   final String videoTitle;
   final Function(BuildContext, SheetInfo)? onClick;
   final Function(BuildContext, SheetInfo)? onLongClicked;
+  final Function(SheetInfo)? onClickLikeButton;
+  final double itemHeight;
 
   BridgeSheetListView({
     Key? key,
@@ -21,6 +23,8 @@ class BridgeSheetListView extends StatefulWidget {
     required this.videoTitle,
     this.onClick,
     this.onLongClicked,
+    this.onClickLikeButton,
+    this.itemHeight = 110,
   }) : super(key: key);
 
   @override
@@ -40,51 +44,68 @@ class _BridgeSheetListViewState extends State<BridgeSheetListView> {
         return Column(
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-              decoration: BoxDecoration(
-                color: Colors.white,
-              ),
+              color: Colors.white,
+              height: widget.itemHeight,
               child: Row(
                 children: [
                   Expanded(
-                    child: SheetInfoCard(
-                      sheetTitle: sheet.title,
-                      videoTitle: widget.videoTitle,
-                      ownerUserId: sheet.userId,
-                      likeCount: sheet.likeCount,
-                      backgroundColor: Colors.white,
-                      onClicked: () {
-                        widget.onClick?.call(context, sheet);
-                      },
-                      onLongClicked: () {
-                        widget.onLongClicked?.call(context, sheet);
-                      },
+                    child: Material(
+                      child: InkWell(
+                        onTap: () {
+                          widget.onClick?.call(context, sheet);
+                        },
+                        onLongPress: () {
+                          widget.onLongClicked?.call(context, sheet);
+                        },
+                        child: Ink(
+                          color: Colors.white,
+                          padding:
+                              EdgeInsets.only(left: 15, top: 10, bottom: 10),
+                          child: SheetInfoCard(
+                            sheetTitle: sheet.title,
+                            videoTitle: widget.videoTitle,
+                            ownerUserId: sheet.userId,
+                            likeCount: sheet.likeCount,
+                            backgroundColor: Colors.transparent,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: SizedBox(
-                        width: 40,
+                  Material(
+                    child: InkWell(
+                      onTap: () {
+                        widget.onClickLikeButton?.call(sheet);
+                      },
+                      child: Ink(
+                        padding: EdgeInsets.only(right: 10),
+                        width: 70,
+                        height: widget.itemHeight,
+                        color: Colors.white,
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             LikeCount(
                               count: sheet.likeCount,
                               width: 20,
-                              space: 12,
-                              color: (true) ? AppColors.redFF : AppColors.gray80,
+                              height: 20,
+                              space: 15,
+                              color: sheet.liked
+                                  ? AppColors.redFF
+                                  : AppColors.gray80,
                             ),
                           ],
                         ),
                       ),
+                    ),
                   ),
                 ],
               ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 10),
               height: 2,
-              color: AppColors.grayF5
-            )
+              color: AppColors.grayF5,
+            ),
           ],
         );
       },

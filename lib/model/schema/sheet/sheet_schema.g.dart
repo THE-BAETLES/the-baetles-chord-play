@@ -14,6 +14,7 @@ SheetSchema _$SheetSchemaFromJson(Map<String, dynamic> json) => SheetSchema(
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
       likeCount: json['like_count'] as int,
+      liked: json['liked'] as bool,
     );
 
 Map<String, dynamic> _$SheetSchemaToJson(SheetSchema instance) =>
@@ -25,6 +26,7 @@ Map<String, dynamic> _$SheetSchemaToJson(SheetSchema instance) =>
       'created_at': instance.createdAt.toIso8601String(),
       'updated_at': instance.updatedAt.toIso8601String(),
       'like_count': instance.likeCount,
+      'liked': instance.liked,
     };
 
 AllSheetSchema _$AllSheetSchemaFromJson(Map<String, dynamic> json) =>

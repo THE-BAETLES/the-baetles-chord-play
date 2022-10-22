@@ -8,11 +8,13 @@ import 'package:the_baetles_chord_play/router/client.dart';
 import 'package:the_baetles_chord_play/model/api/response/sheet/patch_sheet_data_response.dart';
 import '../../model/api/request/sheet/patch_sheet_data_request.dart';
 import '../../model/api/request/sheet/post_sheet_duplication_request.dart';
+import '../../model/api/response/sheet/delete_sheet_like_response.dart';
 import '../../model/api/response/sheet/delete_sheet_response.dart';
 import '../../model/api/response/sheet/get_condition_sheet_response.dart';
 import '../../model/api/response/sheet/get_sheet_data_response.dart';
 import '../../model/api/response/sheet/get_sheet_response.dart';
 import '../../model/api/response/sheet/post_sheet_duplication_response.dart';
+import '../../model/api/response/sheet/post_sheet_like_response.dart';
 
 part 'sheet_client.g.dart';
 
@@ -44,4 +46,10 @@ abstract class SheetClient extends RestClient {
 
   @POST('/sheets/duplication')
   Future<PostSheetDuplicationResponse> postSheetDuplication(@Body() PostSheetDuplicationRequest postSheetDuplicationRequest);
+
+  @POST('/sheet-like/{sheetId}')
+  Future<PostSheetLikeResponse> postSheetLike(@Path('sheetId') String sheetId);
+
+  @DELETE('/sheet-like/{sheetId}')
+  Future<DeleteSheetLikeResponse> deleteSheetLike(@Path('sheetId') String sheetId);
 }

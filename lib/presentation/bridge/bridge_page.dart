@@ -18,7 +18,6 @@ import '../../domain/model/video.dart';
 import '../../widget/atom/app_colors.dart';
 import '../../widget/molecule/collection_button.dart';
 import '../../widget/molecule/create_sheet_button.dart';
-import 'bridge_control_bar.dart';
 import 'bridge_sheet_list_view.dart';
 import 'bridge_view_model.dart';
 
@@ -76,7 +75,7 @@ class _BridgePageState extends State<BridgePage> {
               borderRadius: BorderRadius.circular(12),
               panel: _sheetSelector(
                   context: context,
-                  sheets: viewModel.sharedSheets ?? UnmodifiableListView([]),
+                  sheets: viewModel.sharedSheets ?? [],
                   videoTitle: viewModel.video?.title ?? "",
                   onClick: (BuildContext context, SheetInfo sheetInfo) {
                     viewModel.onSelectSheetToDuplicate(sheetInfo);
@@ -242,18 +241,21 @@ class _BridgePageState extends State<BridgePage> {
                           videoTitle: viewModel.video?.title ?? "",
                           onClick: viewModel.onSelectSheet,
                           onLongClicked: viewModel.onLongClickSheet,
+                          onClickLikeButton: viewModel.onClickLikeButton,
                         ),
                         BridgeSheetListView(
                           sheets: viewModel.likedSheets,
                           videoTitle: viewModel.video?.title ?? "",
                           onClick: viewModel.onSelectSheet,
                           onLongClicked: viewModel.onLongClickSheet,
+                          onClickLikeButton: viewModel.onClickLikeButton,
                         ),
                         BridgeSheetListView(
                           sheets: viewModel.sharedSheets,
                           videoTitle: viewModel.video?.title ?? "",
                           onClick: viewModel.onSelectSheet,
                           onLongClicked: viewModel.onLongClickSheet,
+                          onClickLikeButton: viewModel.onClickLikeButton,
                         ),
                       ],
                     ),
@@ -330,7 +332,7 @@ class _BridgePageState extends State<BridgePage> {
 
   Widget? _sheetSelector({
     required BuildContext context,
-    required UnmodifiableListView<SheetInfo> sheets,
+    required List<SheetInfo> sheets,
     required String videoTitle,
     required Function(BuildContext, SheetInfo) onClick,
   }) {

@@ -11,8 +11,6 @@ class SheetInfoCard extends StatelessWidget {
   final String ownerUserId;
   final int likeCount;
   final Color? backgroundColor;
-  final void Function()? onClicked;
-  final void Function()? onLongClicked;
 
   const SheetInfoCard({
     Key? key,
@@ -21,78 +19,72 @@ class SheetInfoCard extends StatelessWidget {
     required this.ownerUserId,
     required this.likeCount,
     this.backgroundColor,
-    this.onClicked,
-    this.onLongClicked,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => onClicked?.call(),
-      onLongPress: () => onLongClicked?.call(),
-      child: Container(
-        color: backgroundColor ?? Colors.transparent,
-        child: Row(
-          children: [
-            Flexible(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Wrap(
-                    children: [
-                      Text(
-                        sheetTitle,
+    return Container(
+      color: backgroundColor ?? Colors.transparent,
+      child: Row(
+        children: [
+          Flexible(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Wrap(
+                  children: [
+                    Text(
+                      sheetTitle,
+                      style: TextStyle(
+                        color: AppColors.black04,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: AppFontFamilies.pretendard,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Container(
+                      height: 4,
+                    ),
+                    Container(
+                      height: 26,
+                      child: Text(
+                        videoTitle,
                         style: TextStyle(
-                          color: AppColors.black04,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
+                          color: AppColors.gray80,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w400,
                           fontFamily: AppFontFamilies.pretendard,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      Container(
-                        height: 4,
+                    ),
+                  ],
+                ),
+                Container(
+                  height: 13,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      child: UserInfoView(
+                        userNickname: "baetles",
+                        userProfileImage:
+                            Image.asset("assets/icons/ic_robot.png"),
                       ),
-                      Container(
-                        height: 26,
-                        child: Text(
-                          videoTitle,
-                          style: TextStyle(
-                            color: AppColors.gray80,
-                            fontSize: 11,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: AppFontFamilies.pretendard,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    height: 13,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        child: UserInfoView(
-                          userNickname: "baetles",
-                          userProfileImage:
-                              Image.asset("assets/icons/ic_robot.png"),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

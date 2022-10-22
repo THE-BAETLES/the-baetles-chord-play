@@ -14,6 +14,7 @@ import 'package:the_baetles_chord_play/data/repository/video_repository.dart';
 import 'package:the_baetles_chord_play/domain/use_case/add_conductor_position_listener.dart';
 import 'package:the_baetles_chord_play/domain/use_case/add_performer.dart';
 import 'package:the_baetles_chord_play/domain/use_case/check_nickname_valid.dart';
+import 'package:the_baetles_chord_play/domain/use_case/delete_like.dart';
 import 'package:the_baetles_chord_play/domain/use_case/delete_sheet.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_liked_sheets_of_video.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_music_to_check_preference.dart';
@@ -48,6 +49,7 @@ import 'controller/chord_picker_view_model.dart';
 import 'data/repository/user_repository.dart';
 import 'domain/model/loop.dart';
 import 'domain/model/play_option.dart';
+import 'domain/use_case/add_like.dart';
 import 'domain/use_case/create_sheet_duplication.dart';
 import 'domain/use_case/generate_video.dart';
 import 'domain/use_case/get_my_collection.dart';
@@ -134,6 +136,8 @@ class MyApp extends StatelessWidget {
             CreateSheetDuplication(SheetRepository()),
             DeleteSheet(SheetRepository()),
             GetSheetData(SheetRepository()),
+            AddLike(SheetRepository()),
+            DeleteLike(SheetRepository()),
           ),
         ),
         ChangeNotifierProvider(

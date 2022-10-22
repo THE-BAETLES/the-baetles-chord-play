@@ -11,8 +11,10 @@ import '../../domain/model/sheet_data.dart';
 import '../../domain/model/sheet_info.dart';
 import '../../model/api/request/sheet/patch_sheet_data_request.dart';
 import '../../model/api/request/sheet/post_sheet_duplication_request.dart';
+import '../../model/api/response/sheet/delete_sheet_like_response.dart';
 import '../../model/api/response/sheet/delete_sheet_response.dart';
 import '../../model/api/response/sheet/post_sheet_duplication_response.dart';
+import '../../model/api/response/sheet/post_sheet_like_response.dart';
 import '../../router/sheet/sheet_client.dart';
 
 class SheetRepository {
@@ -99,5 +101,21 @@ class SheetRepository {
     DeleteSheetResponse response = await client.deleteSheet(sheetId);
 
     return response.code == "200";
+  }
+
+  Future<void> addLike(String sheetId) async {
+    SheetClient client = RestClientFactory().getClient(RestClientType.sheet) as SheetClient;
+
+    PostSheetLikeResponse response = await client.postSheetLike(sheetId);
+
+    return;
+  }
+
+  Future<void> deleteLike(String sheetId) async {
+    SheetClient client = RestClientFactory().getClient(RestClientType.sheet) as SheetClient;
+
+    DeleteSheetLikeResponse response = await client.deleteSheetLike(sheetId);
+
+    return;
   }
 }

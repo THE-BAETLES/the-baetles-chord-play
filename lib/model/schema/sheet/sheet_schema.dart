@@ -27,29 +27,34 @@ class SheetSchema {
   @JsonKey(name: 'like_count')
   int likeCount;
 
-  SheetSchema(
-      {required this.id,
-      required this.videoId,
-      required this.userId,
-      required this.title,
-      required this.createdAt,
-      required this.updatedAt,
-      required this.likeCount});
+  @JsonKey(name: 'liked')
+  bool liked;
 
-  factory SheetSchema.fromJson(Map<String, dynamic> json) =>
-      _$SheetSchemaFromJson(json);
+  SheetSchema({
+    required this.id,
+    required this.videoId,
+    required this.userId,
+    required this.title,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.likeCount,
+    required this.liked,
+  });
+
+  factory SheetSchema.fromJson(Map<String, dynamic> json) => _$SheetSchemaFromJson(json);
 
   Map<String, dynamic> toJson() => _$SheetSchemaToJson(this);
 
   SheetInfo toSheetInfo() {
     return SheetInfo(
-      id: id,
-      videoId: videoId,
-      userId: userId,
-      title: title,
-      createAt: createdAt,
-      updateAt: updatedAt,
-      likeCount: likeCount,
+        id: id,
+        videoId: videoId,
+        userId: userId,
+        title: title,
+        createAt: createdAt,
+        updateAt: updatedAt,
+        likeCount: likeCount,
+        liked: liked,
     );
   }
 }
@@ -65,7 +70,8 @@ class AllSheetSchema {
   @JsonKey(name: 'my')
   List<SheetSchema> myList;
 
-  AllSheetSchema({required this.sharedList, required this.likeList, required this.myList});
+  AllSheetSchema(
+      {required this.sharedList, required this.likeList, required this.myList});
 
   factory AllSheetSchema.fromJson(Map<String, dynamic> json) =>
       _$AllSheetSchemaFromJson(json);

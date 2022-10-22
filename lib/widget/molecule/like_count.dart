@@ -6,10 +6,10 @@ import 'package:the_baetles_chord_play/widget/atom/app_font_families.dart';
 import '../atom/app_colors.dart';
 
 class LikeCount extends StatelessWidget {
-  final _widthPerHeight = 0.94083;
 
   final int count;
   final double width;
+  final double height;
   final double space;
   final Color color;
 
@@ -17,6 +17,7 @@ class LikeCount extends StatelessWidget {
     Key? key,
     required this.count,
     required this.width,
+    required this.height,
     this.space = 10,
     this.color = Colors.red,
   }) : super(key: key);
@@ -30,8 +31,9 @@ class LikeCount extends StatelessWidget {
         SvgPicture.asset(
           'assets/icons/ic_grey_heart.svg',
           width: width,
-          height: width * _widthPerHeight,
+          height: height,
           color: color,
+          fit: BoxFit.contain,
         ),
         Container(
           height: space,

@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:the_baetles_chord_play/data/repository/user_repository.dart';
+import 'package:the_baetles_chord_play/domain/use_case/add_like.dart';
 import 'package:the_baetles_chord_play/domain/use_case/delete_sheet.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_my_sheets_of_video.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_shared_sheets_of_video.dart';
@@ -19,6 +20,7 @@ import '../../domain/model/sheet_info.dart';
 import '../../domain/model/triad_type.dart';
 import '../../domain/model/video.dart';
 import '../../domain/use_case/create_sheet_duplication.dart';
+import '../../domain/use_case/delete_like.dart';
 import '../../domain/use_case/generate_video.dart';
 import '../../domain/use_case/get_liked_sheets_of_video.dart';
 import '../../domain/use_case/get_sheet_data.dart';
@@ -39,9 +41,9 @@ class BridgeViewModel with ChangeNotifier {
   final ValueNotifier<bool> _isDeletingSheet = ValueNotifier(false);
   final ValueNotifier<bool> _isVideoIncludedInCollection = ValueNotifier(false);
 
-  UnmodifiableListView<SheetInfo>? _mySheets;
-  UnmodifiableListView<SheetInfo>? _likedSheets;
-  UnmodifiableListView<SheetInfo>? _sharedSheets;
+  List<SheetInfo>? _mySheets;
+  List<SheetInfo>? _likedSheets;
+  List<SheetInfo>? _sharedSheets;
 
   // use cases
   final GenerateVideo _generateVideo;
@@ -51,12 +53,14 @@ class BridgeViewModel with ChangeNotifier {
   final CreateSheetDuplication _createSheet;
   final DeleteSheet _deleteSheet;
   final GetSheetData _getSheetData;
+  final AddLike _addLike;
+  final DeleteLike _deleteLike;
 
-  UnmodifiableListView<SheetInfo>? get mySheets => _mySheets;
+  List<SheetInfo>? get mySheets => _mySheets;
 
-  UnmodifiableListView<SheetInfo>? get likedSheets => _likedSheets;
+  List<SheetInfo>? get likedSheets => _likedSheets;
 
-  UnmodifiableListView<SheetInfo>? get sharedSheets => _sharedSheets;
+  List<SheetInfo>? get sharedSheets => _sharedSheets;
 
   Video? get video => _video;
 
@@ -103,6 +107,8 @@ class BridgeViewModel with ChangeNotifier {
     this._createSheet,
     this._deleteSheet,
     this._getSheetData,
+    this._addLike,
+    this._deleteLike,
   );
 
   Future<void> onPageBuild(BuildContext context, Video video) async {
@@ -142,10 +148,9 @@ class BridgeViewModel with ChangeNotifier {
   }
 
   Future<void> _loadSheets(Video video) async {
-    _mySheets = UnmodifiableListView(await _getMySheetsOfVideo(video.id));
-    _likedSheets = UnmodifiableListView(await _getLikedSheetsOfVideo(video.id));
-    _sharedSheets =
-        UnmodifiableListView(await _getSharedSheetsOfVideo(video.id));
+    _mySheets = await _getMySheetsOfVideo(video.id);
+    _likedSheets = await _getLikedSheetsOfVideo(video.id);
+    _sharedSheets = await _getSharedSheetsOfVideo(video.id);
   }
 
   int _findNotEmptyTabIndex() {
@@ -188,7 +193,7 @@ class BridgeViewModel with ChangeNotifier {
   }
 
   void onClickCollectionButton() {
-    if(video == null) {
+    if (video == null) {
       log("E/BridgeViewModel: collection button clicked before init view model");
       return;
     }
@@ -205,6 +210,23 @@ class BridgeViewModel with ChangeNotifier {
   void onLongClickSheet(BuildContext context, SheetInfo sheet) {
     _sheetToDelete = sheet;
     _isDeletingSheet.value = true;
+  }
+
+  void onClickLikeButton(SheetInfo sheet) async {
+    bool newLikeState = !sheet.liked;
+
+    if (newLikeState) {
+      await _addLike(sheet.id);
+    } else {
+      await _deleteLike(sheet.id);
+    }
+
+    await _loadSheets(video!);
+    // _applyLikeOnLocalData(sheet.id, newLikeState, _mySheets ?? []);
+    // _applyLikeOnLocalData(sheet.id, newLikeState, _likedSheets ?? []);
+    // _applyLikeOnLocalData(sheet.id, newLikeState, _sharedSheets ?? []);
+
+    notifyListeners();
   }
 
   void onClickDeleteButton() {
@@ -309,5 +331,22 @@ class BridgeViewModel with ChangeNotifier {
     _shouldRoute = false;
     _routeName = null;
     _routeArguments = null;
+  }
+
+  void _applyLikeOnLocalData(
+    String sheetId,
+    bool liked,
+    List<SheetInfo> sheets,
+  ) {
+    for (int i = 0; i < sheets.length; ++i) {
+      SheetInfo sheet = sheets[i];
+
+      if (sheet.id == sheetId) {
+        sheets[i] = sheet.copy(
+          liked: liked,
+          likeCount: sheet.likeCount + (liked ? 1 : -1),
+        );
+      }
+    }
   }
 }
