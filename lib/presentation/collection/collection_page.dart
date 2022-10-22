@@ -29,23 +29,42 @@ class _CollectionPageState extends State<CollectionPage> {
             child: Scrollbar(
               child: Container(
                 color: Colors.white,
-                child: VideoListView(
-                  videos: viewModel.myCollection ?? [],
-                  onVideoBlockClicked: (Video video) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      Navigator.pushNamed(context, "/bridge-page",
-                          arguments: video);
-                    });
+                child: Builder(builder: (context) {
+                  if (viewModel.myCollection != null &&
+                      viewModel.myCollection!.length == 0) {
+                    return Container(
+                      alignment: AlignmentDirectional.center,
+                      child: Text(
+                        "내 곡 목록이 비어있어요",
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.gray3E,
+                          fontFamily: AppFontFamilies.montserrat,
+                        ),
+                      ),
+                    );
+                  }
 
-                    setState(() {});
-                  },
-                  head: Container(
-                    margin: const EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 12),
-                    child: _itemCountIndicator(
-                      viewModel.myCollection?.length ?? 0,
+                  return VideoListView(
+                    videos: viewModel.myCollection ?? [],
+                    onVideoBlockClicked: (Video video) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        Navigator.pushNamed(context, "/bridge-page",
+                            arguments: video);
+                      });
+
+                      setState(() {});
+                    },
+                    head: Container(
+                      margin: const EdgeInsets.only(
+                          left: 15, right: 15, top: 20, bottom: 12),
+                      child: _itemCountIndicator(
+                        viewModel.myCollection?.length ?? 0,
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                }),
               ),
             ),
           ),
