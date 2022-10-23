@@ -140,7 +140,7 @@ class VideoRepository {
   Future<List<Video>> getWatchHistory({int offset = 0, int limit = 25}) async {
     VideoClient client =
         RestClientFactory().getClient(RestClientType.video) as VideoClient;
-    GetWatchHistoryResponse response = await client.getWatchHistory(0, limit);
+    GetWatchHistoryResponse response = await client.getWatchHistory(offset, limit);
     return response.toVideoList();
   }
 }
