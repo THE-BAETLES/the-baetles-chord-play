@@ -4,6 +4,7 @@ class SheetInfo {
   final String id;
   final String videoId;
   final String userId;
+  final String userNickname;
   final String title;
   final DateTime createAt;
   final DateTime updateAt;
@@ -13,6 +14,7 @@ class SheetInfo {
     required this.id,
     required this.videoId,
     required this.userId,
+    required this.userNickname,
     required this.title,
     required this.createAt,
     required this.updateAt,
@@ -22,23 +24,8 @@ class SheetInfo {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SheetInfo &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          videoId == other.videoId &&
-          userId == other.userId &&
-          title == other.title &&
-          createAt == other.createAt &&
-          updateAt == other.updateAt &&
-          likeCount == other.likeCount;
+      other is SheetInfo && runtimeType == other.runtimeType && id == other.id;
 
   @override
-  int get hashCode =>
-      id.hashCode ^
-      videoId.hashCode ^
-      userId.hashCode ^
-      title.hashCode ^
-      createAt.hashCode ^
-      updateAt.hashCode ^
-      likeCount.hashCode;
+  int get hashCode => id.hashCode;
 }

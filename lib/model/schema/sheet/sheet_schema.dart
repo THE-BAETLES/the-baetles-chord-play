@@ -15,6 +15,9 @@ class SheetSchema {
   @JsonKey(name: 'user_id')
   String userId;
 
+  @JsonKey(name: 'user_nickname')
+  String userNickname;
+
   @JsonKey(name: 'title')
   String title;
 
@@ -31,10 +34,11 @@ class SheetSchema {
       {required this.id,
       required this.videoId,
       required this.userId,
+        required this.userNickname,
       required this.title,
       required this.createdAt,
       required this.updatedAt,
-      required this.likeCount});
+      required this.likeCount,});
 
   factory SheetSchema.fromJson(Map<String, dynamic> json) =>
       _$SheetSchemaFromJson(json);
@@ -46,6 +50,7 @@ class SheetSchema {
       id: id,
       videoId: videoId,
       userId: userId,
+      userNickname: userNickname,
       title: title,
       createAt: createdAt,
       updateAt: updatedAt,
