@@ -8,16 +8,16 @@ part of 'user_schema.dart';
 
 UserSchema _$UserSchemaFromJson(Map<String, dynamic> json) => UserSchema(
       id: json['id'] as String,
-      country: json['country'] as String,
+      country: json['country'] as String?,
       firebaseUid: json['firebase_uid'] as String,
-      gender: json['gender'] as String,
+      gender: json['gender'] as String?,
       language: json['language'] as String?,
       memberShip: json['membership'] as String?,
       myCollection: (json['my_collection'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
       nickname: json['nickname'] as String,
-      performerGrade: json['performer_grade'] as String,
+      performerGrade: json['performer_grade'] as String?,
       signupFavorites: (json['signup_favorite'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),

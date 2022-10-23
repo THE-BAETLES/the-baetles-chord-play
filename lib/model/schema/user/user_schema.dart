@@ -24,16 +24,16 @@ class UserSchema {
   String email;
 
   @JsonKey(name: 'country')
-  String country;
+  String? country;
 
   @JsonKey(name: 'language')
   String? language;
 
   @JsonKey(name: 'gender')
-  String gender;
+  String? gender;
 
   @JsonKey(name: 'performer_grade')
-  String performerGrade;
+  String? performerGrade;
 
   @JsonKey(name: 'membership')
   String? memberShip;
