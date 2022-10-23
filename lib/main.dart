@@ -51,6 +51,7 @@ import 'data/repository/collection_repository.dart';
 import 'domain/model/loop.dart';
 import 'domain/model/play_option.dart';
 import 'domain/use_case/create_sheet_duplication.dart';
+import 'domain/use_case/edit_sheet.dart';
 import 'domain/use_case/generate_video.dart';
 import 'domain/use_case/get_my_collection.dart';
 import 'domain/use_case/get_my_sheets_of_video.dart';
@@ -161,7 +162,7 @@ class MyApp extends StatelessWidget {
               AddConductorPositionListener(conductor),
               RemoveConductorPositionListener(conductor),
               SetYoutubePlayerController(conductor),
-              PatchSheetData(SheetRepository()),
+              EditSheet(PatchSheetData(SheetRepository())),
               GetUserId(UserRepository()),
             );
           },

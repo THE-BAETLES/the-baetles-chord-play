@@ -21,6 +21,7 @@ import '../../domain/model/sheet_data.dart';
 import '../../domain/model/sheet_info.dart';
 import '../../domain/model/video.dart';
 import '../../domain/use_case/add_performer.dart';
+import '../../domain/use_case/edit_sheet.dart';
 import '../../domain/use_case/move_play_position.dart';
 import '../../domain/use_case/update_play_option.dart';
 import '../../service/conductor/performers/call_performer.dart';
@@ -61,7 +62,7 @@ class PerformanceViewModel with ChangeNotifier {
   final AddConductorPositionListener _addConductorPositionListener;
   final RemoveConductorPositionListener _removeConductorPositionListener;
   final SetYoutubePlayerController _setYoutubePlayerController;
-  final PatchSheetData _patchSheetData;
+  final EditSheet _editSheet;
   final GetUserId _getUserId;
 
   late final MeasureScaleAdapter _scaleAdapter;
@@ -127,7 +128,7 @@ class PerformanceViewModel with ChangeNotifier {
     this._addConductorPositionListener,
     this._removeConductorPositionListener,
     this._setYoutubePlayerController,
-    this._patchSheetData,
+    this._editSheet,
     this._getUserId,
   ) {
     _conductorPositionCallback = ((int position) {
@@ -341,30 +342,15 @@ class PerformanceViewModel with ChangeNotifier {
     _selectedChord.value = chord;
   }
 
-  void onApplyEdit() {
-    Chord? chord = _selectedChord.value;
-
-    int? index = _sheetState.value!.sheetData.chords
-        .indexWhere((element) => element.position >= _editingPosition.value!);
-
-    double spb = 1 / (_sheetState.value!.sheetData.bpm / 60.0);
-    ChordBlock newChord = ChordBlock(chord!, _editingPosition.value!,
-        _editingPosition.value! * spb, (_editingPosition.value! + 1) * spb);
-
-    if (index == -1) {
-      _sheetState.value!.sheetData.chords.add(newChord);
-    } else if (_sheetState.value!.sheetData.chords[index].position ==
-        _editingPosition.value) {
-      _sheetState.value!.sheetData.chords[index] = newChord;
-    } else {
-      _sheetState.value!.sheetData.chords.insert(index, newChord);
-    }
-
-    _patchSheetData(
-      sheetId: sheetState.value!.sheetInfo.id,
+  void onApplyEdit() async {
+    SheetData newSheetData = await _editSheet(
+      sheetId: _sheetState.value!.sheetInfo.id,
+      sheet: _sheetState.value!.sheetData,
       position: _editingPosition.value!,
-      chord: newChord.chord.fullNameWithoutOctave,
+      newChord: _selectedChord.value!,
     );
+
+    _sheetState.value = _sheetState.value!.copy(sheetData: newSheetData);
 
     _sheetState.notifyListeners();
 
