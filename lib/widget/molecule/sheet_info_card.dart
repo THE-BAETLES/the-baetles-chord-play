@@ -8,7 +8,7 @@ import '../atom/app_colors.dart';
 class SheetInfoCard extends StatelessWidget {
   final String sheetTitle;
   final String videoTitle;
-  final String ownerUserId;
+  final String ownerUserNickname;
   final int likeCount;
   final Color? backgroundColor;
   final void Function()? onClicked;
@@ -18,7 +18,7 @@ class SheetInfoCard extends StatelessWidget {
     Key? key,
     required this.sheetTitle,
     required this.videoTitle,
-    required this.ownerUserId,
+    required this.ownerUserNickname,
     required this.likeCount,
     this.backgroundColor,
     this.onClicked,
@@ -75,18 +75,8 @@ class SheetInfoCard extends StatelessWidget {
                   Container(
                     height: 13,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        child: UserInfoView(
-                          userNickname: "baetles",
-                          userProfileImage:
-                              Image.asset("assets/icons/ic_robot.png"),
-                        ),
-                      ),
-                    ],
+                  UserInfoView(
+                    userNickname: ownerUserNickname,
                   ),
                 ],
               ),
