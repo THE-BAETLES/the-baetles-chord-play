@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import '../../model/api/response/user/delete_my_collection_response.dart';
 import '../../model/api/response/user/get_my_collection_response.dart';
 import '../../model/api/response/user/get_my_collection_video_id_list_response.dart';
+import '../../model/api/response/user/get_user_response.dart';
 import '../../model/api/response/user/post_my_collection_response.dart';
 import '../client.dart';
 
@@ -24,4 +25,7 @@ abstract class UserClient extends RestClient {
 
   @DELETE('/user/my-collection/{videoId}')
   Future<DeleteMyCollectionResponse> deleteMyCollection(@Path("videoId") String videoId);
+
+  @GET('/user')
+  Future<GetUserResponse> getUser();
 }

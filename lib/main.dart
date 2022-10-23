@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:the_baetles_chord_play/data/repository/auth_repository.dart';
 import 'package:the_baetles_chord_play/data/repository/country_repository.dart';
 import 'package:the_baetles_chord_play/data/repository/sheet_repository.dart';
+import 'package:the_baetles_chord_play/data/repository/user_repository.dart';
 import 'package:the_baetles_chord_play/data/repository/video_repository.dart';
 import 'package:the_baetles_chord_play/domain/use_case/add_conductor_position_listener.dart';
 import 'package:the_baetles_chord_play/domain/use_case/add_performer.dart';
@@ -46,7 +47,7 @@ import 'package:the_baetles_chord_play/service/system_ui_manager/system_ui_manag
 import 'package:the_baetles_chord_play/widget/molecule/chord_picker.dart';
 
 import 'controller/chord_picker_view_model.dart';
-import 'data/repository/user_repository.dart';
+import 'data/repository/collection_repository.dart';
 import 'domain/model/loop.dart';
 import 'domain/model/play_option.dart';
 import 'domain/use_case/create_sheet_duplication.dart';
@@ -54,6 +55,7 @@ import 'domain/use_case/generate_video.dart';
 import 'domain/use_case/get_my_collection.dart';
 import 'domain/use_case/get_my_sheets_of_video.dart';
 import 'domain/use_case/get_nickname_suggestion.dart';
+import 'domain/use_case/get_user_id.dart';
 import 'domain/use_case/get_user_id_token.dart';
 import 'domain/use_case/move_play_position.dart';
 import 'domain/use_case/search_video.dart';
@@ -136,6 +138,7 @@ class MyApp extends StatelessWidget {
             CreateSheetDuplication(SheetRepository()),
             DeleteSheet(SheetRepository()),
             GetSheetData(SheetRepository()),
+            GetUserId(UserRepository()),
           ),
         ),
         ChangeNotifierProvider(

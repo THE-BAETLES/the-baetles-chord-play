@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_my_collection.dart';
 
-import '../../data/repository/user_repository.dart';
+import '../../data/repository/collection_repository.dart';
 import '../../domain/model/video.dart';
 
 class CollectionViewModel with ChangeNotifier {

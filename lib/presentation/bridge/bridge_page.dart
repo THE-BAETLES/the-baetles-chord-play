@@ -158,7 +158,7 @@ class _BridgePageState extends State<BridgePage> {
                         title: "악보 삭제",
                         body: Text("이 작업은 되돌릴 수 없습니다."),
                         onClickConfirmButton: () {
-                          viewModel.onClickDeleteButton();
+                          viewModel.onClickDeleteSheetButton();
                         },
                         onClickCancelButton: () {
                           viewModel.onClickCancelDeletingButton();
