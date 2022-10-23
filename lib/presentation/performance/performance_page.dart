@@ -34,8 +34,6 @@ class _PerformancePageState extends State<PerformancePage>
   void initState() {
     super.initState();
 
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initViewModel();
     });

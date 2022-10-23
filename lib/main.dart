@@ -42,6 +42,7 @@ import 'package:the_baetles_chord_play/service/google_auth_service.dart';
 import 'package:the_baetles_chord_play/service/orientation_manager/orientation_manager.dart';
 import 'package:the_baetles_chord_play/service/orientation_manager/screen_orientation.dart';
 import 'package:the_baetles_chord_play/service/progress_service.dart';
+import 'package:the_baetles_chord_play/service/system_ui_manager/system_ui_manager.dart';
 import 'package:the_baetles_chord_play/widget/molecule/chord_picker.dart';
 
 import 'controller/chord_picker_view_model.dart';
@@ -88,6 +89,7 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   final _orientationManager = OrientationManager();
+  final _systemUiManager = SystemUiManager();
   late final String _initialRoute;
 
   MyApp(bool hadSignedIn) {
@@ -184,7 +186,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           initialRoute: _initialRoute,
           routes: Navigate.routes,
-          navigatorObservers: [_orientationManager],
+          navigatorObservers: [_orientationManager, _systemUiManager],
         );
       },
     );
