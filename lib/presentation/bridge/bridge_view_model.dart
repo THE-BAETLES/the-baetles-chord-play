@@ -309,9 +309,7 @@ class BridgeViewModel with ChangeNotifier {
     };
     _shouldRoute = true;
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      notifyListeners();
-    });
+    notifyListeners();
 
     return true;
   }
