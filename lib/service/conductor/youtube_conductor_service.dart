@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:mutex/mutex.dart';
@@ -18,10 +19,11 @@ class YoutubeConductorService implements ConductorInterface {
   YoutubePlayerController? _youtubeController;
 
   final Mutex lock = Mutex();
+  final Mutex loopCheckLock = Mutex();
 
   late PlayOption _playOption;
   final ValueNotifier<int> _currentPosition = ValueNotifier(0); // ms
-  final List<Function(int)> _onPositionChangeCallbacks = [];
+  final Set<Function(int)> _onPositionChangeCallbacks = {};
   Timer? _timer;
 
   YoutubeConductorService({required final PlayOption initialPlayOption}) {
@@ -161,27 +163,55 @@ class YoutubeConductorService implements ConductorInterface {
     return true;
   }
 
-  Future<bool> _syncYoutubeController(YoutubePlayerController controller, PlayOption playOption, int playPosition) async {
+  bool _syncYoutubeController(YoutubePlayerController controller, PlayOption playOption, int playPosition) {
     // youtube controller play state 적용
-    if (!(_youtubeController!.value.isReady)) {
-      log("youtube player is not ready (error code ${_youtubeController!.value.errorCode})");
+    if (!(controller.value.isReady)) {
+      log("youtube player is not ready (error code ${controller.value.errorCode})");
       return false;
     }
 
-    _youtubeController!.setPlaybackRate(playOption.tempo);
+    controller.setPlaybackRate(playOption.tempo);
 
     if (playOption.isPlaying) {
-      _youtubeController!.seekTo(
+      controller.seekTo(
         Duration(milliseconds: playPosition),
       );
     } else {
-      _youtubeController!.seekTo(
+      controller.seekTo(
         Duration(milliseconds: playPosition),
       );
-      _youtubeController!.pause();
+      controller.pause();
       log("youtube controller stop playing");
     }
 
+    if (playOption.loop.isInfinite()) {
+      removeCurrentPositionListener(_boundPosition);
+    } else {
+      addCurrentPositionListener(_boundPosition);
+    }
+
     return true;
+  }
+
+  void _boundPosition(int currentPosition) async {
+    if (loopCheckLock.isLocked) {
+      return;
+    }
+
+    await loopCheckLock.acquire();
+
+    if (_playOption.loop.isInfinite()) {
+      return;
+    }
+
+    if (currentPosition < _playOption.loop.start) {
+      _youtubeController!.seekTo(Duration(milliseconds: _playOption.loop.start));
+    } else if (currentPosition >= _playOption.loop.end - 1000) {
+      _youtubeController!.seekTo(Duration(milliseconds: _playOption.loop.start));
+    } else {
+      log("YoutubeConductorService: loop checked but not looped ${math.min(_playOption.loop.end, _youtubeController!.value.metaData.duration.inMilliseconds)} ${_playOption.loop.toString()}");
+    }
+
+    loopCheckLock.release();
   }
 }

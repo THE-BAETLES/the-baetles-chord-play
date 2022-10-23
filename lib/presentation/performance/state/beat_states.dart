@@ -32,9 +32,9 @@ class BeatStates {
         beatStates[position].value.chord,
         true,
       );
-    }
 
-    _playingPosition = position;
+      _playingPosition = position;
+    }
 
     beatStateLock.release();
   }

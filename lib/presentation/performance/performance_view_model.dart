@@ -33,7 +33,7 @@ class PerformanceViewModel with ChangeNotifier {
     isPlaying: false,
     tempo: 1.0,
     defaultBpm: 80,
-    loop: Loop(0, -1),
+    loop: Loop.infinite(),
     capo: 0,
   );
   late final ValueNotifier<PlayOption> _playOption;
@@ -159,7 +159,7 @@ class PerformanceViewModel with ChangeNotifier {
       isPlaying: false,
       tempo: 1.0,
       defaultBpm: sheetData.bpm,
-      loop: Loop(0, -1),
+      loop: Loop.infinite(),
       capo: 0,
     );
 
@@ -304,6 +304,14 @@ class PerformanceViewModel with ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  void onRepeatButtonClicked() {
+    if (_playOption.value.loop.isInfinite()) {
+      _updatePlayOption(loop: Loop(0, _video!.length));
+    } else {
+      _updatePlayOption(loop: Loop.infinite());
+    }
   }
 
   void onChangeTempo(double tempo) {

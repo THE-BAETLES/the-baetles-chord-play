@@ -51,10 +51,16 @@ class ControlBar extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                    child: SvgToggleButton(
-                      isToggled: false,
-                      iconPath: 'assets/icons/ic_repeat.svg',
-                      text: 'Repeat',
+                    child: ValueListenableBuilder(
+                      valueListenable: viewModel.playOption,
+                      builder: (context, value, _) {
+                        return SvgToggleButton(
+                          isToggled: !viewModel.playOption.value.loop.isInfinite(),
+                          iconPath: 'assets/icons/ic_repeat.svg',
+                          text: 'Repeat',
+                          onClick: viewModel.onRepeatButtonClicked,
+                        );
+                      }
                     ),
                   ),
                   Padding(

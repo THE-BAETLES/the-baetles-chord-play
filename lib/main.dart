@@ -146,7 +146,7 @@ class MyApp extends StatelessWidget {
               isPlaying: false,
               tempo: 1.0,
               defaultBpm: 60,
-              loop: Loop(0, -1),
+              loop: Loop.infinite(),
               capo: 0,
             ));
             return PerformanceViewModel(
