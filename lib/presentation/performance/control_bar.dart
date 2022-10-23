@@ -95,18 +95,20 @@ class ControlBar extends StatelessWidget {
                       height: 44,
                       color: Colors.black,
                       child: ValueListenableBuilder(
-                          valueListenable: viewModel.youtubePlayerController,
-                          builder: (context, value, _) {
-                            if (viewModel.youtubePlayerController.value ==
-                                null) {
-                              return Text("동영상을 불러올 수 없습니다.");
-                            } else {
-                              return YoutubeVideoPlayer(
-                                controller:
-                                    viewModel.youtubePlayerController.value!,
-                              );
-                            }
-                          }),
+                        valueListenable: viewModel.youtubePlayerController,
+                        builder: (context, value, _) {
+                          if (viewModel.youtubePlayerController.value == null) {
+                            return Text("동영상을 불러올 수 없습니다.");
+                          } else {
+                            return YoutubeVideoPlayer(
+                              controller:
+                                  viewModel.youtubePlayerController.value!,
+                              width: 62,
+                              height: 44,
+                            );
+                          }
+                        },
+                      ),
                     ),
                   ),
                   Padding(

@@ -83,21 +83,28 @@ class _BridgePageState extends State<BridgePage> {
                   }),
               body: Column(
                 children: [
-                  Builder(
-                    builder: (context) {
-                      if (viewModel.youtubePlayerController == null) {
-                        return Container(
-                          color: AppColors.black04,
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.width * (9/16),
-                        );
-                      }
+                  Builder(builder: (context) {
+                    double width = MediaQuery.of(context).size.width;
+                    double height = width * (9 / 16);
 
-                      return YoutubeVideoPlayer(
-                        controller: viewModel.youtubePlayerController!,
-                      );
+                    if (height > MediaQuery.of(context).size.height) {
+                      height = MediaQuery.of(context).size.height;
+                      width = height * (16 / 9);
                     }
-                  ),
+
+                    if (viewModel.youtubePlayerController == null) {
+                      return Container(
+                          color: AppColors.black04,
+                          width: width,
+                          height: height);
+                    }
+
+                    return YoutubeVideoPlayer(
+                      controller: viewModel.youtubePlayerController!,
+                      width: width,
+                      height: height,
+                    );
+                  }),
                   VideoInfoCard(
                     video: video,
                     onChangeInstrument: (Instrument? instrument) {

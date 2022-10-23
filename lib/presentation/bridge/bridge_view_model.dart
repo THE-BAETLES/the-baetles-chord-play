@@ -120,6 +120,7 @@ class BridgeViewModel with ChangeNotifier {
       flags: const YoutubePlayerFlags(
         autoPlay: false,
         enableCaption: false,
+        showLiveFullscreenButton: false,
       ),
     );
 
