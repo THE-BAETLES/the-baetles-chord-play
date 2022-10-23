@@ -216,7 +216,7 @@ class BridgeViewModel with ChangeNotifier {
     }
   }
 
-  void onClickDeleteSheetButton() {
+  Future<void> onClickDeleteSheetButton() async {
     if (_sheetToDelete == null) {
       return;
     }
@@ -224,7 +224,8 @@ class BridgeViewModel with ChangeNotifier {
     _deleteSheet(_sheetToDelete!.id);
     _isDeletingSheet.value = false;
     _sheetToDelete = null;
-    _loadSheets(_video!);
+    await _loadSheets(_video!);
+    notifyListeners();
   }
 
   void onClickCancelDeletingButton() {
