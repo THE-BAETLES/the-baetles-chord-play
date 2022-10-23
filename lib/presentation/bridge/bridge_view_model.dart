@@ -118,7 +118,7 @@ class BridgeViewModel with ChangeNotifier {
     _youtubePlayerController = YoutubePlayerController(
       initialVideoId: video.id,
       flags: const YoutubePlayerFlags(
-        autoPlay: true,
+        autoPlay: false,
         enableCaption: false,
       ),
     );
