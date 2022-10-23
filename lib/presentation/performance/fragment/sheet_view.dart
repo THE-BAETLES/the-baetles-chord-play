@@ -203,7 +203,7 @@ class SheetView extends StatelessWidget {
                         ),
                         beatState.value.chord!.bass != null
                             ? Container(
-                                width: sheetElementSize.tileWidth / 1.7,
+                                width: sheetElementSize.tileWidth / 1.5,
                                 height: sheetElementSize.tileHeight / 4.5,
                                 margin: EdgeInsets.only(top: sheetElementSize.tileHeight / 200),
                                 alignment: Alignment.center,

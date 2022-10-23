@@ -162,6 +162,7 @@ class MyApp extends StatelessWidget {
               RemoveConductorPositionListener(conductor),
               SetYoutubePlayerController(conductor),
               PatchSheetData(SheetRepository()),
+              GetUserId(UserRepository()),
             );
           },
         ),

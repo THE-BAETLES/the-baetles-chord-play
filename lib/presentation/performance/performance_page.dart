@@ -162,10 +162,10 @@ class _PerformancePageState extends State<PerformancePage>
                           viewModel: viewModel,
                         ),
                         onClick: (int tileIndex) {
-                          viewModel.onTileClick(tileIndex);
+                          viewModel.onTileClicked(tileIndex);
                         },
                         onLongClick: (tileIndex) {
-                          viewModel.onTileLongClick(tileIndex);
+                          viewModel.onTileLongClicked(tileIndex);
                         },
                         scaleAdapter: viewModel.scaleAdapter,
                         sheetElementSize: sheetElementSize,

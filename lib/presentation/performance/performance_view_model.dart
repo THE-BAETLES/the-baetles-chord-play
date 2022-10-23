@@ -6,6 +6,7 @@ import 'package:the_baetles_chord_play/controller/chord_picker_view_model.dart';
 import 'package:the_baetles_chord_play/domain/model/chord_block.dart';
 import 'package:the_baetles_chord_play/domain/model/play_option.dart';
 import 'package:the_baetles_chord_play/domain/use_case/add_conductor_position_listener.dart';
+import 'package:the_baetles_chord_play/domain/use_case/get_user_id.dart';
 import 'package:the_baetles_chord_play/domain/use_case/patch_sheet_data.dart';
 import 'package:the_baetles_chord_play/domain/use_case/remove_conductor_position_listener.dart';
 import 'package:the_baetles_chord_play/domain/use_case/set_youtube_player_controller.dart';
@@ -61,6 +62,7 @@ class PerformanceViewModel with ChangeNotifier {
   final RemoveConductorPositionListener _removeConductorPositionListener;
   final SetYoutubePlayerController _setYoutubePlayerController;
   final PatchSheetData _patchSheetData;
+  final GetUserId _getUserId;
 
   late final MeasureScaleAdapter _scaleAdapter;
   late final ChordPickerViewModel _chordPickerViewModel;
@@ -69,6 +71,7 @@ class PerformanceViewModel with ChangeNotifier {
       PlayOptionCallbackPerformer();
   ChordChecker? _chordChecker;
   Video? _video;
+  String? _userId;
 
   ValueNotifier<PlayOption> get playOption => _playOption;
 
@@ -125,6 +128,7 @@ class PerformanceViewModel with ChangeNotifier {
     this._removeConductorPositionListener,
     this._setYoutubePlayerController,
     this._patchSheetData,
+    this._getUserId,
   ) {
     _conductorPositionCallback = ((int position) {
       _currentPosition.value = position;
@@ -149,7 +153,7 @@ class PerformanceViewModel with ChangeNotifier {
     required final Video video,
     required final SheetInfo sheetInfo,
     required final SheetData sheetData,
-  }) {
+  }) async {
     _video = video;
 
     _feedbackState.value = FeedbackState();
@@ -222,6 +226,8 @@ class PerformanceViewModel with ChangeNotifier {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       notifyListeners();
     });
+
+    _userId = await _getUserId();
   }
 
   void play() {
@@ -242,14 +248,17 @@ class PerformanceViewModel with ChangeNotifier {
     _setPlayPosition(position: dest);
   }
 
-  void onTileClick(int tileIndex) {
+  void onTileClicked(int tileIndex) {
     double bps = _playOption.value.defaultBpm / 60.0;
     double spb = 1 / bps;
     _setPlayPosition(position: (tileIndex * spb).toInt() * 1000);
   }
 
-  void onTileLongClick(int tileIndex) {
-    log("long click detected (tile index: ${tileIndex})");
+  void onTileLongClicked(int tileIndex) async {
+    if (_userId == null || _userId != _sheetState.value!.sheetInfo.userId) {
+      return;
+    }
+
     _editingPosition.value = tileIndex;
 
     List<ChordBlock>? chords = _sheetState.value?.sheetData.chords;
@@ -280,6 +289,7 @@ class PerformanceViewModel with ChangeNotifier {
     _isPitchBeingChecked.value = false;
     _isMuted.value = false;
     _editingPosition.value = null;
+    _userId == null;
   }
 
   void onCheckButtonClicked() {
