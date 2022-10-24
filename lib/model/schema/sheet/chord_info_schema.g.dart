@@ -8,16 +8,16 @@ part of 'chord_info_schema.dart';
 
 ChordInfoSchema _$ChordInfoSchemaFromJson(Map<String, dynamic> json) =>
     ChordInfoSchema(
-      chord: json['chord'] as String,
-      start: (json['start'] as num).toDouble(),
-      end: (json['end'] as num).toDouble(),
-      position: json['position'] as int,
+      root: json['root'] as String,
+      triad: json['triad'] as String,
+      bass: json['bass'] as String,
+      beatTime: (json['beat_time'] as num).toDouble(),
     );
 
 Map<String, dynamic> _$ChordInfoSchemaToJson(ChordInfoSchema instance) =>
     <String, dynamic>{
-      'chord': instance.chord,
-      'start': instance.start,
-      'end': instance.end,
-      'position': instance.position,
+      'root': instance.root,
+      'triad': instance.triad,
+      'bass': instance.bass,
+      'beat_time': instance.beatTime,
     };

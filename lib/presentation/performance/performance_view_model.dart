@@ -43,12 +43,12 @@ class PerformanceViewModel with ChangeNotifier {
   final ValueNotifier<bool> _isPitchBeingChecked = ValueNotifier(false);
   final ValueNotifier<bool> _isMuted = ValueNotifier(false);
   final ValueNotifier<FeedbackState> _feedbackState =
-      ValueNotifier(FeedbackState());
+  ValueNotifier(FeedbackState());
   final ValueNotifier<SheetState?> _sheetState = ValueNotifier(null);
   final ValueNotifier<int?> _editingPosition = ValueNotifier(null);
   final ValueNotifier<Chord?> _selectedChord = ValueNotifier(null);
   final ValueNotifier<YoutubePlayerController?> _youtubeController =
-      ValueNotifier(null);
+  ValueNotifier(null);
   final ValueNotifier<int> _measureCount = ValueNotifier(4);
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
   final ValueNotifier<bool> _isTabVisible = ValueNotifier(false);
@@ -69,7 +69,7 @@ class PerformanceViewModel with ChangeNotifier {
   late final ChordPickerViewModel _chordPickerViewModel;
 
   final PlayOptionCallbackPerformer _callbackPerformer =
-      PlayOptionCallbackPerformer();
+  PlayOptionCallbackPerformer();
   ChordChecker? _chordChecker;
   Video? _video;
   String? _userId;
@@ -96,13 +96,9 @@ class PerformanceViewModel with ChangeNotifier {
 
   bool get isEditing => _editingPosition.value != null;
 
-  Chord? get editedChord =>
-      (_sheetState.value?.sheetData.chords.cast<ChordBlock?>())
-          ?.firstWhere(
-            (element) => element?.position == _editingPosition.value,
-            orElse: () => null,
-          )
-          ?.chord;
+  Chord? get editedChord {
+    return _sheetState.value?.sheetData.chords[_editingPosition.value!].chord;
+  }
 
   ValueNotifier<YoutubePlayerController?> get youtubePlayerController =>
       _youtubeController;
@@ -121,16 +117,14 @@ class PerformanceViewModel with ChangeNotifier {
 
   ScaleAdapter get scaleAdapter => _scaleAdapter;
 
-  PerformanceViewModel(
-    this._updatePlayOption,
-    this._setPlayPosition,
-    this._addPerformer,
-    this._addConductorPositionListener,
-    this._removeConductorPositionListener,
-    this._setYoutubePlayerController,
-    this._editSheet,
-    this._getUserId,
-  ) {
+  PerformanceViewModel(this._updatePlayOption,
+      this._setPlayPosition,
+      this._addPerformer,
+      this._addConductorPositionListener,
+      this._removeConductorPositionListener,
+      this._setYoutubePlayerController,
+      this._editSheet,
+      this._getUserId,) {
     _conductorPositionCallback = ((int position) {
       _currentPosition.value = position;
       _beatStates.value.setPlayingPosition(
@@ -261,16 +255,12 @@ class PerformanceViewModel with ChangeNotifier {
     }
 
     _editingPosition.value = tileIndex;
-
     List<ChordBlock>? chords = _sheetState.value?.sheetData.chords;
-    int index = chords == null
-        ? -1
-        : chords.indexWhere((element) => element.position == tileIndex);
 
-    if (index == -1) {
+    if (tileIndex < 0 || chords == null || chords.length <= tileIndex) {
       _selectedChord.value = null;
     } else {
-      _selectedChord.value = chords![index].chord;
+      _selectedChord.value = chords[tileIndex].chord;
     }
 
     notifyListeners();
@@ -330,7 +320,7 @@ class PerformanceViewModel with ChangeNotifier {
       tempo: tempo,
     );
 
-    log("tempo changed to ${tempo}");
+    log("tempo changed to $tempo");
   }
 
   void onCancelEdit() {
@@ -366,6 +356,10 @@ class PerformanceViewModel with ChangeNotifier {
     this.measureCount.value = measureCount;
   }
 
+  void onSetTabVisibility(bool isVisible) {
+    isTabVisible.value = isVisible;
+  }
+
   void _initLoadingNotifier() {
     _playOption.addListener(() {
       _updateIsLoading();
@@ -386,30 +380,10 @@ class PerformanceViewModel with ChangeNotifier {
     final chords = sheetState.sheetData.chords;
     final List<ValueNotifier<BeatState>> beatStates = [];
 
-    int positionCounter = 0;
-
-    for (int chordIndex = 0; chordIndex < chords.length; ++chordIndex) {
-      ChordBlock chordBlock = chords[chordIndex];
-
-      while (positionCounter < chordBlock.position) {
-        beatStates.add(ValueNotifier(BeatState(null, false)));
-        positionCounter++;
-      }
-
+    for (ChordBlock chordBlock in chords) {
       beatStates.add(ValueNotifier(BeatState(chordBlock.chord, false)));
-      positionCounter++;
-
-      // 같은 포지션인 코드들은 맨 앞 하나만 반영함.
-      while (chordIndex < chords.length - 1 &&
-          chords[chordIndex].position == chords[chordIndex + 1].position) {
-        chordIndex++;
-      }
     }
 
     return BeatStates(beatStates);
-  }
-
-  void onSetTabVisibility(bool isVisible) {
-    isTabVisible.value = isVisible;
   }
 }

@@ -16,30 +16,18 @@ class EditSheet {
     required int position,
     required Chord newChord,
   }) async {
+    assert(position < sheet.chords.length);
 
-    double spb = 1 / (sheet.bpm / 60.0);
-    ChordBlock newChordBlock = ChordBlock(
-      newChord,
-      position,
-      position * spb,
-      (position + 1) * spb,
-    );
+    ChordBlock currentChordBlock = sheet.chords[position];
+    ChordBlock newChordBlock = currentChordBlock.copy(chord: newChord);
 
     List<ChordBlock> newChords = List<ChordBlock>.of(sheet.chords);
-    int? index = newChords.indexWhere((chord) => chord.position >= position);
-
-    if (index == -1) {
-      newChords.add(newChordBlock);
-    } else if (newChords[index].position == position) {
-      newChords[index] = newChordBlock;
-    } else {
-      newChords.insert(index, newChordBlock);
-    }
+    newChords[position] = newChordBlock;
 
     await _patchSheetData(
       sheetId: sheetId,
       position: position!,
-      chord: newChordBlock.chord.fullNameWithoutOctave,
+      chord: newChordBlock.chord,
     );
 
     return sheet.copy(

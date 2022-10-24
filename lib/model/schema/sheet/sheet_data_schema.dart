@@ -11,13 +11,18 @@ part 'sheet_data_schema.g.dart';
 class SheetDataSchema {
   @JsonKey(name: '_id')
   String id;
+
+  @JsonKey(name: 'bpm')
   int bpm;
 
-  @JsonKey(name: 'chord_infos')
-  List<ChordInfoSchema> chordInfos;
+  @JsonKey(name: 'infos')
+  List<ChordInfoSchema> chords;
 
-  SheetDataSchema(
-      {required this.id, required this.bpm, required this.chordInfos});
+  SheetDataSchema({
+    required this.id,
+    required this.bpm,
+    required this.chords,
+  });
 
   factory SheetDataSchema.fromJson(Map<String, dynamic> json) =>
       _$SheetDataSchemaFromJson(json);
@@ -26,7 +31,7 @@ class SheetDataSchema {
     return SheetDataSchema(
       id: sheetData.id,
       bpm: (sheetData.bpm).toInt(),
-      chordInfos: sheetData.chords.map((e) {
+      chords: sheetData.chords.map((e) {
         return ChordInfoSchema.fromChordBlock(e);
       }).toList(),
     );
@@ -37,7 +42,7 @@ class SheetDataSchema {
   SheetData toSheetData() {
     final List<ChordBlock> chordBlocks = [];
 
-    for (ChordInfoSchema chordInfo in chordInfos) {
+    for (ChordInfoSchema chordInfo in chords) {
       chordBlocks.add(chordInfo.toChordBlock());
     }
 

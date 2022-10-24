@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:the_baetles_chord_play/domain/model/note.dart';
+import 'package:the_baetles_chord_play/domain/model/triad_type.dart';
 
 import '../../../domain/model/chord.dart';
 import '../../../domain/model/chord_block.dart';
@@ -8,37 +9,59 @@ part 'chord_info_schema.g.dart';
 
 @JsonSerializable()
 class ChordInfoSchema {
-  String chord;
-  double start;
-  double end;
-  int position;
+  @JsonKey(name: "root")
+  String root;
 
-  ChordInfoSchema(
-      {required this.chord,
-      required this.start,
-      required this.end,
-      required this.position});
+  @JsonKey(name: "triad")
+  String triad;
+
+  @JsonKey(name: "bass")
+  String bass;
+
+  @JsonKey(name: "beat_time")
+  double beatTime;
+
+  ChordInfoSchema({
+    required this.root,
+    required this.triad,
+    required this.bass,
+    required this.beatTime,
+  });
 
   factory ChordInfoSchema.fromJson(Map<String, dynamic> json) =>
       _$ChordInfoSchemaFromJson(json);
 
   factory ChordInfoSchema.fromChordBlock(ChordBlock chordBlock) {
     return ChordInfoSchema(
-      chord: chordBlock.toString(),
-      start: chordBlock.start,
-      end: chordBlock.end,
-      position: chordBlock.position,
+      root: chordBlock.chord?.root.noteNameWithoutOctave ?? "none",
+      triad: chordBlock.chord?.triadType.notation ?? "none",
+      bass: chordBlock.chord?.bass?.noteNameWithoutOctave ?? "none",
+      beatTime: chordBlock.beatTime,
     );
   }
 
   Map<String, dynamic> toJson() => _$ChordInfoSchemaToJson(this);
 
   ChordBlock toChordBlock() {
+    Note? bassNote;
+
+    if (bass != "none") {
+      Note.fromNoteName(bass!);
+    }
+
+    Chord? chord;
+
+    if (root != "none") {
+      chord = Chord(
+        Note.fromNoteName(root),
+        TriadType.tryParse(triad!)!,
+        bassNote,
+      );
+    }
+
     return ChordBlock(
-      Chord.fromString(chord),
-      position,
-      start,
-      end,
+      chord: chord,
+      beatTime: beatTime,
     );
   }
 }

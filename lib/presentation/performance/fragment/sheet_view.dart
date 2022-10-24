@@ -49,9 +49,8 @@ class SheetView extends StatelessWidget {
     final List<Widget> tileRows = [];
 
     int highlightedTileIndex = bps * currentPosition ~/ 1000;
-    int currentChordIndex = 0;
     int rowCount = sheetData.chords.isNotEmpty
-        ? sheetData.chords.last.position ~/
+        ? sheetData.chords.length ~/
                 (beatPerMeasure * sheetElementSize.measureCount) +
             1
         : 0;
@@ -71,18 +70,10 @@ class SheetView extends StatelessWidget {
         ),
       );
 
-      // vertical spacer
+      // vertical divider
       tileRows.add(Container(
         height: spaceBetweenRow,
       ));
-
-      int nextRowFirstTileIndex = _calcTileIndex(
-          rowIndex + 1, (beatPerMeasure * sheetElementSize.measureCount), 0);
-      while (currentChordIndex < sheetData.chords.length &&
-          nextRowFirstTileIndex >
-              sheetData.chords[currentChordIndex].position) {
-        currentChordIndex++;
-      }
     }
 
     return GestureDetector(
