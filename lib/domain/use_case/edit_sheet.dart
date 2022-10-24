@@ -14,7 +14,7 @@ class EditSheet {
     required String sheetId,
     required SheetData sheet,
     required int position,
-    required Chord newChord,
+    required Chord? newChord,
   }) async {
     assert(position < sheet.chords.length);
 

@@ -5,9 +5,7 @@ class SetPlayPosition {
 
   SetPlayPosition(this._conductor);
 
-  Future<void> call({
-    required int position,
-  }) async {
+  Future<void> call({required int position}) async {
     _conductor.syncPlayPosition(positionInMillis: position);
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -97,6 +98,10 @@ class PerformanceViewModel with ChangeNotifier {
   bool get isEditing => _editingPosition.value != null;
 
   Chord? get editedChord {
+    if (_editingPosition.value == null) {
+      return null;
+    }
+
     return _sheetState.value?.sheetData.chords[_editingPosition.value!].chord;
   }
 
@@ -127,10 +132,12 @@ class PerformanceViewModel with ChangeNotifier {
       this._getUserId,) {
     _conductorPositionCallback = ((int position) {
       _currentPosition.value = position;
-      _beatStates.value.setPlayingPosition(
-          (position / 1000 * (_sheetState.value?.sheetData.bps ?? position))
-              .toInt());
 
+      int playingIndex = _sheetState.value!.sheetData.chords.indexWhere((chord) {
+        return position < chord.beatTime * 1000;
+      });
+
+      _beatStates.value.setPlayingPosition(playingIndex);
       notifyListeners();
     });
 
@@ -233,20 +240,31 @@ class PerformanceViewModel with ChangeNotifier {
     _updatePlayOption(isPlaying: false);
   }
 
-  void moveCurrentPosition(int amount) {
-    int dest = _currentPosition.value + amount;
+  void moveTileIndex(int amount) {
+    int destIdx = math.max(0, beatStates.value.playingPosition.value + amount);
+    int destPosition = 0;
 
-    if (dest < 0) {
-      dest = 0;
+    if (destIdx > 0) {
+      destPosition = _sheetState.value!.sheetData.chords[destIdx - 1].beatTimeInMillis;
     }
 
-    _setPlayPosition(position: dest);
+    _setPlayPosition(position: destPosition);
   }
 
   void onTileClicked(int tileIndex) {
-    double bps = _playOption.value.defaultBpm / 60.0;
-    double spb = 1 / bps;
-    _setPlayPosition(position: (tileIndex * spb).toInt() * 1000);
+    List<ChordBlock> chords = _sheetState.value!.sheetData.chords;
+
+    if (tileIndex >= chords.length) {
+      return;
+    }
+
+    int beatStartTimeInMillis = 0;
+
+    if (tileIndex > 0) {
+      beatStartTimeInMillis = (chords[tileIndex - 1].beatTime * 1000).toInt();
+    }
+
+    _setPlayPosition(position: beatStartTimeInMillis);
   }
 
   void onTileLongClicked(int tileIndex) async {

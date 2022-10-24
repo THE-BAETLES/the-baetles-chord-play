@@ -85,7 +85,7 @@ class ControlBar extends StatelessWidget {
                     context,
                     viewModel.play,
                     viewModel.stop,
-                    viewModel.moveCurrentPosition,
+                    viewModel.moveTileIndex,
                     viewModel.playOption.value,
                   );
                 }),
@@ -166,9 +166,7 @@ class ControlBar extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () {
-                  double secondPerBeat = 1 / (playOption.defaultBpm / 60.0);
-                  int changeAmount = (8 * secondPerBeat * 1000).toInt();
-                  move(-changeAmount);
+                  move(-8);
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
@@ -204,9 +202,7 @@ class ControlBar extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  double secondPerBeat = 1 / (playOption.defaultBpm / 60.0);
-                  int changeAmount = (8 * secondPerBeat * 1000).toInt();
-                  move(changeAmount);
+                  move(8);
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),

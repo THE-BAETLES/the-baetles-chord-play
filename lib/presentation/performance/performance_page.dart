@@ -152,7 +152,7 @@ class _PerformancePageState extends State<PerformancePage>
                       return SheetView(
                         currentPosition: viewModel.currentPosition.value,
                         sheetData: (viewModel.sheetState.value?.sheetData)!,
-                        beatStates: viewModel.beatStates.value.beatStates,
+                        beatStates: viewModel.beatStates.value.states,
                         correctIndexes:
                             viewModel.feedbackState.correctIndexes.toList(),
                         wrongIndexes:
@@ -187,17 +187,16 @@ class _PerformancePageState extends State<PerformancePage>
   }) {
     final int beatPerMeasure = 4;
     List<ValueNotifier<BeatState>> beatStates =
-        viewModel.beatStates.value.beatStates;
+        viewModel.beatStates.value.states;
 
     return SheetAutoScrollController(
+      playingPosition: viewModel.beatStates.value.playingPosition,
       topMargin: SheetView.topMargin,
       bottomMargin: SheetView.bottomMargin,
       lineHeight: sheetElementSize.tileHeight + SheetView.spaceBetweenRow,
       screenHeight: MediaQuery.of(context).size.height,
-      measureCount: viewModel.measureCount.value,
-      msPerBeat: 1000 ~/ (viewModel.sheetState.value!.sheetData.bpm / 60.0),
+      beatPerLine: viewModel.measureCount.value * 4,
       lineCount: (beatStates.length / (viewModel.measureCount.value * beatPerMeasure).toDouble()).ceil(),
-      positionInMs: viewModel.currentPosition,
     );
   }
 

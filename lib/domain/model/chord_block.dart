@@ -4,6 +4,8 @@ class ChordBlock {
   final Chord? chord;
   final double beatTime;
 
+  int get beatTimeInMillis => (beatTime * 1000).toInt();
+
   ChordBlock({required this.chord, required this.beatTime});
 
   @override
