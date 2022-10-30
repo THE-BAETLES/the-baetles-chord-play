@@ -36,6 +36,18 @@ class SheetRepository {
 
     return sheets;
   }
+  
+  Future<List<SheetInfo>> getMySheets() async {
+    SheetClient client = RestClientFactory().getClient(RestClientType.sheet) as SheetClient;
+    // todo: 실제 소스 연결
+    return (await fetchSheetsByVideoId('OpvT3HTnHNI'))['shared']!;
+  }
+
+  Future<List<SheetInfo>> getLikedSheets() async {
+    SheetClient client = RestClientFactory().getClient(RestClientType.sheet) as SheetClient;
+    // todo: 실제 소스 연결
+    return (await fetchSheetsByVideoId('OpvT3HTnHNI'))['like']!;
+  }
 
   Future<SheetData?> fetchSheetDataBySheetId(String sheetId) async {
     SheetClient client =

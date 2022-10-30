@@ -5,6 +5,7 @@ import '../../widget/atom/app_colors.dart';
 import '../../widget/atom/app_font_families.dart';
 import '../collection/collection_page.dart';
 import '../home/home_page.dart';
+import '../sheet/sheet_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -17,6 +18,7 @@ class _MainPageState extends State<MainPage> {
   final List<Widget> pages = [
     HomePage(),
     CollectionPage(),
+    SheetPage(),
   ];
 
   int pageIndex = 0;

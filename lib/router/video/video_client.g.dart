@@ -21,6 +21,29 @@ class _VideoClient implements VideoClient {
   String? baseUrl;
 
   @override
+  Future<GetVideoResponse> getVideo(videoId) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<GetVideoResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/videos/${videoId}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = GetVideoResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
   Future<GetVideoGradeCollectionResponse> getGradeCollection(
       performerGrade) async {
     const _extra = <String, dynamic>{};

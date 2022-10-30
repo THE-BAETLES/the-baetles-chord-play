@@ -24,6 +24,7 @@ import 'package:the_baetles_chord_play/domain/use_case/get_sheet_data.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_sheets_of_video.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_user_country.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_user_nickname.dart';
+import 'package:the_baetles_chord_play/domain/use_case/get_video_by_id.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_watch_history.dart';
 import 'package:the_baetles_chord_play/domain/use_case/patch_sheet_data.dart';
 import 'package:the_baetles_chord_play/domain/use_case/remove_conductor_position_listener.dart';
@@ -36,6 +37,7 @@ import 'package:the_baetles_chord_play/presentation/home/home_view_model.dart';
 import 'package:the_baetles_chord_play/presentation/loading/loading_view_model.dart';
 import 'package:the_baetles_chord_play/presentation/performance/performance_view_model.dart';
 import 'package:the_baetles_chord_play/presentation/search/search_view_model.dart';
+import 'package:the_baetles_chord_play/presentation/sheet/sheet_view_model.dart';
 import 'package:the_baetles_chord_play/presentation/sign_up/sign_up_view_model.dart';
 import 'package:the_baetles_chord_play/router/rest_client_factory.dart';
 import 'package:the_baetles_chord_play/service/conductor/youtube_conductor_service.dart';
@@ -52,7 +54,9 @@ import 'domain/model/play_option.dart';
 import 'domain/use_case/add_like.dart';
 import 'domain/use_case/create_sheet_duplication.dart';
 import 'domain/use_case/generate_video.dart';
+import 'domain/use_case/get_liked_sheets.dart';
 import 'domain/use_case/get_my_collection.dart';
+import 'domain/use_case/get_my_sheets.dart';
 import 'domain/use_case/get_my_sheets_of_video.dart';
 import 'domain/use_case/get_nickname_suggestion.dart';
 import 'domain/use_case/get_user_id_token.dart';
@@ -181,7 +185,19 @@ class MyApp extends StatelessWidget {
               GetMyCollection(CollectionRepository()),
             );
           },
-        )
+        ),
+        ChangeNotifierProvider(
+          create: (_) {
+            return SheetViewModel(
+              GetMySheets(SheetRepository()),
+              GetLikedSheets(SheetRepository()),
+              GetVideoById(VideoRepository()),
+              GetSheetData(SheetRepository()),
+              AddLike(SheetRepository()),
+              DeleteLike(SheetRepository()),
+            );
+          },
+        ),
       ],
       builder: (context, child) {
         return MaterialApp(

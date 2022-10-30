@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:the_baetles_chord_play/model/api/request/video/post_video_request.dart';
 import 'package:the_baetles_chord_play/model/api/response/search/get_search_response.dart';
+import 'package:the_baetles_chord_play/model/api/response/video/get_video_response.dart';
 import 'package:the_baetles_chord_play/model/api/response/video/get_watch_history_response.dart';
 import 'package:the_baetles_chord_play/router/rest_client_factory.dart';
 import 'package:the_baetles_chord_play/router/video/video_client.dart';
@@ -140,7 +141,13 @@ class VideoRepository {
   Future<List<Video>> getWatchHistory({int offset = 0, int limit = 25}) async {
     VideoClient client =
         RestClientFactory().getClient(RestClientType.video) as VideoClient;
-    GetWatchHistoryResponse response = await client.getWatchHistory(0, limit);
+    GetWatchHistoryResponse response = await client.getWatchHistory(offset, limit);
     return response.toVideoList();
+  }
+
+  Future<Video?> getVideoById(String videoId) async {
+    VideoClient client = RestClientFactory().getClient(RestClientType.video) as VideoClient;
+    GetVideoResponse response = await client.getVideo(videoId);
+    return response.data?.toVideo();
   }
 }

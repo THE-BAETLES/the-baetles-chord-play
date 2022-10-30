@@ -10,7 +10,7 @@ import 'package:the_baetles_chord_play/widget/atom/youtube_video_player.dart';
 import 'package:the_baetles_chord_play/widget/molecule/block_title.dart';
 import 'package:the_baetles_chord_play/widget/molecule/middle_hightlight_text.dart';
 import 'package:the_baetles_chord_play/widget/molecule/confirm_dialog.dart';
-import 'package:the_baetles_chord_play/widget/organism/transparent_appbar.dart';
+import 'package:the_baetles_chord_play/widget/organism/transparent_app_bar.dart';
 
 import '../../domain/model/instrument.dart';
 import '../../domain/model/sheet_info.dart';
@@ -18,6 +18,7 @@ import '../../domain/model/video.dart';
 import '../../widget/atom/app_colors.dart';
 import '../../widget/molecule/collection_button.dart';
 import '../../widget/molecule/create_sheet_button.dart';
+import '../../widget/molecule/simple_tab_bar.dart';
 import 'bridge_sheet_list_view.dart';
 import 'bridge_view_model.dart';
 
@@ -182,6 +183,7 @@ class _BridgePageState extends State<BridgePage> {
       length: 3,
       child: Builder(builder: (context) {
         final tabController = DefaultTabController.of(context)!;
+
         tabController.addListener(() {
           viewModel.onChangeTabIndex(tabController.index);
         });
@@ -191,11 +193,8 @@ class _BridgePageState extends State<BridgePage> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const TabBar(
-              physics: BouncingScrollPhysics(),
-              isScrollable: true,
-              padding: EdgeInsets.symmetric(horizontal: 15),
-              tabs: [
+            SimpleTabBar(
+              tabs: const [
                 Tab(
                   height: 40,
                   child: Text("내 악보"),
@@ -209,20 +208,6 @@ class _BridgePageState extends State<BridgePage> {
                   child: Text("공유된 악보"),
                 ),
               ],
-              labelColor: AppColors.mainPointColor,
-              labelStyle: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                fontFamily: AppFontFamilies.pretendard,
-              ),
-              unselectedLabelColor: AppColors.gray80,
-              unselectedLabelStyle: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w400,
-                fontFamily: AppFontFamilies.pretendard,
-              ),
-              indicatorColor: AppColors.mainPointColor,
-              indicatorSize: TabBarIndicatorSize.label,
             ),
             const Divider(
               height: 3,

@@ -9,7 +9,7 @@ import 'package:the_baetles_chord_play/widget/molecule/video_summary.dart';
 
 import '../../domain/model/video.dart';
 import '../atom/app_colors.dart';
-import '../atom/video_thumbnail.dart';
+import 'video_thumbnail.dart';
 
 class VideoBlock extends StatelessWidget {
   final Video video;
@@ -37,11 +37,9 @@ class VideoBlock extends StatelessWidget {
             return Row(
               children: [
                 _videoThumbnail(context),
-
                 Container(
                   width: 14,
                 ),
-
                 Expanded(
                   flex: 1,
                   child: Padding(
@@ -67,29 +65,13 @@ class VideoBlock extends StatelessWidget {
   }
 
   Widget _videoThumbnail(BuildContext context) {
-    return Stack(
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(5),
-          child: Container(
-            color: Colors.black,
-            child: VideoThumbnail(
-              thumbnailPath: video.thumbnailPath,
-              width: 75,
-              height: 75,
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-
-        Positioned(
-          child: DurationBadge(
-            duration: Duration(milliseconds: video.length),
-          ),
-          bottom: 4,
-          right: 4,
-        ),
-      ],
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(5),
+      child: VideoThumbnail(
+        thumbnailPath: video.thumbnailPath,
+        width: 75,
+        height: 75,
+      ),
     );
   }
 }

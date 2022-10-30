@@ -6,6 +6,7 @@ import 'package:the_baetles_chord_play/widget/organism/video_list_view.dart';
 import '../../domain/model/video.dart';
 import '../../widget/atom/app_colors.dart';
 import '../../widget/molecule/middle_hightlight_text.dart';
+import '../../widget/organism/simple_app_bar.dart';
 import 'collection_view_model.dart';
 
 class CollectionPage extends StatefulWidget {
@@ -22,7 +23,7 @@ class _CollectionPageState extends State<CollectionPage> {
 
     return Scaffold(
       extendBody: false,
-      appBar: _appBar(),
+      appBar: SimpleAppBar(title: '내 곡 목록',),
       body: Column(
         children: [
           Expanded(
@@ -69,27 +70,6 @@ class _CollectionPageState extends State<CollectionPage> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  AppBar _appBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      bottom: PreferredSize(
-        preferredSize: Size.fromHeight(1.5),
-        child: Container(
-          color: AppColors.grayE3,
-          height: 1.5,
-        ),
-      ),
-      elevation: 0,
-      title: const Text("내 곡 목록"),
-      titleTextStyle: const TextStyle(
-        color: AppColors.black04,
-        fontFamily: AppFontFamilies.pretendard,
-        fontSize: 19,
-        fontWeight: FontWeight.w600,
       ),
     );
   }
