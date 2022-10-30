@@ -400,7 +400,7 @@ class _PerformancePageState extends State<PerformancePage>
                               child: EllipseToggleButton(
                                 text: "지우기",
                                 initState: false,
-                                onPressed: (_) => viewModel.onCancelEdit(),
+                                onPressed: (_) => viewModel.onRemoveChordButtonClicked(),
                                 textStyleOnActivated: const TextStyle(
                                   fontFamily: AppFontFamilies.pretendard,
                                   fontWeight: FontWeight.w400,

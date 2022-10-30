@@ -341,6 +341,22 @@ class PerformanceViewModel with ChangeNotifier {
     log("tempo changed to $tempo");
   }
 
+  Future<void> onRemoveChordButtonClicked() async {
+    SheetData newSheetData = await _editSheet(
+      sheetId: _sheetState.value!.sheetInfo.id,
+      sheet: _sheetState.value!.sheetData,
+      position: _editingPosition.value!,
+      newChord: null,
+    );
+
+    _sheetState.value = _sheetState.value!.copy(sheetData: newSheetData);
+
+    _sheetState.notifyListeners();
+
+    _editingPosition.value = null;
+    _selectedChord.value = null;
+  }
+
   void onCancelEdit() {
     _editingPosition.value = null;
     _selectedChord.value = null;
