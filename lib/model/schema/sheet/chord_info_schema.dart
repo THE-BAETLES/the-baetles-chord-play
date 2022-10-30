@@ -4,27 +4,20 @@ import 'package:the_baetles_chord_play/domain/model/triad_type.dart';
 
 import '../../../domain/model/chord.dart';
 import '../../../domain/model/chord_block.dart';
+import 'chord_schema.dart';
 
 part 'chord_info_schema.g.dart';
 
 @JsonSerializable()
 class ChordInfoSchema {
-  @JsonKey(name: "root")
-  String root;
-
-  @JsonKey(name: "triad")
-  String triad;
-
-  @JsonKey(name: "bass")
-  String bass;
+  @JsonKey(name: "chord")
+  ChordSchema chord;
 
   @JsonKey(name: "beat_time")
   double beatTime;
 
   ChordInfoSchema({
-    required this.root,
-    required this.triad,
-    required this.bass,
+    required this.chord,
     required this.beatTime,
   });
 
@@ -33,9 +26,7 @@ class ChordInfoSchema {
 
   factory ChordInfoSchema.fromChordBlock(ChordBlock chordBlock) {
     return ChordInfoSchema(
-      root: chordBlock.chord?.root.noteNameWithoutOctave ?? "none",
-      triad: chordBlock.chord?.triadType.notation ?? "none",
-      bass: chordBlock.chord?.bass?.noteNameWithoutOctave ?? "none",
+      chord: ChordSchema.fromChord(chordBlock.chord),
       beatTime: chordBlock.beatTime,
     );
   }
@@ -43,24 +34,8 @@ class ChordInfoSchema {
   Map<String, dynamic> toJson() => _$ChordInfoSchemaToJson(this);
 
   ChordBlock toChordBlock() {
-    Note? bassNote;
-
-    if (bass != "none") {
-      Note.fromNoteName(bass!);
-    }
-
-    Chord? chord;
-
-    if (root != "none") {
-      chord = Chord(
-        Note.fromNoteName(root),
-        TriadType.tryParse(triad!)!,
-        bassNote,
-      );
-    }
-
     return ChordBlock(
-      chord: chord,
+      chord: chord.toChord(),
       beatTime: beatTime,
     );
   }
