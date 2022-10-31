@@ -11,7 +11,9 @@ class SheetData {
     required this.id,
     required this.bpm,
     required this.chords,
-  });
+  }) {
+    _sortByBeatTimeInAsc(chords);
+  }
 
   SheetData copy({
     String? id,
@@ -23,5 +25,11 @@ class SheetData {
       bpm: bpm ?? this.bpm,
       chords: chords ?? this.chords,
     );
+  }
+
+  void _sortByBeatTimeInAsc(List<ChordBlock> chords) {
+    chords.sort((ChordBlock chord1, ChordBlock chord2) {
+      return ((chord1.beatTime - chord2.beatTime) * 1000).toInt();
+    });
   }
 }

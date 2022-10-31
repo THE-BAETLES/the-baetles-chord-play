@@ -13,7 +13,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../domain/model/play_option.dart';
 
 class YoutubeConductorService implements ConductorInterface {
-  static const Duration syncPeriod = Duration(milliseconds: 30);
+  static const Duration syncPeriod = Duration(milliseconds: 16);
 
   final List<PerformerInterface> performers = [];
   YoutubePlayerController? _youtubeController;

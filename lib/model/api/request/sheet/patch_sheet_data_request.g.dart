@@ -10,7 +10,7 @@ PatchSheetDataRequest _$PatchSheetDataRequestFromJson(
         Map<String, dynamic> json) =>
     PatchSheetDataRequest(
       position: json['position'] as int,
-      chord: json['chord'] as String,
+      chord: ChordSchema.fromJson(json['chord'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PatchSheetDataRequestToJson(

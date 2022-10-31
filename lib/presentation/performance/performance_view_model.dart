@@ -130,12 +130,21 @@ class PerformanceViewModel with ChangeNotifier {
       this._setYoutubePlayerController,
       this._editSheet,
       this._getUserId,) {
-    _conductorPositionCallback = ((int position) {
-      _currentPosition.value = position;
+    _conductorPositionCallback = ((int positionInMillis) {
+      _currentPosition.value = positionInMillis;
+
+      final stopWatch = Stopwatch();
+      stopWatch.start();
 
       int playingIndex = _sheetState.value!.sheetData.chords.indexWhere((chord) {
-        return position < chord.beatTime * 1000;
+        return positionInMillis < chord.beatTime * 1000;
       });
+
+      List<ChordBlock> chords = _sheetState.value!.sheetData.chords
+      binarySearch(chords, value)
+
+      stopWatch.stop();
+      log("stopwatch time: ${stopWatch.elapsedMicroseconds} micro seconds");
 
       _beatStates.value.setPlayingPosition(playingIndex);
       notifyListeners();
@@ -261,7 +270,7 @@ class PerformanceViewModel with ChangeNotifier {
     int beatStartTimeInMillis = 0;
 
     if (tileIndex > 0) {
-      beatStartTimeInMillis = (chords[tileIndex - 1].beatTime * 1000).toInt();
+      beatStartTimeInMillis = (chords[tileIndex - 1].beatTime * 1000 + 1).toInt();
     }
 
     _setPlayPosition(position: beatStartTimeInMillis);

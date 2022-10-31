@@ -43,7 +43,7 @@ class ChordSchema {
     Note? bassNote;
 
     if (bass != "none") {
-      Note.fromNoteName(bass!);
+      bassNote = Note.fromNoteName(bass!);
     }
 
     return Chord(

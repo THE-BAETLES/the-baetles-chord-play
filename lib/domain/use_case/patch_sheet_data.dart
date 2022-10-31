@@ -15,7 +15,7 @@ class PatchSheetData {
     return await _sheetRepository.patchSheet(
       sheetId,
       position,
-      chord?.fullNameWithoutOctave ?? "none",
+      chord,
     );
   }
 }
