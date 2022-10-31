@@ -133,18 +133,9 @@ class PerformanceViewModel with ChangeNotifier {
     _conductorPositionCallback = ((int positionInMillis) {
       _currentPosition.value = positionInMillis;
 
-      final stopWatch = Stopwatch();
-      stopWatch.start();
-
       int playingIndex = _sheetState.value!.sheetData.chords.indexWhere((chord) {
         return positionInMillis < chord.beatTime * 1000;
       });
-
-      List<ChordBlock> chords = _sheetState.value!.sheetData.chords
-      binarySearch(chords, value)
-
-      stopWatch.stop();
-      log("stopwatch time: ${stopWatch.elapsedMicroseconds} micro seconds");
 
       _beatStates.value.setPlayingPosition(playingIndex);
       notifyListeners();
