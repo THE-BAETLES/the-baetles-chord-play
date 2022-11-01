@@ -71,10 +71,10 @@ class ControlBar extends StatelessWidget {
                       },
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                    child: TranspositionButton(),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                  //   child: TranspositionButton(),
+                  // ),
                 ],
               ),
             ),
@@ -117,28 +117,28 @@ class ControlBar extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                    child: ValueListenableBuilder(
-                      valueListenable: viewModel.isPitchBeingChecked,
-                      builder: (context, value, _) {
-                        return SvgToggleButton(
-                          isToggled: viewModel.isPitchBeingChecked.value,
-                          iconPath: 'assets/icons/ic_check2.svg',
-                          text: 'Check On',
-                          onClick: viewModel.onCheckButtonClicked,
-                        );
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                    child: SvgToggleButton(
-                      isToggled: false,
-                      iconPath: 'assets/icons/ic_record2.svg',
-                      text: 'Rec.',
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                  //   child: ValueListenableBuilder(
+                  //     valueListenable: viewModel.isPitchBeingChecked,
+                  //     builder: (context, value, _) {
+                  //       return SvgToggleButton(
+                  //         isToggled: viewModel.isPitchBeingChecked.value,
+                  //         iconPath: 'assets/icons/ic_check2.svg',
+                  //         text: 'Check On',
+                  //         onClick: viewModel.onCheckButtonClicked,
+                  //       );
+                  //     },
+                  //   ),
+                  // ),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                  //   child: SvgToggleButton(
+                  //     isToggled: false,
+                  //     iconPath: 'assets/icons/ic_record2.svg',
+                  //     text: 'Rec.',
+                  //   ),
+                  // ),
                 ],
               ),
             ),
