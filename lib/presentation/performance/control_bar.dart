@@ -51,10 +51,16 @@ class ControlBar extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                    child: SvgToggleButton(
-                      isToggled: false,
-                      iconPath: 'assets/icons/ic_repeat.svg',
-                      text: 'Repeat',
+                    child: ValueListenableBuilder(
+                      valueListenable: viewModel.playOption,
+                      builder: (context, value, _) {
+                        return SvgToggleButton(
+                          isToggled: !viewModel.playOption.value.loop.isInfinite(),
+                          iconPath: 'assets/icons/ic_repeat.svg',
+                          text: 'Repeat',
+                          onClick: viewModel.onRepeatButtonClicked,
+                        );
+                      }
                     ),
                   ),
                   Padding(
@@ -79,7 +85,7 @@ class ControlBar extends StatelessWidget {
                     context,
                     viewModel.play,
                     viewModel.stop,
-                    viewModel.moveCurrentPosition,
+                    viewModel.moveTileIndex,
                     viewModel.playOption.value,
                   );
                 }),
@@ -95,18 +101,20 @@ class ControlBar extends StatelessWidget {
                       height: 44,
                       color: Colors.black,
                       child: ValueListenableBuilder(
-                          valueListenable: viewModel.youtubePlayerController,
-                          builder: (context, value, _) {
-                            if (viewModel.youtubePlayerController.value ==
-                                null) {
-                              return Text("동영상을 불러올 수 없습니다.");
-                            } else {
-                              return YoutubeVideoPlayer(
-                                controller:
-                                    viewModel.youtubePlayerController.value!,
-                              );
-                            }
-                          }),
+                        valueListenable: viewModel.youtubePlayerController,
+                        builder: (context, value, _) {
+                          if (viewModel.youtubePlayerController.value == null) {
+                            return Text("동영상을 불러올 수 없습니다.");
+                          } else {
+                            return YoutubeVideoPlayer(
+                              controller:
+                                  viewModel.youtubePlayerController.value!,
+                              width: 62,
+                              height: 44,
+                            );
+                          }
+                        },
+                      ),
                     ),
                   ),
                   Padding(
@@ -158,9 +166,7 @@ class ControlBar extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () {
-                  double secondPerBeat = 1 / (playOption.defaultBpm / 60.0);
-                  int changeAmount = (8 * secondPerBeat * 1000).toInt();
-                  move(-changeAmount);
+                  move(-8);
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
@@ -196,9 +202,7 @@ class ControlBar extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  double secondPerBeat = 1 / (playOption.defaultBpm / 60.0);
-                  int changeAmount = (8 * secondPerBeat * 1000).toInt();
-                  move(changeAmount);
+                  move(8);
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),

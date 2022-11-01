@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:the_baetles_chord_play/data/repository/auth_repository.dart';
 import 'package:the_baetles_chord_play/data/repository/country_repository.dart';
 import 'package:the_baetles_chord_play/data/repository/sheet_repository.dart';
+import 'package:the_baetles_chord_play/data/repository/user_repository.dart';
 import 'package:the_baetles_chord_play/data/repository/video_repository.dart';
 import 'package:the_baetles_chord_play/domain/use_case/add_conductor_position_listener.dart';
 import 'package:the_baetles_chord_play/domain/use_case/add_performer.dart';
@@ -45,20 +46,23 @@ import 'package:the_baetles_chord_play/service/google_auth_service.dart';
 import 'package:the_baetles_chord_play/service/orientation_manager/orientation_manager.dart';
 import 'package:the_baetles_chord_play/service/orientation_manager/screen_orientation.dart';
 import 'package:the_baetles_chord_play/service/progress_service.dart';
+import 'package:the_baetles_chord_play/service/system_ui_manager/system_ui_manager.dart';
 import 'package:the_baetles_chord_play/widget/molecule/chord_picker.dart';
 
 import 'controller/chord_picker_view_model.dart';
-import 'data/repository/user_repository.dart';
+import 'data/repository/collection_repository.dart';
 import 'domain/model/loop.dart';
 import 'domain/model/play_option.dart';
 import 'domain/use_case/add_like.dart';
 import 'domain/use_case/create_sheet_duplication.dart';
+import 'domain/use_case/edit_sheet.dart';
 import 'domain/use_case/generate_video.dart';
 import 'domain/use_case/get_liked_sheets.dart';
 import 'domain/use_case/get_my_collection.dart';
 import 'domain/use_case/get_my_sheets.dart';
 import 'domain/use_case/get_my_sheets_of_video.dart';
 import 'domain/use_case/get_nickname_suggestion.dart';
+import 'domain/use_case/get_user_id.dart';
 import 'domain/use_case/get_user_id_token.dart';
 import 'domain/use_case/move_play_position.dart';
 import 'domain/use_case/search_video.dart';
@@ -94,6 +98,7 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   final _orientationManager = OrientationManager();
+  final _systemUiManager = SystemUiManager();
   late final String _initialRoute;
 
   MyApp(bool hadSignedIn) {
@@ -142,6 +147,7 @@ class MyApp extends StatelessWidget {
             GetSheetData(SheetRepository()),
             AddLike(SheetRepository()),
             DeleteLike(SheetRepository()),
+            GetUserId(UserRepository()),
           ),
         ),
         ChangeNotifierProvider(
@@ -154,7 +160,7 @@ class MyApp extends StatelessWidget {
               isPlaying: false,
               tempo: 1.0,
               defaultBpm: 60,
-              loop: Loop(0, -1),
+              loop: Loop.infinite(),
               capo: 0,
             ));
             return PerformanceViewModel(
@@ -164,7 +170,8 @@ class MyApp extends StatelessWidget {
               AddConductorPositionListener(conductor),
               RemoveConductorPositionListener(conductor),
               SetYoutubePlayerController(conductor),
-              PatchSheetData(SheetRepository()),
+              EditSheet(PatchSheetData(SheetRepository())),
+              GetUserId(UserRepository()),
             );
           },
         ),
@@ -204,7 +211,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           initialRoute: _initialRoute,
           routes: Navigate.routes,
-          navigatorObservers: [_orientationManager],
+          navigatorObservers: [_orientationManager, _systemUiManager],
         );
       },
     );

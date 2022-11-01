@@ -4,6 +4,7 @@ class SheetInfo {
   final String id;
   final String videoId;
   final String userId;
+  final String userNickname;
   final String title;
   final DateTime createAt;
   final DateTime updateAt;
@@ -14,6 +15,7 @@ class SheetInfo {
     required this.id,
     required this.videoId,
     required this.userId,
+    required this.userNickname,
     required this.title,
     required this.createAt,
     required this.updateAt,
@@ -25,6 +27,7 @@ class SheetInfo {
     final String? id,
     final String? videoId,
     final String? userId,
+    final String? userNickname,
     final String? title,
     final DateTime? createAt,
     final DateTime? updateAt,
@@ -35,6 +38,7 @@ class SheetInfo {
       id: id ?? this.id,
       videoId: videoId ?? this.videoId,
       userId: userId ?? this.userId,
+      userNickname:  userNickname ?? this.userNickname,
       title: title ?? this.title,
       createAt: createAt ?? this.createAt,
       updateAt: updateAt ?? this.updateAt,

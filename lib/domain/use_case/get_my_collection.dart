@@ -1,4 +1,4 @@
-import 'package:the_baetles_chord_play/data/repository/user_repository.dart';
+import 'package:the_baetles_chord_play/data/repository/collection_repository.dart';
 
 import '../model/video.dart';
 

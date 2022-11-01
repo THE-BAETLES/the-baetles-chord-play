@@ -1,12 +1,12 @@
 import 'chord.dart';
 
 class ChordBlock {
-  final Chord chord;
-  final int position;
-  final double start;
-  final double end;
+  final Chord? chord;
+  final double beatTime;
 
-  ChordBlock(this.chord, this.position, this.start, this.end);
+  int get beatTimeInMillis => (beatTime * 1000).toInt();
+
+  ChordBlock({required this.chord, required this.beatTime});
 
   @override
   bool operator ==(Object other) =>
@@ -14,11 +14,18 @@ class ChordBlock {
       other is ChordBlock &&
           runtimeType == other.runtimeType &&
           chord == other.chord &&
-          position == other.position &&
-          start == other.start &&
-          end == other.end;
+          beatTime == other.beatTime;
 
   @override
-  int get hashCode =>
-      chord.hashCode ^ position.hashCode ^ start.hashCode ^ end.hashCode;
+  int get hashCode => chord.hashCode ^ beatTime.hashCode;
+
+  ChordBlock copy({
+    required Chord? chord,
+    double? beatTime,
+  }) {
+    return ChordBlock(
+      chord: chord,
+      beatTime: beatTime ?? this.beatTime,
+    );
+  }
 }

@@ -78,57 +78,57 @@ class ChordChecker implements PerformerInterface {
   }
 
   void _streamListenerCallback(List<Note> detectedNotes) {
-    int currentPosition =
-        (_currentPosition! / 1000.0) ~/ _playOption!.spb;
-
-    if (_listeningPosition != currentPosition &&
-        _listeningPosition != null &&
-        !_isCurrentBeatCorrect) {
-      _onWrongCallback?.call(_listeningPosition!);
-      print("오답 : { index: ${_listeningPosition} }");
-      _listeningPosition = null;
-    }
-
-    if (_sheetData.chords.isEmpty ||
-        _sheetData.chords.first.position > currentPosition) {
-      return;
-    }
-
-    ChordBlock lastBlock = _sheetData.chords.lastWhere((chordBlock) {
-      return chordBlock.position <= currentPosition;
-    });
-
-    if (currentPosition - lastBlock.position >= 1) {
-      // 가장 최근의 코드가 이미 지나간 코드인 경우
-      return;
-    }
-
-    if (_listeningPosition != currentPosition) {
-      _listeningPosition = currentPosition;
-      _isCurrentBeatCorrect = false;
-    }
-
-    Set<int> simplifiedNotes =
-        detectedNotes.map((note) => (note.keyNumber - 1) % 12 + 1).toSet();
-    List<int> answer = lastBlock.chord
-        .getNotes()
-        .map((e) => (e.keyNumber - 1) % 12 + 1)
-        .toList();
-
-    bool isCorrect = true;
-
-    for (int answerNote in answer) {
-      if (!simplifiedNotes.contains(answerNote)) {
-        isCorrect = false;
-        break;
-      }
-    }
-
-    if (isCorrect) {
-      _isCurrentBeatCorrect = true;
-      _onCorrectCallback?.call(currentPosition);
-      print("정답 : { index: ${currentPosition} }");
-    }
+    // int currentPosition =
+    //     (_currentPosition! / 1000.0) ~/ _playOption!.spb;
+    //
+    // if (_listeningPosition != currentPosition &&
+    //     _listeningPosition != null &&
+    //     !_isCurrentBeatCorrect) {
+    //   _onWrongCallback?.call(_listeningPosition!);
+    //   print("오답 : { index: ${_listeningPosition} }");
+    //   _listeningPosition = null;
+    // }
+    //
+    // if (_sheetData.chords.isEmpty ||
+    //     _sheetData.chords.first.position > currentPosition) {
+    //   return;
+    // }
+    //
+    // ChordBlock lastBlock = _sheetData.chords.lastWhere((chordBlock) {
+    //   return chordBlock.position <= currentPosition;
+    // });
+    //
+    // if (currentPosition - lastBlock.position >= 1) {
+    //   // 가장 최근의 코드가 이미 지나간 코드인 경우
+    //   return;
+    // }
+    //
+    // if (_listeningPosition != currentPosition) {
+    //   _listeningPosition = currentPosition;
+    //   _isCurrentBeatCorrect = false;
+    // }
+    //
+    // Set<int> simplifiedNotes =
+    //     detectedNotes.map((note) => (note.keyNumber - 1) % 12 + 1).toSet();
+    // List<int> answer = lastBlock.chord
+    //     .getNotes()
+    //     .map((e) => (e.keyNumber - 1) % 12 + 1)
+    //     .toList();
+    //
+    // bool isCorrect = true;
+    //
+    // for (int answerNote in answer) {
+    //   if (!simplifiedNotes.contains(answerNote)) {
+    //     isCorrect = false;
+    //     break;
+    //   }
+    // }
+    //
+    // if (isCorrect) {
+    //   _isCurrentBeatCorrect = true;
+    //   _onCorrectCallback?.call(currentPosition);
+    //   print("정답 : { index: ${currentPosition} }");
+    // }
   }
 
   void _updateCurrentPosition(int currentPosition) {

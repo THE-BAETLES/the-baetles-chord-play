@@ -10,25 +10,23 @@ class SheetAutoScrollController extends ScrollController {
 
   int _priorLineIdx = none;
   late void Function() _positionChangeListener;
-  late ValueNotifier<int> _positionInMs;
+  late ValueNotifier<int> _playingPosition;
 
   SheetAutoScrollController({
-    required ValueNotifier<int> positionInMs,
+    required ValueNotifier<int> playingPosition,
     required double topMargin,
     required double bottomMargin,
-    required int measureCount,
+    required int beatPerLine,
     required double lineHeight,
     required int lineCount,
-    required int msPerBeat,
     required double screenHeight,
   }) {
-    _positionInMs = positionInMs;
-    int msPerRow = measureCount * beatPerMeasure * msPerBeat;
+    _playingPosition = playingPosition;
     double sheetHeight = topMargin + lineHeight * lineCount + bottomMargin;
     double maxPosition = sheetHeight - screenHeight;
 
     _positionChangeListener = () {
-      int newLineIdx = positionInMs.value ~/ msPerRow;
+      int newLineIdx = _playingPosition.value ~/ beatPerLine;
 
       if (newLineIdx == _priorLineIdx) {
         return;
@@ -53,12 +51,12 @@ class SheetAutoScrollController extends ScrollController {
       _priorLineIdx = newLineIdx;
     };
 
-    positionInMs.addListener(_positionChangeListener);
+    playingPosition.addListener(_positionChangeListener);
   }
 
   @override
   void dispose() {
-    _positionInMs.removeListener(_positionChangeListener);
+    _playingPosition.removeListener(_positionChangeListener);
     super.dispose();
   }
 }

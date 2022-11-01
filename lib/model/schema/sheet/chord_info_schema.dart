@@ -1,33 +1,33 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:the_baetles_chord_play/domain/model/note.dart';
+import 'package:the_baetles_chord_play/domain/model/triad_type.dart';
 
 import '../../../domain/model/chord.dart';
 import '../../../domain/model/chord_block.dart';
+import 'chord_schema.dart';
 
 part 'chord_info_schema.g.dart';
 
 @JsonSerializable()
 class ChordInfoSchema {
-  String chord;
-  double start;
-  double end;
-  int position;
+  @JsonKey(name: "chord")
+  ChordSchema chord;
 
-  ChordInfoSchema(
-      {required this.chord,
-      required this.start,
-      required this.end,
-      required this.position});
+  @JsonKey(name: "beat_time")
+  double beatTime;
+
+  ChordInfoSchema({
+    required this.chord,
+    required this.beatTime,
+  });
 
   factory ChordInfoSchema.fromJson(Map<String, dynamic> json) =>
       _$ChordInfoSchemaFromJson(json);
 
   factory ChordInfoSchema.fromChordBlock(ChordBlock chordBlock) {
     return ChordInfoSchema(
-      chord: chordBlock.toString(),
-      start: chordBlock.start,
-      end: chordBlock.end,
-      position: chordBlock.position,
+      chord: ChordSchema.fromChord(chordBlock.chord),
+      beatTime: chordBlock.beatTime,
     );
   }
 
@@ -35,10 +35,8 @@ class ChordInfoSchema {
 
   ChordBlock toChordBlock() {
     return ChordBlock(
-      Chord.fromString(chord),
-      position,
-      start,
-      end,
+      chord: chord.toChord(),
+      beatTime: beatTime,
     );
   }
 }

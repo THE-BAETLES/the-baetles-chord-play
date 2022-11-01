@@ -9,4 +9,14 @@ class SheetState {
     required this.sheetInfo,
     required this.sheetData,
   });
+
+  SheetState copy({
+    SheetInfo? sheetInfo,
+    SheetData? sheetData,
+  }) {
+    return SheetState(
+      sheetInfo: sheetInfo ?? this.sheetInfo,
+      sheetData: sheetData ?? this.sheetData,
+    );
+  }
 }

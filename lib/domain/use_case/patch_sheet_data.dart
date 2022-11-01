@@ -1,5 +1,7 @@
 import 'package:the_baetles_chord_play/data/repository/sheet_repository.dart';
 
+import '../model/chord.dart';
+
 class PatchSheetData {
   final SheetRepository _sheetRepository;
 
@@ -8,8 +10,12 @@ class PatchSheetData {
   Future<bool> call({
     required String sheetId,
     required int position,
-    required String chord,
+    required Chord? chord,
   }) async {
-    return await _sheetRepository.patchSheet(sheetId, position, chord);
+    return await _sheetRepository.patchSheet(
+      sheetId,
+      position,
+      chord,
+    );
   }
 }

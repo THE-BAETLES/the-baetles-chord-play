@@ -6,35 +6,37 @@ import 'beat_state.dart';
 
 class BeatStates {
   static const none = -1;
-  final List<ValueNotifier<BeatState>> beatStates;
+  final List<ValueNotifier<BeatState>> states;
   final beatStateLock = Mutex();
+  final ValueNotifier<int> _playingPosition = ValueNotifier(none);
 
-  int _playingPosition = none;
+  ValueNotifier<int> get playingPosition => _playingPosition;
 
-  BeatStates(this.beatStates);
+  BeatStates(this.states);
 
   setPlayingPosition(int position) async {
-    if (_playingPosition == position) {
+    if (_playingPosition.value == position) {
       return;
     }
 
     await beatStateLock.acquire();
 
-    if (_playingPosition != none) {
-      beatStates[_playingPosition].value = BeatState(
-        beatStates[_playingPosition].value.chord,
+    if (_playingPosition.value != none) {
+      states[_playingPosition.value].value = BeatState(
+        states[_playingPosition.value].value.chord,
         false,
       );
     }
 
-    if (0 <= position && position < beatStates.length) {
-      beatStates[position].value = BeatState(
-        beatStates[position].value.chord,
+    if (0 <= position && position < states.length) {
+      states[position].value = BeatState(
+        states[position].value.chord,
         true,
       );
-    }
 
-    _playingPosition = position;
+      _playingPosition.value = position;
+      _playingPosition.notifyListeners();
+    }
 
     beatStateLock.release();
   }
@@ -42,9 +44,9 @@ class BeatStates {
   setChord(int position, Chord? chord) async {
     await beatStateLock.acquire();
 
-    beatStates[position].value = BeatState(
+    states[position].value = BeatState(
       chord,
-      beatStates[position].value.isPlaying,
+      states[position].value.isPlaying,
     );
 
     beatStateLock.release();

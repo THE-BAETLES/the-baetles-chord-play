@@ -1,6 +1,5 @@
 enum TriadType {
   none('none', ''),
-
   major('maj', 'M'),
   majorSeven('maj7', 'M7'),
   minor('min', 'm'),
@@ -35,6 +34,20 @@ enum TriadType {
   diminishedSeven('dim7', 'dim7');
 
   const TriadType(this.notation, this.shortNotation);
+
   final String notation;
   final String shortNotation;
+
+  static TriadType? tryParse(String str) {
+    try {
+      TriadType triadType = TriadType.values.firstWhere(
+            (triad) => triad.notation == str,
+      );
+
+      return triadType;
+    } on StateError catch(e) {
+      // str에 대응하는 notation이 존재하지 않을 때
+      return null;
+    }
+  }
 }

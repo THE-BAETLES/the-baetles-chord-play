@@ -44,29 +44,6 @@ class _SheetClient implements SheetClient {
   }
 
   @override
-  Future<GetConditionSheetResponse> getSheetsByUserId() async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<GetConditionSheetResponse>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/sheets',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = GetConditionSheetResponse.fromJson(_result.data!);
-    return value;
-  }
-
-  @override
   Future<GetSheetDataResponse> getAISheet(videoId) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};

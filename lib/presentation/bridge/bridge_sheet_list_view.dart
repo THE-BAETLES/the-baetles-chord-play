@@ -64,7 +64,7 @@ class _BridgeSheetListViewState extends State<BridgeSheetListView> {
                           child: SheetInfoCard(
                             sheetTitle: sheet.title,
                             videoTitle: widget.videoTitle,
-                            ownerUserId: sheet.userId,
+                            ownerUserNickname: sheet.userNickname,
                             likeCount: sheet.likeCount,
                             backgroundColor: Colors.transparent,
                           ),

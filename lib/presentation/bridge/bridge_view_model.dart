@@ -1,29 +1,25 @@
-import 'dart:collection';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:the_baetles_chord_play/data/repository/user_repository.dart';
 import 'package:the_baetles_chord_play/domain/use_case/add_like.dart';
+import 'package:the_baetles_chord_play/data/repository/collection_repository.dart';
 import 'package:the_baetles_chord_play/domain/use_case/delete_sheet.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_my_sheets_of_video.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_shared_sheets_of_video.dart';
 import 'package:the_baetles_chord_play/presentation/bridge/sheet_creation_dialog_view_model.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-import '../../domain/model/chord.dart';
-import '../../domain/model/chord_block.dart';
 import '../../domain/model/instrument.dart';
-import '../../domain/model/note.dart';
 import '../../domain/model/sheet_data.dart';
 import '../../domain/model/sheet_info.dart';
-import '../../domain/model/triad_type.dart';
 import '../../domain/model/video.dart';
 import '../../domain/use_case/create_sheet_duplication.dart';
 import '../../domain/use_case/delete_like.dart';
 import '../../domain/use_case/generate_video.dart';
 import '../../domain/use_case/get_liked_sheets_of_video.dart';
 import '../../domain/use_case/get_sheet_data.dart';
+import '../../domain/use_case/get_user_id.dart';
 
 class BridgeViewModel with ChangeNotifier {
   Video? _video;
@@ -55,6 +51,7 @@ class BridgeViewModel with ChangeNotifier {
   final GetSheetData _getSheetData;
   final AddLike _addLike;
   final DeleteLike _deleteLike;
+  final GetUserId _getUserId;
 
   List<SheetInfo>? get mySheets => _mySheets;
 
@@ -109,6 +106,7 @@ class BridgeViewModel with ChangeNotifier {
     this._getSheetData,
     this._addLike,
     this._deleteLike,
+    this._getUserId,
   );
 
   Future<void> onPageBuild(BuildContext context, Video video) async {
@@ -124,8 +122,9 @@ class BridgeViewModel with ChangeNotifier {
     _youtubePlayerController = YoutubePlayerController(
       initialVideoId: video.id,
       flags: const YoutubePlayerFlags(
-        autoPlay: true,
+        autoPlay: false,
         enableCaption: false,
+        showLiveFullscreenButton: false,
       ),
     );
 
@@ -207,9 +206,14 @@ class BridgeViewModel with ChangeNotifier {
     }
   }
 
-  void onLongClickSheet(BuildContext context, SheetInfo sheet) {
+  void onLongClickSheet(BuildContext context, SheetInfo sheet) async {
     _sheetToDelete = sheet;
-    _isDeletingSheet.value = true;
+
+    String userId = (await _getUserId())!;
+
+    if (userId == sheet.userId) {
+      _isDeletingSheet.value = true;
+    }
   }
 
   void onClickLikeButton(SheetInfo sheet) async {
@@ -229,7 +233,7 @@ class BridgeViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void onClickDeleteButton() {
+  Future<void> onClickDeleteSheetButton() async {
     if (_sheetToDelete == null) {
       return;
     }
@@ -237,6 +241,8 @@ class BridgeViewModel with ChangeNotifier {
     _deleteSheet(_sheetToDelete!.id);
     _isDeletingSheet.value = false;
     _sheetToDelete = null;
+    await _loadSheets(_video!);
+    notifyListeners();
   }
 
   void onClickCancelDeletingButton() {
@@ -320,9 +326,7 @@ class BridgeViewModel with ChangeNotifier {
     };
     _shouldRoute = true;
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      notifyListeners();
-    });
+    notifyListeners();
 
     return true;
   }
@@ -331,22 +335,5 @@ class BridgeViewModel with ChangeNotifier {
     _shouldRoute = false;
     _routeName = null;
     _routeArguments = null;
-  }
-
-  void _applyLikeOnLocalData(
-    String sheetId,
-    bool liked,
-    List<SheetInfo> sheets,
-  ) {
-    for (int i = 0; i < sheets.length; ++i) {
-      SheetInfo sheet = sheets[i];
-
-      if (sheet.id == sheetId) {
-        sheets[i] = sheet.copy(
-          liked: liked,
-          likeCount: sheet.likeCount + (liked ? 1 : -1),
-        );
-      }
-    }
   }
 }

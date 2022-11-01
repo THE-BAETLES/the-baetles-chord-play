@@ -3,6 +3,7 @@ import 'package:the_baetles_chord_play/widget/atom/app_font_families.dart';
 import 'package:the_baetles_chord_play/widget/molecule/beat_tile.dart';
 import 'package:the_baetles_chord_play/widget/atom/marker_stick.dart';
 
+import '../../../domain/model/chord_block.dart';
 import '../../../domain/model/sheet_data.dart';
 import '../state/beat_state.dart';
 import 'sheet_element_size.dart';
@@ -49,11 +50,11 @@ class SheetView extends StatelessWidget {
     final List<Widget> tileRows = [];
 
     int highlightedTileIndex = bps * currentPosition ~/ 1000;
-    int currentChordIndex = 0;
+
+    int beatPerRow = (beatPerMeasure * sheetElementSize.measureCount);
+
     int rowCount = sheetData.chords.isNotEmpty
-        ? sheetData.chords.last.position ~/
-                (beatPerMeasure * sheetElementSize.measureCount) +
-            1
+        ? _calcRowCount(sheetData.chords.length, beatPerRow)
         : 0;
 
     for (int rowIndex = 0; rowIndex < rowCount; ++rowIndex) {
@@ -71,18 +72,10 @@ class SheetView extends StatelessWidget {
         ),
       );
 
-      // vertical spacer
+      // vertical divider
       tileRows.add(Container(
         height: spaceBetweenRow,
       ));
-
-      int nextRowFirstTileIndex = _calcTileIndex(
-          rowIndex + 1, (beatPerMeasure * sheetElementSize.measureCount), 0);
-      while (currentChordIndex < sheetData.chords.length &&
-          nextRowFirstTileIndex >
-              sheetData.chords[currentChordIndex].position) {
-        currentChordIndex++;
-      }
     }
 
     return GestureDetector(
@@ -192,8 +185,10 @@ class SheetView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ChordText(
-                          root: beatState.value.chord!.root.flatNoteNameWithoutOctaveAndKeySignature,
-                          keySignature: beatState.value.chord!.root.keySignature,
+                          root: beatState.value.chord!.root
+                              .flatNoteNameWithoutOctaveAndKeySignature,
+                          keySignature:
+                              beatState.value.chord!.root.keySignature,
                           postfix:
                               beatState.value.chord!.triadType.shortNotation,
                           rootSize: sheetElementSize.chordRootTextSize,
@@ -203,9 +198,10 @@ class SheetView extends StatelessWidget {
                         ),
                         beatState.value.chord!.bass != null
                             ? Container(
-                                width: sheetElementSize.tileWidth / 1.7,
+                                width: sheetElementSize.tileWidth / 1.5,
                                 height: sheetElementSize.tileHeight / 4.5,
-                                margin: EdgeInsets.only(top: sheetElementSize.tileHeight / 200),
+                                margin: EdgeInsets.only(
+                                    top: sheetElementSize.tileHeight / 200),
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                   color: AppColors.grayC3,
@@ -252,5 +248,15 @@ class SheetView extends StatelessWidget {
 
   int _calcTileIndex(int rowIndex, int beatPerRow, int tileIndex) {
     return rowIndex * beatPerRow + tileIndex;
+  }
+
+  int _calcRowCount(int beatCount, int beatPerRow) {
+    int rowCount = beatCount ~/ beatPerRow;
+
+    if (beatCount % beatPerRow > 0) {
+      rowCount += 1;
+    }
+
+    return rowCount;
   }
 }

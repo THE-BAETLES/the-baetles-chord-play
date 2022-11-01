@@ -1,6 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:the_baetles_chord_play/domain/model/sheet_info.dart';
-import 'package:the_baetles_chord_play/model/schema/schema.dart';
 
 part 'sheet_schema.g.dart';
 
@@ -14,6 +13,9 @@ class SheetSchema {
 
   @JsonKey(name: 'user_id')
   String userId;
+
+  @JsonKey(name: 'user_nickname')
+  String userNickname;
 
   @JsonKey(name: 'title')
   String title;
@@ -34,6 +36,7 @@ class SheetSchema {
     required this.id,
     required this.videoId,
     required this.userId,
+    required this.userNickname,
     required this.title,
     required this.createdAt,
     required this.updatedAt,
@@ -41,20 +44,22 @@ class SheetSchema {
     required this.liked,
   });
 
-  factory SheetSchema.fromJson(Map<String, dynamic> json) => _$SheetSchemaFromJson(json);
+  factory SheetSchema.fromJson(Map<String, dynamic> json) =>
+      _$SheetSchemaFromJson(json);
 
   Map<String, dynamic> toJson() => _$SheetSchemaToJson(this);
 
   SheetInfo toSheetInfo() {
     return SheetInfo(
-        id: id,
-        videoId: videoId,
-        userId: userId,
-        title: title,
-        createAt: createdAt,
-        updateAt: updatedAt,
-        likeCount: likeCount,
-        liked: liked,
+      id: id,
+      videoId: videoId,
+      userId: userId,
+      title: title,
+      userNickname: userNickname,
+      createAt: createdAt,
+      updateAt: updatedAt,
+      likeCount: likeCount,
+      liked: liked,
     );
   }
 }
