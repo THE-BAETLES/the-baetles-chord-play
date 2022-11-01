@@ -153,28 +153,28 @@ class _MainPageState extends State<MainPage> {
               ),
               label: "악보",
             ),
-            BottomNavigationBarItem(
-              icon: Container(
-                width: 32,
-                height: 32,
-                padding: EdgeInsets.all(5),
-                child: SvgPicture.asset(
-                  "assets/icons/ic_record1.svg",
-                  fit: BoxFit.cover,
-                ),
-              ),
-              activeIcon: Container(
-                width: 32,
-                height: 32,
-                padding: EdgeInsets.all(5),
-                child: SvgPicture.asset(
-                  "assets/icons/ic_record1.svg",
-                  color: AppColors.mainPointColor,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              label: "레코드",
-            ),
+            // BottomNavigationBarItem(
+            //   icon: Container(
+            //     width: 32,
+            //     height: 32,
+            //     padding: EdgeInsets.all(5),
+            //     child: SvgPicture.asset(
+            //       "assets/icons/ic_record1.svg",
+            //       fit: BoxFit.cover,
+            //     ),
+            //   ),
+            //   activeIcon: Container(
+            //     width: 32,
+            //     height: 32,
+            //     padding: EdgeInsets.all(5),
+            //     child: SvgPicture.asset(
+            //       "assets/icons/ic_record1.svg",
+            //       color: AppColors.mainPointColor,
+            //       fit: BoxFit.cover,
+            //     ),
+            //   ),
+            //   label: "레코드",
+            // ),
           ],
         ),
       ),
