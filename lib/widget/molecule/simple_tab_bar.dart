@@ -5,15 +5,18 @@ import '../atom/app_font_families.dart';
 
 class SimpleTabBar extends StatelessWidget {
   final List<Widget> tabs;
+  final TabController? controller;
 
   SimpleTabBar({
     Key? key,
     required this.tabs,
+    this.controller,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TabBar(
+      controller: this.controller,
       physics: BouncingScrollPhysics(),
       isScrollable: true,
       padding: EdgeInsets.symmetric(horizontal: 15),

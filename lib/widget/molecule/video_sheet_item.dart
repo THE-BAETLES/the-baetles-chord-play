@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_baetles_chord_play/widget/atom/app_colors.dart';
 import 'package:the_baetles_chord_play/widget/atom/app_font_families.dart';
+import 'package:the_baetles_chord_play/widget/molecule/user_info_view.dart';
 import 'package:the_baetles_chord_play/widget/molecule/video_thumbnail.dart';
 
 import 'like_count.dart';

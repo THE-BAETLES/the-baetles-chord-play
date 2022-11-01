@@ -13,6 +13,8 @@ import '../../model/api/response/sheet/delete_sheet_response.dart';
 import '../../model/api/response/sheet/get_condition_sheet_response.dart';
 import '../../model/api/response/sheet/get_sheet_data_response.dart';
 import '../../model/api/response/sheet/get_sheet_response.dart';
+import '../../model/api/response/sheet/get_sheets_like_response.dart';
+import '../../model/api/response/sheet/get_sheets_my_response.dart';
 import '../../model/api/response/sheet/post_sheet_duplication_response.dart';
 import '../../model/api/response/sheet/post_sheet_like_response.dart';
 
@@ -25,6 +27,12 @@ abstract class SheetClient extends RestClient {
   // This class must include fromJson and toJson Methods;
   @GET('/sheets')
   Future<GetConditionSheetResponse> getSheetsByVideoId(@Query('videoId') String videoId);
+
+  @GET('/sheets/my')
+  Future<GetSheetsMyResponse> getMySheets();
+
+  @GET('/sheets/my-like')
+  Future<GetSheetsLikeResponse> getMyLikeSheets();
 
   @GET('/sheets/ai/{videoId}')
   Future<GetSheetDataResponse> getAISheet(@Path("videoId") String videoId);

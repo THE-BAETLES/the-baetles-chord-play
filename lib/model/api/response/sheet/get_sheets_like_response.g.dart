@@ -1,13 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'get_sheet_my_response.dart';
+part of 'get_sheets_like_response.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-GetSheetMyResponse _$GetSheetMyResponseFromJson(Map<String, dynamic> json) =>
-    GetSheetMyResponse(
+GetSheetsLikeResponse _$GetSheetsLikeResponseFromJson(
+        Map<String, dynamic> json) =>
+    GetSheetsLikeResponse(
       json['code'] as String,
       json['message'] as String,
       (json['data'] as List<dynamic>)
@@ -15,7 +16,8 @@ GetSheetMyResponse _$GetSheetMyResponseFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$GetSheetMyResponseToJson(GetSheetMyResponse instance) =>
+Map<String, dynamic> _$GetSheetsLikeResponseToJson(
+        GetSheetsLikeResponse instance) =>
     <String, dynamic>{
       'code': instance.code,
       'message': instance.message,

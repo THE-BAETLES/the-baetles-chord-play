@@ -51,7 +51,7 @@ class SheetViewModel with ChangeNotifier {
     this._addLike,
     this._deleteLike,
   ) {
-    _loadSheets();
+    loadSheets();
   }
 
   Future<void> onClickLikeButton(SheetInfo sheet) async {
@@ -63,9 +63,7 @@ class SheetViewModel with ChangeNotifier {
       await _deleteLike(sheet.id);
     }
 
-    await _loadSheets();
-
-    notifyListeners();
+    await loadSheets();
   }
 
   Future<void> onClickSheetItem(SheetInfo sheetInfo) async {
@@ -74,7 +72,7 @@ class SheetViewModel with ChangeNotifier {
 
     if (video == null) {
       log(
-        "cannot load video for oute",
+        "cannot load video for route",
         name: "SheetViewModel.onClickSheetItem",
       );
       return;
@@ -105,7 +103,7 @@ class SheetViewModel with ChangeNotifier {
     _routeArguments = null;
   }
 
-  Future<void> _loadSheets() async {
+  Future<void> loadSheets() async {
     Future<List<SheetInfo>> mySheetsResponse = _getMySheets();
     Future<List<SheetInfo>> likedSheetsResponse = _getLikedSheets();
 

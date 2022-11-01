@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:the_baetles_chord_play/presentation/performance/fragment/sheet_view.dart';
 import 'package:the_baetles_chord_play/presentation/sheet/sheet_view_model.dart';
 import 'package:the_baetles_chord_play/widget/molecule/video_thumbnail.dart';
 import 'package:the_baetles_chord_play/widget/molecule/simple_tab_bar.dart';
@@ -18,7 +19,21 @@ class SheetPage extends StatefulWidget {
   State<SheetPage> createState() => _SheetPageState();
 }
 
-class _SheetPageState extends State<SheetPage> {
+class _SheetPageState extends State<SheetPage> with SingleTickerProviderStateMixin {
+  late TabController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = TabController(length: 2, vsync: this);
+
+    SheetViewModel viewModel = context.read<SheetViewModel>();
+    _controller.addListener(() {
+      viewModel.loadSheets();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     SheetViewModel viewModel = context.watch<SheetViewModel>();
@@ -52,7 +67,7 @@ class _SheetPageState extends State<SheetPage> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _tabBar(),
+                  _tabBar(this._controller),
                   const Divider(
                     height: 3,
                     thickness: 1,
@@ -60,6 +75,7 @@ class _SheetPageState extends State<SheetPage> {
                   ),
                   Expanded(
                     child: TabBarView(
+                      controller: this._controller,
                       children: [
                         _sheetList(
                           context: context,
@@ -93,7 +109,7 @@ class _SheetPageState extends State<SheetPage> {
     );
   }
 
-  Widget _tabBar() {
+  Widget _tabBar(TabController? controller) {
     return SimpleTabBar(
       tabs: const [
         Tab(
@@ -105,6 +121,7 @@ class _SheetPageState extends State<SheetPage> {
           child: Text("좋아요"),
         ),
       ],
+      controller: controller,
     );
   }
 
@@ -138,7 +155,7 @@ class _SheetPageState extends State<SheetPage> {
                   onClickItem(sheet);
                 },
                 child: Ink(
-                  padding: EdgeInsets.only(
+                  padding: const EdgeInsets.only(
                     left: 15,
                     right: 15,
                     top: 10,

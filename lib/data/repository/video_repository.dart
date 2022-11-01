@@ -23,9 +23,7 @@ class VideoRepository {
     return _instance;
   }
 
-  VideoRepository._internal() {
-    // TODO : source 연결
-  }
+  VideoRepository._internal() {}
 
   Future<UnmodifiableListView<Video>> fetchVideosToCheckPreference(
       String idToken,
