@@ -29,12 +29,13 @@ class VideoBlock extends StatelessWidget {
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        height: 92,
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        height: 100,
         color: Colors.white,
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
             return Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 _videoThumbnail(context),
                 Container(
@@ -42,17 +43,14 @@ class VideoBlock extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 1,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: VideoSummary(
-                      video: video,
-                      titleMaxLines: 2,
-                      width: 10,
-                      titleTextStyle: const TextStyle(
-                        fontSize: 15,
-                        fontFamily: AppFontFamilies.pretendard,
-                        fontWeight: FontWeight.w600,
-                      ),
+                  child: VideoSummary(
+                    video: video,
+                    titleMaxLines: 2,
+                    width: 10,
+                    titleTextStyle: const TextStyle(
+                      fontSize: 15,
+                      fontFamily: AppFontFamilies.pretendard,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
@@ -69,8 +67,8 @@ class VideoBlock extends StatelessWidget {
       borderRadius: BorderRadius.circular(5),
       child: VideoThumbnail(
         thumbnailPath: video.thumbnailPath,
-        width: 75,
-        height: 75,
+        width: 80,
+        height: 80,
       ),
     );
   }
