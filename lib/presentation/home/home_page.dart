@@ -42,7 +42,8 @@ class HomePage extends StatelessWidget {
           Container(height: 30),
 
           VideoListBlock(
-            userName: viewModel.userName,
+            title: "연주했던 곡",
+            subTitle: "${viewModel.userName}님이 연습했던 악보영상들",
             videos: viewModel.watchHistory ?? [],
             onVideoClicked: (Video video) {
               viewModel.onVideoClicked(context, video);
