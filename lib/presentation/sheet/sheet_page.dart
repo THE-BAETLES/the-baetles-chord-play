@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:the_baetles_chord_play/presentation/performance/fragment/sheet_view.dart';
 import 'package:the_baetles_chord_play/presentation/sheet/sheet_view_model.dart';
@@ -9,6 +10,7 @@ import 'package:the_baetles_chord_play/widget/molecule/video_sheet_item.dart';
 import '../../domain/model/sheet_info.dart';
 import '../../domain/model/video.dart';
 import '../../widget/atom/app_colors.dart';
+import '../../widget/atom/app_font_families.dart';
 import '../../widget/molecule/like_count.dart';
 import '../../widget/organism/simple_app_bar.dart';
 
@@ -19,7 +21,8 @@ class SheetPage extends StatefulWidget {
   State<SheetPage> createState() => _SheetPageState();
 }
 
-class _SheetPageState extends State<SheetPage> with SingleTickerProviderStateMixin {
+class _SheetPageState extends State<SheetPage>
+    with SingleTickerProviderStateMixin {
   late TabController _controller;
 
   @override
@@ -77,28 +80,8 @@ class _SheetPageState extends State<SheetPage> with SingleTickerProviderStateMix
                     child: TabBarView(
                       controller: this._controller,
                       children: [
-                        _sheetList(
-                          context: context,
-                          videos: viewModel.videosOfMySheets,
-                          sheets: viewModel.mySheets ?? [],
-                          onClickLikeButton: (SheetInfo sheetInfo) {
-                            viewModel.onClickLikeButton(sheetInfo);
-                          },
-                          onClickItem: (SheetInfo sheetInfo) {
-                            viewModel.onClickSheetItem(sheetInfo);
-                          },
-                        ),
-                        _sheetList(
-                          context: context,
-                          videos: viewModel.videosOfLikedSheets,
-                          sheets: viewModel.likedSheets ?? [],
-                          onClickLikeButton: (SheetInfo sheetInfo) {
-                            viewModel.onClickLikeButton(sheetInfo);
-                          },
-                          onClickItem: (SheetInfo sheetInfo) {
-                            viewModel.onClickSheetItem(sheetInfo);
-                          },
-                        ),
+                        _mySheetList(context, viewModel),
+                        _likeSheetList(context, viewModel),
                       ],
                     ),
                   ),
@@ -216,5 +199,108 @@ class _SheetPageState extends State<SheetPage> with SingleTickerProviderStateMix
         ),
       ),
     );
+  }
+
+  Widget _mySheetList(BuildContext context, SheetViewModel viewModel) {
+    if (viewModel.mySheets == null) {
+      return Container(
+        alignment: Alignment.center,
+        child: LoadingAnimationWidget.prograssiveDots(
+          color: AppColors.mainPointColor,
+          size: 40,
+        ),
+      );
+    } else if (viewModel.mySheets!.isEmpty) {
+      return Container(
+        alignment: AlignmentDirectional.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "아직 직접 생성한 악보가 없어요 😅",
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w600,
+                color: AppColors.gray3E,
+                fontFamily: AppFontFamilies.montserrat,
+              ),
+            ),
+            Text(
+              "곡 상세정보 페이지에서 새 악보를 생성할 수 있어요.",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w300,
+                color: AppColors.black04,
+                fontFamily: AppFontFamilies.montserrat,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return _sheetList(
+        context: context,
+        videos: viewModel.videosOfMySheets,
+        sheets: viewModel.mySheets ?? [],
+        onClickLikeButton: (SheetInfo sheetInfo) {
+          viewModel.onClickLikeButton(sheetInfo);
+        },
+        onClickItem: (SheetInfo sheetInfo) {
+          viewModel.onClickSheetItem(sheetInfo);
+        },
+      );
+    }
+  }
+
+  Widget _likeSheetList(BuildContext context, SheetViewModel viewModel) {
+    if (viewModel.likedSheets == null) {
+      return Container(
+        alignment: Alignment.center,
+        child: LoadingAnimationWidget.prograssiveDots(
+          color: AppColors.mainPointColor,
+          size: 40,
+        ),
+      );
+    } else if (viewModel.likedSheets!.isEmpty) {
+      return Container(
+        alignment: AlignmentDirectional.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "아직 좋아요 표시한 악보가 없어요 😅",
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w600,
+                color: AppColors.gray3E,
+                fontFamily: AppFontFamilies.montserrat,
+              ),
+            ),
+            Text(
+              "좋아하는 악보에 하트 버튼을 눌러보세요!",
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w300,
+                color: AppColors.black04,
+                fontFamily: AppFontFamilies.montserrat,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return _sheetList(
+        context: context,
+        videos: viewModel.videosOfLikedSheets,
+        sheets: viewModel.likedSheets ?? [],
+        onClickLikeButton: (SheetInfo sheetInfo) {
+          viewModel.onClickLikeButton(sheetInfo);
+        },
+        onClickItem: (SheetInfo sheetInfo) {
+          viewModel.onClickSheetItem(sheetInfo);
+        },
+      );
+    }
   }
 }

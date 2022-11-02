@@ -8,14 +8,16 @@ import '../../widget/molecule/block_title.dart';
 
 class VideoListBlock extends StatelessWidget {
   final List<Video> videos;
-  final String userName;
+  final String title;
+  final String subTitle;
   final Function(Video)? onVideoClicked;
   final Function(double offset, double maxScrollExtent)? scrollListener;
 
   VideoListBlock({
     Key? key,
     required this.videos,
-    required this.userName,
+    required this.title,
+    required this.subTitle,
     this.onVideoClicked,
     this.scrollListener,
   }) : super(key: key);
@@ -25,9 +27,11 @@ class VideoListBlock extends StatelessWidget {
     return Column(
       children: [
         Container(
-          margin: EdgeInsets.symmetric(horizontal: 15),
+          margin: const EdgeInsets.symmetric(horizontal: 15),
           child: BlockTitle(
-              title: "연주했던 곡", subTitle: "${this.userName}님이 연습했던 악보영상들"),
+            title: title,
+            subTitle: subTitle,
+          ),
         ),
         VideoList(
           video: videos,

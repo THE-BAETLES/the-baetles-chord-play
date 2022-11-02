@@ -28,47 +28,75 @@ class HomePage extends StatelessWidget {
         elevation: 0,
         toolbarHeight: 0,
       ),
-      body: _homePage(context, viewModel),
+      body: _homePage(
+        context,
+        viewModel,
+        [
+          _watchHistoryBlock(context, viewModel),
+          _recommendBlock(context, viewModel),
+        ],
+      ),
     );
   }
 
-  Widget _homePage(BuildContext context, HomeViewModel viewModel) {
+  Widget _homePage(
+    BuildContext context,
+    HomeViewModel viewModel,
+    List<Widget> blocks,
+  ) {
+    List<Widget> children = [
+      // header
+      HomeHeader(userName: viewModel.userName),
+      Container(height: 30),
+    ];
+
+    // content
+    for (Widget block in blocks) {
+      children.add(block);
+      children.add(Container(height: 40)); // divider
+    }
+
+    // footer
+    children.add(Container(height: 60));
+
     return SingleChildScrollView(
       child: Column(
-        children: [
-          // header
-          HomeHeader(userName: viewModel.userName),
-
-          Container(height: 30),
-
-          VideoListBlock(
-            userName: viewModel.userName,
-            videos: viewModel.watchHistory ?? [],
-            onVideoClicked: (Video video) {
-              viewModel.onVideoClicked(context, video);
-            },
-            scrollListener: (double offset, double maxScrollExtent) {
-              viewModel.onScrollWatchHistory(offset, maxScrollExtent);
-            },
-          ),
-
-          Container(height: 40),
-
-          VideoGridBlock(
-            videos: viewModel.recommendedVideos,
-            onVideoClicked: (Video video) {
-              viewModel.onVideoClicked(context, video);
-            },
-            scrollListener: (double offset, double maxScrollExtent) {
-              viewModel.onScrollRecommendVideos(offset, maxScrollExtent);
-            },
-          ),
-
-          Container(
-            height: 60,
-          ),
-        ],
+        children: children,
       ),
+    );
+  }
+
+  Widget _watchHistoryBlock(BuildContext context, HomeViewModel viewModel) {
+    if (viewModel.watchHistory.isEmpty) {
+      return Container(height: 0);
+    }
+
+    return VideoListBlock(
+      title: "연주했던 곡",
+      subTitle: "${viewModel.userName}님이 연습했던 악보영상들",
+      videos: viewModel.watchHistory ?? [],
+      onVideoClicked: (Video video) {
+        viewModel.onVideoClicked(context, video);
+      },
+      scrollListener: (double offset, double maxScrollExtent) {
+        viewModel.onScrollWatchHistory(offset, maxScrollExtent);
+      },
+    );
+  }
+
+  Widget _recommendBlock(BuildContext context, HomeViewModel viewModel) {
+    if (viewModel.recommendedVideos.isEmpty) {
+      return Container(height: 0);
+    }
+
+    return VideoGridBlock(
+      videos: viewModel.recommendedVideos,
+      onVideoClicked: (Video video) {
+        viewModel.onVideoClicked(context, video);
+      },
+      scrollListener: (double offset, double maxScrollExtent) {
+        viewModel.onScrollRecommendVideos(offset, maxScrollExtent);
+      },
     );
   }
 }
