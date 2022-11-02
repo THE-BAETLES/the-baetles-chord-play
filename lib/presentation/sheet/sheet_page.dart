@@ -128,10 +128,7 @@ class _SheetPageState extends State<SheetPage>
         }
 
         return Container(
-          width: MediaQuery
-              .of(context)
-              .size
-              .width,
+          width: MediaQuery.of(context).size.width,
           height: 100,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -147,10 +144,7 @@ class _SheetPageState extends State<SheetPage>
                     top: 10,
                     bottom: 10,
                   ),
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width - likeButtonWidth,
+                  width: MediaQuery.of(context).size.width - likeButtonWidth,
                   child: VideoSheetItem(
                     thumbnailPath: video?.thumbnailPath ?? "",
                     height: 80,
@@ -164,7 +158,7 @@ class _SheetPageState extends State<SheetPage>
               _likeButton(
                 sheet.likeCount,
                 sheet.liked,
-                    () => onClickLikeButton(sheet),
+                () => onClickLikeButton(sheet),
                 100,
                 likeButtonWidth,
               ),
@@ -175,11 +169,13 @@ class _SheetPageState extends State<SheetPage>
     );
   }
 
-  Widget _likeButton(int likeCount,
-      bool isLiked,
-      Function() onClick,
-      double height,
-      double width,) {
+  Widget _likeButton(
+    int likeCount,
+    bool isLiked,
+    Function() onClick,
+    double height,
+    double width,
+  ) {
     return Material(
       child: InkWell(
         onTap: onClick,
@@ -217,14 +213,29 @@ class _SheetPageState extends State<SheetPage>
     } else if (viewModel.mySheets!.isEmpty) {
       return Container(
         alignment: AlignmentDirectional.center,
-        child: const Text(
-          "아직 직접 생성한 악보가 없어요 😅",
-          style: TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.w600,
-            color: AppColors.gray3E,
-            fontFamily: AppFontFamilies.montserrat,
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "아직 직접 생성한 악보가 없어요 😅",
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w600,
+                color: AppColors.gray3E,
+                fontFamily: AppFontFamilies.montserrat,
+              ),
+            ),
+            Text(
+              "곡 상세정보 페이지에서 새 악보를 생성할 수 있어요.",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w300,
+                color: AppColors.black04,
+                fontFamily: AppFontFamilies.montserrat,
+              ),
+            ),
+          ],
         ),
       );
     } else {
@@ -254,14 +265,28 @@ class _SheetPageState extends State<SheetPage>
     } else if (viewModel.likedSheets!.isEmpty) {
       return Container(
         alignment: AlignmentDirectional.center,
-        child: const Text(
-          "아직 좋아요 누른 악보가 없어요 😅",
-          style: TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.w600,
-            color: AppColors.gray3E,
-            fontFamily: AppFontFamilies.montserrat,
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "아직 좋아요 표시한 악보가 없어요 😅",
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w600,
+                color: AppColors.gray3E,
+                fontFamily: AppFontFamilies.montserrat,
+              ),
+            ),
+            Text(
+              "좋아하는 악보에 하트 버튼을 눌러보세요!",
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w300,
+                color: AppColors.black04,
+                fontFamily: AppFontFamilies.montserrat,
+              ),
+            ),
+          ],
         ),
       );
     } else {
