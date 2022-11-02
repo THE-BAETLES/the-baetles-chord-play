@@ -73,7 +73,7 @@ class RemoteDataSource {
       }),
     );
 
-    return response.statusCode == ok;
+    return response.statusCode == created;
   }
 
   Future<String?> getNicknameSuggestion(String idToken, {http.Client? client}) async {
