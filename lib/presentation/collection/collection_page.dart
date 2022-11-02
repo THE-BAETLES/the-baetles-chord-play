@@ -23,7 +23,9 @@ class _CollectionPageState extends State<CollectionPage> {
 
     return Scaffold(
       extendBody: false,
-      appBar: SimpleAppBar(title: '내 곡 목록',),
+      appBar: SimpleAppBar(
+        title: '내 곡 목록',
+      ),
       body: Column(
         children: [
           Expanded(
@@ -35,14 +37,28 @@ class _CollectionPageState extends State<CollectionPage> {
                       viewModel.myCollection!.length == 0) {
                     return Container(
                       alignment: AlignmentDirectional.center,
-                      child: Text(
-                        "내 곡 목록이 비어있어요",
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.gray3E,
-                          fontFamily: AppFontFamilies.montserrat,
-                        ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "내 곡 목록이 비어있어요 🤔",
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.gray3E,
+                              fontFamily: AppFontFamilies.montserrat,
+                            ),
+                          ),
+                          Text(
+                            "곡 상세정보 페이지에서 마음에 드는 곡을 담아보세요.",
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w300,
+                              color: AppColors.black04,
+                              fontFamily: AppFontFamilies.montserrat,
+                            ),
+                          ),
+                        ],
                       ),
                     );
                   }
