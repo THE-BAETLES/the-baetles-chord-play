@@ -28,17 +28,22 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       extendBody: true,
       body: pages[pageIndex],
-      bottomNavigationBar: _mainPageNavigationBar(
-        selectedItemIndex: pageIndex,
-        onTap: (int index) {
-          if (index < 0 || pages.length <= index) {
-            return;
-          }
-          
-          setState(() {
-            pageIndex = index;
-          });
-        },
+      bottomNavigationBar: Container(
+        color: Colors.white,
+        child: SafeArea(
+          child: _mainPageNavigationBar(
+            selectedItemIndex: pageIndex,
+            onTap: (int index) {
+              if (index < 0 || pages.length <= index) {
+                return;
+              }
+
+              setState(() {
+                pageIndex = index;
+              });
+            },
+          ),
+        ),
       ),
     );
   }

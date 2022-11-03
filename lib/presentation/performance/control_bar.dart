@@ -23,7 +23,6 @@ class ControlBar extends StatelessWidget {
     PerformanceViewModel viewModel = context.read<PerformanceViewModel>();
 
     return Container(
-      height: 62,
       width: MediaQuery.of(context).size.width,
       color: AppColors.gray34,
       child: SafeArea(
