@@ -14,11 +14,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "617007775764-sdf39numd6cahb0292e4ie1i5qdtuqqv.apps.googleusercontent.com",
+          "client_id": "617007775764-g62hnskfneu0t50bt95htl49id66ms3k.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "site.baetles.chordplay",
             "certificate_hash": "23b86dbff9b8613f94583b8ba0d3e00601d2947a"
+          }
+        },
+        {
+          "client_id": "617007775764-h0hldiujr8fg7as4lh3vp3q8pkf6b7o5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "site.baetles.chordplay",
+            "certificate_hash": "d7b12d8c81584ef54bcfa9575d4896015a3140e8"
           }
         },
         {
@@ -37,6 +45,13 @@
             {
               "client_id": "617007775764-577hkapkhncdq5hv5d39u7b5006ej8an.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "617007775764-ha9l5a3ubbtu64e0b8ltih9a0mhhe9bs.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.thebaetles.theBaetlesChordPlay"
+              }
             }
           ]
         }
