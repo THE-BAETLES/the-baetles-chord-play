@@ -34,6 +34,7 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
       ),
       elevation: 0,
       title: Text(widget.title),
+      centerTitle: false,
       titleTextStyle: const TextStyle(
         color: AppColors.black04,
         fontFamily: AppFontFamilies.pretendard,

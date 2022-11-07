@@ -5,7 +5,7 @@ class GetUserNickname {
 
   GetUserNickname(this._authRepository);
 
-  String? call() {
-    return _authRepository.getUserNickname();
+  String call() {
+    return _authRepository.getUserNickname() ?? "회원";
   }
 }

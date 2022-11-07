@@ -43,6 +43,7 @@ class PerformanceAppBar extends StatelessWidget {
         ],
       ),
       child: SafeArea(
+        bottom: false,
         child: Row(
           children: [
             Expanded(

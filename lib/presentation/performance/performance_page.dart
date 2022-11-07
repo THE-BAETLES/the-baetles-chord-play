@@ -270,25 +270,22 @@ class _PerformancePageState extends State<PerformancePage>
   }
 
   Widget _controlBar(PerformanceViewModel viewModel) {
-    return SizedBox(
-      height: 65,
-      child: Column(
-        children: [
-          ValueListenableBuilder(
-            valueListenable: viewModel.currentPosition,
-            builder: (context, value, _) {
-              return LinearProgressIndicator(
-                value: ((viewModel.currentPositionInPercentage ?? 0) / 100.0)
-                    .clamp(0, 1),
-                color: AppColors.mainPointColor,
-                backgroundColor: Colors.transparent,
-                minHeight: 3,
-              );
-            },
-          ),
-          const ControlBar(),
-        ],
-      ),
+    return Column(
+      children: [
+        ValueListenableBuilder(
+          valueListenable: viewModel.currentPosition,
+          builder: (context, value, _) {
+            return LinearProgressIndicator(
+              value: ((viewModel.currentPositionInPercentage ?? 0) / 100.0)
+                  .clamp(0, 1),
+              color: AppColors.mainPointColor,
+              backgroundColor: Colors.transparent,
+              minHeight: 3,
+            );
+          },
+        ),
+        const ControlBar(),
+      ],
     );
   }
 
