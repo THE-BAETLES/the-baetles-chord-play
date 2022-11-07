@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:the_baetles_chord_play/data/repository/auth_repository.dart';
+import 'package:the_baetles_chord_play/service/apple_auth_service.dart';
 import 'package:the_baetles_chord_play/service/auth_service.dart';
 import 'package:the_baetles_chord_play/service/google_auth_service.dart';
 
@@ -21,6 +22,9 @@ class SignInController {
     switch (platform) {
       case SignInPlatform.GOOGLE:
         authService = GoogleAuthService();
+        break;
+      case SignInPlatform.APPLE:
+        authService = AppleAuthService();
         break;
     }
 

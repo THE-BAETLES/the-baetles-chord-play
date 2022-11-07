@@ -1,5 +1,6 @@
 enum SignInPlatform {
-  GOOGLE("go");
+  GOOGLE("go"),
+  APPLE("ap");
 
   const SignInPlatform(this.name);
 

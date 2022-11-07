@@ -57,6 +57,9 @@ dependencies:
   sliding_up_panel: 2.0.0+1
   auto_size_text: 3.0.0
   flutter_gif: ^0.0.4
+  sign_in_with_apple: 4.1.0
+  firebase_core_platform_interface: 4.5.1
+  firebase_messaging: 13.0.4
 
   flutter_client_sse:
     git:
