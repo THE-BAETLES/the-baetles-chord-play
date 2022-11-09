@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_baetles_chord_play/presentation/performance/state/feedback_state.dart';
 import 'package:the_baetles_chord_play/widget/atom/app_font_families.dart';
 import 'package:the_baetles_chord_play/widget/molecule/beat_tile.dart';
 import 'package:the_baetles_chord_play/widget/atom/marker_stick.dart';
@@ -18,12 +19,11 @@ class SheetView extends StatelessWidget {
   static const double spaceBetweenRow = 20.0;
 
   final SheetData sheetData;
-  final List<int> correctIndexes;
-  final List<int> wrongIndexes;
   final int currentPosition;
   final SheetElementSize sheetElementSize;
   final ScrollController? scrollController;
   final List<ValueNotifier<BeatState>> beatStates;
+  final ValueNotifier<FeedbackState> feedbackState;
 
   final Function(int)? onClick;
   final Function(int)? onLongClick;
@@ -33,8 +33,7 @@ class SheetView extends StatelessWidget {
     Key? key,
     required this.sheetData,
     required this.currentPosition,
-    required this.correctIndexes,
-    required this.wrongIndexes,
+    required this.feedbackState,
     required this.sheetElementSize,
     required this.beatStates,
     this.scrollController,
@@ -153,80 +152,85 @@ class SheetView extends StatelessWidget {
         ValueListenableBuilder(
           valueListenable: beatState,
           builder: (context, value, _) {
-            // present correct and incorrect
-            Color borderColor = Colors.transparent;
-            Color textColor = AppColors.black04;
+            return ValueListenableBuilder(
+              valueListenable: feedbackState,
+              builder: (context, value, _) {
+                // present correct and incorrect
+                Color borderColor = Colors.transparent;
+                Color textColor = AppColors.black04;
 
-            if (correctIndexes.contains(tileIndexOfSheet)) {
-              borderColor = AppColors.blue71;
-              textColor = AppColors.blue71;
-            } else if (wrongIndexes.contains(tileIndexOfSheet)) {
-              borderColor = AppColors.redFF;
-              textColor = AppColors.redFF;
-            }
+                if (feedbackState.value.correctIndexes.contains(tileIndexOfSheet)) {
+                  borderColor = AppColors.blue71;
+                  textColor = AppColors.blue71;
+                } else if (feedbackState.value.wrongIndexes.contains(tileIndexOfSheet)) {
+                  borderColor = AppColors.redFF;
+                  textColor = AppColors.redFF;
+                }
 
-            if (beatState.value.isPlaying) {
-              textColor = Colors.white;
-            }
+                if (beatState.value.isPlaying) {
+                  textColor = Colors.white;
+                }
 
-            return BeatTile(
-              height: sheetElementSize.tileHeight,
-              width: sheetElementSize.tileWidth,
-              isHighlighted: beatState.value.isPlaying,
-              borderColor: borderColor,
-              onClick: () {
-                onClick?.call(tileIndexOfSheet);
+                return BeatTile(
+                  height: sheetElementSize.tileHeight,
+                  width: sheetElementSize.tileWidth,
+                  isHighlighted: beatState.value.isPlaying,
+                  borderColor: borderColor,
+                  onClick: () {
+                    onClick?.call(tileIndexOfSheet);
+                  },
+                  onLongClick: () {
+                    onLongClick?.call(tileIndexOfSheet);
+                  },
+                  child: beatState.value.chord != null
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ChordText(
+                              root: beatState.value.chord!.root
+                                  .flatNoteNameWithoutOctaveAndKeySignature,
+                              keySignature:
+                                  beatState.value.chord!.root.keySignature,
+                              postfix:
+                                  beatState.value.chord!.triadType.shortNotation,
+                              rootSize: sheetElementSize.chordRootTextSize,
+                              postfixSize: sheetElementSize.chordPostfixTextSize,
+                              rootColor: textColor,
+                              postfixColor: textColor,
+                            ),
+                            beatState.value.chord!.bass != null
+                                ? Container(
+                                    width: sheetElementSize.tileWidth / 1.5,
+                                    height: sheetElementSize.tileHeight / 4.5,
+                                    margin: EdgeInsets.only(
+                                        top: sheetElementSize.tileHeight / 200),
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.grayC3,
+                                      borderRadius: BorderRadius.circular(3),
+                                    ),
+                                    child: Text(
+                                      "on ${beatState.value.chord!.bass!.flatNoteNameWithoutOctave}",
+                                      style: TextStyle(
+                                        fontSize:
+                                            sheetElementSize.chordPostfixTextSize *
+                                                0.75,
+                                        fontFamily: AppFontFamilies.pretendard,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.whiteF8,
+                                        height: 1.1,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  )
+                                : Container(),
+                          ],
+                        )
+                      : null,
+                );
               },
-              onLongClick: () {
-                onLongClick?.call(tileIndexOfSheet);
-              },
-              child: beatState.value.chord != null
-                  ? Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ChordText(
-                          root: beatState.value.chord!.root
-                              .flatNoteNameWithoutOctaveAndKeySignature,
-                          keySignature:
-                              beatState.value.chord!.root.keySignature,
-                          postfix:
-                              beatState.value.chord!.triadType.shortNotation,
-                          rootSize: sheetElementSize.chordRootTextSize,
-                          postfixSize: sheetElementSize.chordPostfixTextSize,
-                          rootColor: textColor,
-                          postfixColor: textColor,
-                        ),
-                        beatState.value.chord!.bass != null
-                            ? Container(
-                                width: sheetElementSize.tileWidth / 1.5,
-                                height: sheetElementSize.tileHeight / 4.5,
-                                margin: EdgeInsets.only(
-                                    top: sheetElementSize.tileHeight / 200),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: AppColors.grayC3,
-                                  borderRadius: BorderRadius.circular(3),
-                                ),
-                                child: Text(
-                                  "on ${beatState.value.chord!.bass!.flatNoteNameWithoutOctave}",
-                                  style: TextStyle(
-                                    fontSize:
-                                        sheetElementSize.chordPostfixTextSize *
-                                            0.75,
-                                    fontFamily: AppFontFamilies.pretendard,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.whiteF8,
-                                    height: 1.1,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              )
-                            : Container(),
-                      ],
-                    )
-                  : null,
             );
-          },
+          }
         ),
       );
 

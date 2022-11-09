@@ -31,7 +31,17 @@ enum TriadType {
   sevenSuspendedFour('7sus4', '7sus4'),
   suspendedTwo('sus2', 'sus2'),
   diminished('dim', 'dim'),
-  diminishedSeven('dim7', 'dim7');
+  diminishedSeven('dim7', 'dim7'),
+
+  nineFlatFive('9(♭5)', '9(♭5)'),
+  nine('9', '9'),
+  thirteen('13', '13'),
+  eleven('11', '11'),
+  majorNine('maj9', 'M9'),
+  sevenSharpFive('7(#5)', '7(#5)'),
+  five('5', '5'),
+  minorNine('m9', 'm9'),
+  minorEleven('min11', 'm11');
 
   const TriadType(this.notation, this.shortNotation);
 

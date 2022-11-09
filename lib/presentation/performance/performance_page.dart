@@ -153,10 +153,7 @@ class _PerformancePageState extends State<PerformancePage>
                         currentPosition: viewModel.currentPosition.value,
                         sheetData: (viewModel.sheetState.value?.sheetData)!,
                         beatStates: viewModel.beatStates.value.states,
-                        correctIndexes:
-                            viewModel.feedbackState.correctIndexes.toList(),
-                        wrongIndexes:
-                            viewModel.feedbackState.wrongIndexes.toList(),
+                        feedbackState: viewModel.feedbackState,
                         scrollController: _sheetAutoScrollController(
                           sheetElementSize: sheetElementSize,
                           viewModel: viewModel,

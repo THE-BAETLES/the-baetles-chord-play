@@ -8,6 +8,7 @@ import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.util.Log
 import io.flutter.plugin.common.EventChannel
+import org.json.JSONObject
 import java.nio.BufferOverflowException
 import java.nio.ShortBuffer
 import java.util.concurrent.locks.ReentrantLock
@@ -18,7 +19,6 @@ import java.io.IOException
 import java.nio.BufferUnderflowException
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
-
 
 class PitchTracker(private var activity: Activity) : EventChannel.StreamHandler {
     // Audio recording setting
@@ -65,7 +65,7 @@ class PitchTracker(private var activity: Activity) : EventChannel.StreamHandler 
         tflInterpreter!!.resizeInput(0, intArrayOf(recordingLength, 1))
     }
 
-    fun isPlaying() : Boolean {
+    fun isPlaying(): Boolean {
         return this.isPlaying;
     }
 
@@ -243,50 +243,73 @@ class PitchTracker(private var activity: Activity) : EventChannel.StreamHandler 
             val outputMap: MutableMap<Int, Any> = HashMap()
             outputMap[0] = outputScores
 
+            val recognizedTime = System.currentTimeMillis()
+
             // Run the model
             tflInterpreter!!.runForMultipleInputsOutputs(inputArray, outputMap)
+            val predictions = (outputMap[0] as Array<Array<FloatArray>>)[0]
 
-            // top 5 구하기
-            val validCount = 16
-            val limit = 6
-            val threshold = 2
+            val playedChords = Array(32) { MutableList(0) { 0 }; }
 
-            val restemp = outputMap[0] as Array<Array<FloatArray>>
-            val result = IntArray(88)
+            for (predictionIdx in 0 until 32) {
+                val prediction = predictions[predictionIdx]
 
-            for (i in 32 - validCount until 32) {
-                for (j in 0 until 88) {
-                    if (restemp[0][i][j] > 0) {
-                        result[j] = result[j] + 1
+                for (midi in 0 until 88) {
+                    if (prediction[midi] > 0) {
+                        playedChords[predictionIdx].add(midi + 1)
                     }
                 }
             }
 
-            val playedChords = IntArray(88)
-            var chordCount = 0
+// region           // top 5 구하기
+//            val validCount = 16
+//            val limit = 6
+//            val threshold = 2
+//
+//            val restemp = outputMap[0] as Array<Array<FloatArray>>
+//            val result = IntArray(88)
+//
+//            for (i in 32 - validCount until 32) {
+//                for (j in 0 until 88) {
+//                    if (restemp[0][i][j] > 0) {
+//                        result[j] = result[j] + 1
+//                    }
+//                }
+//            }
+//
+//            val playedChords = IntArray(88)
+//            var chordCount = 0
+//
+//            // 계수 정렬
+//            var countToChordList: Array<IntArray> = Array(validCount + 1) { IntArray(88) }
+//            var listSizeOfIdx: IntArray = IntArray(validCount + 1)
+//
+//            for (i in 0 until 88) {
+//                countToChordList[result[i]][listSizeOfIdx[result[i]]] = i
+//                listSizeOfIdx[result[i]]++
+//            }
+//
+//            for (i in validCount downTo threshold) {
+//                for (j in 0 until listSizeOfIdx[i]) {
+//                    playedChords[chordCount] = countToChordList[i][j] + 1
+//                    chordCount++
+//                }
+//
+//                if (chordCount >= limit) {
+//                    break
+//                }
+//            }
+            // endregion
 
-            // 계수 정렬
-            var countToChordList: Array<IntArray> = Array(validCount + 1 ) { IntArray(88) }
-            var listSizeOfIdx: IntArray = IntArray(validCount + 1)
+            val detectedInfo = HashMap<Any?, Any?>()
 
-            for (i in 0 until 88) {
-                countToChordList[result[i]][listSizeOfIdx[result[i]]] = i
-                listSizeOfIdx[result[i]]++
-            }
-
-            for (i in validCount downTo threshold) {
-                for (j in 0 until listSizeOfIdx[i]) {
-                    playedChords[chordCount] = countToChordList[i][j] + 1
-                    chordCount++
-                }
-
-                if (chordCount >= limit) {
-                    break
-                }
-            }
+            detectedInfo.put("recognized", recognizedTime)
+            detectedInfo.put("pitches", playedChords.copyOfRange(0, 32))
 
             // Send Event
-            activity?.runOnUiThread { eventSink?.success(playedChords.copyOfRange(0, chordCount)) }
+            activity?.runOnUiThread {
+                eventSink?.success(JSONObject(detectedInfo).toString())
+            }
 
             try {
                 Thread.sleep(minimumTimeBetweenSamplesInMS)

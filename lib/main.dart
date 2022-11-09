@@ -12,6 +12,7 @@ import 'package:the_baetles_chord_play/data/repository/country_repository.dart';
 import 'package:the_baetles_chord_play/data/repository/sheet_repository.dart';
 import 'package:the_baetles_chord_play/data/repository/user_repository.dart';
 import 'package:the_baetles_chord_play/data/repository/video_repository.dart';
+import 'package:the_baetles_chord_play/data/source/fingering_data_source.dart';
 import 'package:the_baetles_chord_play/domain/use_case/add_conductor_position_listener.dart';
 import 'package:the_baetles_chord_play/domain/use_case/add_performer.dart';
 import 'package:the_baetles_chord_play/domain/use_case/check_nickname_valid.dart';
@@ -80,6 +81,8 @@ Future<void> main() async {
   RestClientFactory(); // Initialize restClientFactory
 
   ProgressService(); // Initialize progressService
+
+  FingeringDataSource(); // load fingering data source
 
   await CountryCodes.init(); // Initialize country code module
 

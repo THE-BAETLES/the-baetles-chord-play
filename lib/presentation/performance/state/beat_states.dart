@@ -12,6 +12,8 @@ class BeatStates {
 
   ValueNotifier<int> get playingPosition => _playingPosition;
 
+  BeatState get playingBeatState => states[_playingPosition.value].value;
+
   BeatStates(this.states);
 
   setPlayingPosition(int position) async {

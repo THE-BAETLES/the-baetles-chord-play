@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:the_baetles_chord_play/controller/chord_checker.dart';
 import 'package:the_baetles_chord_play/controller/chord_picker_view_model.dart';
 import 'package:the_baetles_chord_play/domain/model/chord_block.dart';
 import 'package:the_baetles_chord_play/domain/model/play_option.dart';
@@ -15,8 +17,10 @@ import 'package:the_baetles_chord_play/presentation/performance/state/beat_state
 import 'package:the_baetles_chord_play/presentation/performance/state/beat_states.dart';
 import 'package:the_baetles_chord_play/presentation/performance/state/sheet_state.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:tuple/tuple.dart';
 
 import '../../domain/model/chord.dart';
+import '../../domain/model/fingering.dart';
 import '../../domain/model/loop.dart';
 import '../../domain/model/sheet_data.dart';
 import '../../domain/model/sheet_info.dart';
@@ -26,7 +30,7 @@ import '../../domain/use_case/edit_sheet.dart';
 import '../../domain/use_case/move_play_position.dart';
 import '../../domain/use_case/update_play_option.dart';
 import '../../service/conductor/performers/call_performer.dart';
-import '../../service/conductor/performers/chord_checker.dart';
+import '../../controller/pitch_checker.dart';
 import 'adapter/measure_scale_adapter.dart';
 import 'adapter/scale_adapter.dart';
 import 'state/feedback_state.dart';
@@ -110,7 +114,7 @@ class PerformanceViewModel with ChangeNotifier {
 
   ChordPickerViewModel get chordPickerViewModel => _chordPickerViewModel;
 
-  FeedbackState get feedbackState => _feedbackState.value;
+  ValueNotifier<FeedbackState> get feedbackState => _feedbackState;
 
   double? get currentPositionInPercentage {
     if (_video == null) {
@@ -207,19 +211,36 @@ class PerformanceViewModel with ChangeNotifier {
 
     _addPerformer(_callbackPerformer);
 
-    _chordChecker = ChordChecker(sheetData);
+    _chordChecker = ChordChecker();
 
-    _chordChecker?.setOnCorrectCallback((correctPosition) {
-      _feedbackState.value.addMarkedIndex(correctPosition, true);
-      notifyListeners();
+    beatStates.value.playingPosition.addListener(() {
+      if (!_isPitchBeingChecked.value) {
+        return;
+      }
+
+      const int interval = 500;
+      const int waitTime = 300;
+      final int currentTime = DateTime.now().millisecondsSinceEpoch;
+      final int endTime = currentTime + interval;
+      final int playingPosition = beatStates.value.playingPosition.value;
+      final Chord? chord = beatStates.value.playingBeatState.chord;
+
+      if (chord != null) {
+        Timer(Duration(milliseconds: interval + waitTime), () {
+          Tuple2<bool, Fingering?> checkResult = _chordChecker!.isChordExist(currentTime, endTime, chord);
+          bool isChordDetected = checkResult.item1;
+
+          if (checkResult.item2 == null) {
+            return;
+          }
+          
+          log("${currentTime}~${endTime} ${playingPosition} | ${chord.fullName} ${isChordDetected ? "detected" : "not detected"}");
+
+          _feedbackState.value.addMarkedIndex(playingPosition, isChordDetected);
+          _feedbackState.notifyListeners();
+        });
+      }
     });
-
-    _chordChecker?.setOnWrongCallback((wrongPosition) {
-      _feedbackState.value.addMarkedIndex(wrongPosition, false);
-      notifyListeners();
-    });
-
-    _addPerformer(_chordChecker!);
 
     _addConductorPositionListener(_conductorPositionCallback);
 

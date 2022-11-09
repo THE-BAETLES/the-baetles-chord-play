@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:flutter/services.dart';
 
@@ -15,19 +17,29 @@ class PitchTracker {
   PitchTracker() {
     _pitchStream = _eventChannel
         .receiveBroadcastStream()
-        .map((event) => event as List<int>);
+        .map((event) => event as String);
   }
 
-  void attachStreamListener(Function(List<Note>) callback) {
-    _subscription = _pitchStream.listen((detectedPitches) {
-      List<Note> detectedNotes = [];
+  void attachStreamListener(Function(int, List<List<int>>) callback) {
+    _subscription = _pitchStream.listen((json) {
+      final Map<String, dynamic> jsonData = jsonDecode(json);
 
-      for (int pitch in detectedPitches) {
-        detectedNotes.add(Note(pitch));
+      final recognized = jsonData['recognized'] as int;
+      final List<dynamic> detectedPitches = jsonData['pitches'] as List<dynamic>;
+
+      final List<List<int>> detectionResult = [];
+
+      for (dynamic pitches in detectedPitches) {
+        final List<int> temp = [];
+
+        for (dynamic pitch in pitches as List<dynamic>) {
+          temp.add(pitch);
+        }
+
+        detectionResult.add(temp);
       }
 
-      print(detectedPitches);
-      callback(detectedNotes);
+      callback(recognized - 1000, detectionResult);
     });
   }
 
