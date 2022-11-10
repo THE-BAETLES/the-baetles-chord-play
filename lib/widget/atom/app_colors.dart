@@ -7,6 +7,8 @@ class AppColors {
   static const servePointColor2 = Color(0xFF9CA0FF);
   static const blue7F = Color(0xFF7F80B1);
   static const blue71 = Color(0xFF7176FF);
+  static const blueE2 = Color(0xFFE2E3FD);
+  static const blue9D = Color(0xFF9DA0F8);
   static const black04 = Color(0xFF040404);
   static const black00 = Color(0x80000000);
   static const redFF = Color(0xFFFF6767);

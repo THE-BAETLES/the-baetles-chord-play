@@ -190,7 +190,7 @@ class _PerformancePageState extends State<PerformancePage>
       playingPosition: viewModel.beatStates.value.playingPosition,
       topMargin: SheetView.topMargin,
       bottomMargin: SheetView.bottomMargin,
-      lineHeight: sheetElementSize.tileHeight + SheetView.spaceBetweenRow,
+      lineHeight: sheetElementSize.tileHeight + SheetView.spaceBetweenRow + sheetElementSize.wordPadding * 2,
       screenHeight: MediaQuery.of(context).size.height,
       beatPerLine: viewModel.measureCount.value * 4,
       lineCount: (beatStates.length / (viewModel.measureCount.value * beatPerMeasure).toDouble()).ceil(),
