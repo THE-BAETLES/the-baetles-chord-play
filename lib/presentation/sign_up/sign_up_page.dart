@@ -83,11 +83,11 @@ class SignUpPage extends StatelessWidget {
                 ),
                 Positioned(
                   left: 30,
-                  top: 288,
-                  height: 200,
+                  top: 251,
+                  height: 250,
                   width: MediaQuery.of(context).size.width - 60,
                   child: RadioButtonList(
-                    const ["남성입니다", "여성입니다"],
+                    const ["남성", "여성", "밝히지 않음"],
                     onPressed: (int index) {
                       if (index == -1) {
                         viewModel.onChangeGender(null);
@@ -168,7 +168,8 @@ class SignUpPage extends StatelessWidget {
                   top: 60,
                   left: 30,
                   child: SignUpGuide(
-                      "${viewModel.confirmedNickname}님이\n즐겨듣는 노래를 선택해주세요 :)"),
+                      "${viewModel.confirmedNickname}님이\n즐겨듣는 노래를 3개 이상 선택해주세요 :)",
+                  ),
                 ),
                 Positioned(
                   top: 180,

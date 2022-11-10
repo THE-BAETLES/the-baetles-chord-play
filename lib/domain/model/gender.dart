@@ -1,6 +1,7 @@
 enum Gender {
   male("male"),
-  female("female");
+  female("female"),
+  none("none");
 
   const Gender (this.name);
 
