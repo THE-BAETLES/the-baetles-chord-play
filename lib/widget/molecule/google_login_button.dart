@@ -38,7 +38,7 @@ class GoogleLoginButton extends StatelessWidget {
             GoogleIcon(),
             const Center(
               child: Text(
-                "구글 계정으로 로그인",
+                "Google로 로그인",
                 style: TextStyle(
                   fontFamily: "Pretendard",
                   fontSize: 14,
