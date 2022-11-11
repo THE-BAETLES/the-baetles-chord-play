@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:the_baetles_chord_play/utility/navigate.dart';
 
 import '../../widget/atom/app_colors.dart';
 import '../../widget/atom/app_font_families.dart';
@@ -65,6 +67,24 @@ class HomeHeader extends StatelessWidget {
             child: _searchBar(context),
           ),
         ),
+        Positioned(
+          right: 10,
+          top: 20,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                '/delete-account-page',
+              );
+            },
+            child: Container(
+              padding: EdgeInsets.all(2.5),
+              width: 30,
+              height: 30,
+              child: SvgPicture.asset('assets/icons/ic_setting.svg', color: Colors.white,),
+            ),
+          ),
+        )
       ],
     );
   }
