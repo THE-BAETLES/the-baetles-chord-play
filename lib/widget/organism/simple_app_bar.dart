@@ -6,10 +6,14 @@ import '../atom/app_font_families.dart';
 class SimpleAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
   final double dividerHeight;
+  final Color backgroundColor;
+  final Color titleTextColor;
 
   const SimpleAppBar({
     Key? key,
     required this.title,
+    this.backgroundColor = Colors.white,
+    this.titleTextColor = AppColors.black04,
     this.dividerHeight = 1.5,
   }) : super(key: key);
 
@@ -24,7 +28,7 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: widget.backgroundColor,
       bottom: PreferredSize(
         preferredSize: Size.fromHeight(widget.dividerHeight),
         child: Container(
@@ -35,8 +39,8 @@ class _SimpleAppBarState extends State<SimpleAppBar> {
       elevation: 0,
       title: Text(widget.title),
       centerTitle: false,
-      titleTextStyle: const TextStyle(
-        color: AppColors.black04,
+      titleTextStyle: TextStyle(
+        color: widget.titleTextColor,
         fontFamily: AppFontFamilies.pretendard,
         fontSize: 19,
         fontWeight: FontWeight.w600,

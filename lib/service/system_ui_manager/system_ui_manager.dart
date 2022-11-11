@@ -10,6 +10,7 @@ class SystemUiManager extends NavigatorObserver {
     '/search-page' : SystemUiMode.manual,
     '/performance-page' : SystemUiMode.immersiveSticky,
     '/loading-page' : SystemUiMode.immersiveSticky,
+    '/delete-account-page' : SystemUiMode.manual,
   };
 
 
