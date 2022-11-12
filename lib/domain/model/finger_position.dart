@@ -30,4 +30,6 @@ class FingerPosition {
   String toString() {
     return "finger: ${finger}, stringNumber: ${stringNumber}, fret: ${fret}, note: ${note.noteName}";
   }
+
+
 }

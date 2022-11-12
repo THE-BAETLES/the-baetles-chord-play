@@ -17,6 +17,7 @@ import 'package:the_baetles_chord_play/presentation/performance/state/beat_state
 import 'package:the_baetles_chord_play/presentation/performance/state/beat_states.dart';
 import 'package:the_baetles_chord_play/presentation/performance/state/sheet_state.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:the_baetles_chord_play/domain/model/fingering_feedback.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../domain/model/chord.dart';
@@ -48,12 +49,12 @@ class PerformanceViewModel with ChangeNotifier {
   final ValueNotifier<bool> _isPitchBeingChecked = ValueNotifier(false);
   final ValueNotifier<bool> _isMuted = ValueNotifier(false);
   final ValueNotifier<FeedbackState> _feedbackState =
-  ValueNotifier(FeedbackState());
+      ValueNotifier(FeedbackState());
   final ValueNotifier<SheetState?> _sheetState = ValueNotifier(null);
   final ValueNotifier<int?> _editingPosition = ValueNotifier(null);
   final ValueNotifier<Chord?> _selectedChord = ValueNotifier(null);
   final ValueNotifier<YoutubePlayerController?> _youtubeController =
-  ValueNotifier(null);
+      ValueNotifier(null);
   final ValueNotifier<int> _measureCount = ValueNotifier(4);
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
   final ValueNotifier<bool> _isTabVisible = ValueNotifier(false);
@@ -74,7 +75,7 @@ class PerformanceViewModel with ChangeNotifier {
   late final ChordPickerViewModel _chordPickerViewModel;
 
   final PlayOptionCallbackPerformer _callbackPerformer =
-  PlayOptionCallbackPerformer();
+      PlayOptionCallbackPerformer();
   ChordChecker? _chordChecker;
   Video? _video;
   String? _userId;
@@ -126,18 +127,21 @@ class PerformanceViewModel with ChangeNotifier {
 
   ScaleAdapter get scaleAdapter => _scaleAdapter;
 
-  PerformanceViewModel(this._updatePlayOption,
-      this._setPlayPosition,
-      this._addPerformer,
-      this._addConductorPositionListener,
-      this._removeConductorPositionListener,
-      this._setYoutubePlayerController,
-      this._editSheet,
-      this._getUserId,) {
+  PerformanceViewModel(
+    this._updatePlayOption,
+    this._setPlayPosition,
+    this._addPerformer,
+    this._addConductorPositionListener,
+    this._removeConductorPositionListener,
+    this._setYoutubePlayerController,
+    this._editSheet,
+    this._getUserId,
+  ) {
     _conductorPositionCallback = ((int positionInMillis) {
       _currentPosition.value = positionInMillis;
 
-      int playingIndex = _sheetState.value!.sheetData.chords.indexWhere((chord) {
+      int playingIndex =
+          _sheetState.value!.sheetData.chords.indexWhere((chord) {
         return positionInMillis < chord.beatTime * 1000;
       });
 
@@ -218,25 +222,37 @@ class PerformanceViewModel with ChangeNotifier {
         return;
       }
 
-      const int interval = 500;
+      const int interval = 700;
       const int waitTime = 300;
       final int currentTime = DateTime.now().millisecondsSinceEpoch;
       final int endTime = currentTime + interval;
       final int playingPosition = beatStates.value.playingPosition.value;
       final Chord? chord = beatStates.value.playingBeatState.chord;
 
-      if (chord != null) {
-        Timer(Duration(milliseconds: interval + waitTime), () {
-          Tuple2<bool, Fingering?> checkResult = _chordChecker!.isChordExist(currentTime, endTime, chord);
-          bool isChordDetected = checkResult.item1;
+      if (chord != null && playOption.value.isPlaying) {
+        Timer(const Duration(milliseconds: interval + waitTime), () {
+          Tuple3<bool, Fingering?, List<int>> checkResult =
+              _chordChecker!.isChordExist(currentTime, endTime, chord);
+          final bool isChordDetected = checkResult.item1;
+          final Fingering? answer = checkResult.item2;
+          final List<int> wrongStrings = checkResult.item3;
 
-          if (checkResult.item2 == null) {
+          if (answer == null) {
             return;
           }
-          
+
           log("${currentTime}~${endTime} ${playingPosition} | ${chord.fullName} ${isChordDetected ? "detected" : "not detected"}");
 
           _feedbackState.value.addMarkedIndex(playingPosition, isChordDetected);
+
+          if (!isChordDetected) {
+            _feedbackState.value.addFeedback(FingeringFeedback(
+              beatIndex: playingPosition,
+              answer: answer,
+              wrongStringNumbers: wrongStrings,
+            ));
+          }
+
           _feedbackState.notifyListeners();
         });
       }
@@ -266,7 +282,8 @@ class PerformanceViewModel with ChangeNotifier {
     int destPosition = 0;
 
     if (destIdx > 0) {
-      destPosition = _sheetState.value!.sheetData.chords[destIdx - 1].beatTimeInMillis;
+      destPosition =
+          _sheetState.value!.sheetData.chords[destIdx - 1].beatTimeInMillis;
     }
 
     _setPlayPosition(position: destPosition);
@@ -282,7 +299,8 @@ class PerformanceViewModel with ChangeNotifier {
     int beatStartTimeInMillis = 0;
 
     if (tileIndex > 0) {
-      beatStartTimeInMillis = (chords[tileIndex - 1].beatTime * 1000 + 1).toInt();
+      beatStartTimeInMillis =
+          (chords[tileIndex - 1].beatTime * 1000 + 1).toInt();
     }
 
     _setPlayPosition(position: beatStartTimeInMillis);

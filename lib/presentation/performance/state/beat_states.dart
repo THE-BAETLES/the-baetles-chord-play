@@ -37,7 +37,6 @@ class BeatStates {
       );
 
       _playingPosition.value = position;
-      _playingPosition.notifyListeners();
     }
 
     beatStateLock.release();
