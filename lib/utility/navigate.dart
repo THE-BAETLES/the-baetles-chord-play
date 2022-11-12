@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_baetles_chord_play/presentation/delete_account/delete_account_page.dart';
 import 'package:the_baetles_chord_play/presentation/main/main_page.dart';
 
 import '../presentation/bridge/bridge_page.dart';
@@ -19,5 +20,6 @@ class Navigate {
     '/performance-page' : (context) => PerformancePage(key: UniqueKey()),
     '/loading-page' : (context) => LoadingPage(key: UniqueKey()),
     '/search-page' : (context) => SearchPage(),
+    '/delete-account-page' : (context) => const DeleteAccountPage(),
   };
 }

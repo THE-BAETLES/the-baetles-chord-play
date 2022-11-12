@@ -27,7 +27,7 @@ class AppleLoginButton extends StatelessWidget {
             AppleIcon(),
             const Center(
               child: Text(
-                "애플 계정으로 로그인",
+                "Apple로 로그인",
                 style: TextStyle(
                   fontFamily: "Pretendard",
                   fontSize: 14,
