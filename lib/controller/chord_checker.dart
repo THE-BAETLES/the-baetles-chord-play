@@ -38,13 +38,17 @@ class ChordChecker {
 
       // log("check chord ${chord.fullName}... ${start} to ${start + length}, ${fingering.positions}");
 
-      for (final finger in fingering.positions) {
-        bool isExist = pitchChecker.isPitchExist(start, length, finger.note.keyNumber);
+      for (final fingering in fingering.positions) {
+        if (fingering.fret == -1) {
+          continue;
+        }
+
+        bool isExist = pitchChecker.isPitchExist(start, length, fingering.note.keyNumber);
 
         if (isExist) {
-          detected.add(finger);
+          detected.add(fingering);
         } else {
-          notDetected.add(finger);
+          notDetected.add(fingering);
         }
       }
 

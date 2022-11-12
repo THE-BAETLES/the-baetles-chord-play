@@ -222,9 +222,10 @@ class PerformanceViewModel with ChangeNotifier {
         return;
       }
 
-      const int interval = 700;
+      const int interval = 1500;
       const int waitTime = 300;
-      final int currentTime = DateTime.now().millisecondsSinceEpoch;
+      const int compensation = 300;
+      final int currentTime = DateTime.now().millisecondsSinceEpoch - compensation;
       final int endTime = currentTime + interval;
       final int playingPosition = beatStates.value.playingPosition.value;
       final Chord? chord = beatStates.value.playingBeatState.chord;

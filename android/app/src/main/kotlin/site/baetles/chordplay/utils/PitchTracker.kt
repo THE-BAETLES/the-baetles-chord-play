@@ -254,8 +254,11 @@ class PitchTracker(private var activity: Activity) : EventChannel.StreamHandler 
             for (predictionIdx in 0 until 32) {
                 val prediction = predictions[predictionIdx]
 
+                // test code
+                Log.d("pitchtracker kotlin", prediction[24].toString() + ' ' + prediction[29].toString())
+
                 for (midi in 0 until 88) {
-                    if (prediction[midi] > 0) {
+                    if (prediction[midi] > 2) {
                         playedChords[predictionIdx].add(midi + 1)
                     }
                 }

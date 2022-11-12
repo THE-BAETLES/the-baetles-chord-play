@@ -286,9 +286,9 @@ class _PerformancePageState extends State<PerformancePage>
                   }
 
                   return Container(
-                    width: 330,
-                    height: 300,
-                    margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 3),
+                    width: 300,
+                    height: 280,
+                    margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -296,33 +296,35 @@ class _PerformancePageState extends State<PerformancePage>
                       boxShadow: [
                         BoxShadow(
                             offset: Offset(0, 3),
-                            color: AppColors.shadow94,
-                            blurRadius: 3),
+                            color: AppColors.shadow55,
+                            blurRadius: 4),
                       ],
                     ),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
-                            child: RichText(
-                                text: TextSpan(children: <TextSpan>[
+                            child: Center(
+                              child: RichText(
+                                  text: TextSpan(children: <TextSpan>[
                           TextSpan(
-                            text: feedback.answer.chord.fullNameWithoutOctave,
-                            style: const TextStyle(fontSize: 18, color: AppColors.redFF),
+                              text: feedback.answer.chord.fullNameWithoutOctave,
+                              style: const TextStyle(fontSize: 17, color: AppColors.redFF),
                           ),
                           const TextSpan(
-                            text: "의 ",
-                            style: TextStyle(fontSize: 16, color: AppColors.black04),
+                              text: "의 ",
+                              style: TextStyle(fontSize: 14, color: AppColors.black04),
                           ),
                           TextSpan(
-                            text: _listToString(feedback.wrongStringNumbers),
-                            style: const TextStyle(fontSize: 16, color: AppColors.redFF),
+                              text: _listToString(feedback.wrongStringNumbers),
+                              style: const TextStyle(fontSize: 17, color: AppColors.redFF),
                           ),
                           const TextSpan(
-                            text: "번 줄을 잘못 잡았어요.",
-                            style: TextStyle(fontSize: 16, color: AppColors.black04),
+                              text: "번 줄을 잘못 잡았어요.",
+                              style: TextStyle(fontSize: 14, color: AppColors.black04),
                           ),
-                        ]))),
+                        ])),
+                            )),
                         Container(
                           width: 145,
                           height: 160,

@@ -77,10 +77,6 @@ class FingeringDataSource {
           final Finger? finger =
               fingerNum < 1 ? null : Finger.values[fingerNum - 1];
 
-          if (fret == -1) {
-            continue;
-          }
-
           positions.add(FingerPosition(
             finger: finger,
             stringNumber: stringIdx + 1,

@@ -15,8 +15,7 @@ class Fingering {
       List<bool> isAppear = List.filled(6, false);
 
       for (FingerPosition position in positions) {
-        // assert(!isAppear[position.stringNumber - 1]);
-        assert(!isAppear[6 - position.stringNumber]);
+        assert(!isAppear[position.stringNumber - 1]);
       }
     }
   }
@@ -25,10 +24,14 @@ class Fingering {
     List<String> result = List.filled(6, 'x');
 
     for (final position in positions) {
-      // result[position.stringNumber - 1] = position.fret.toString();
-      result[6 - position.stringNumber] = position.fret.toString();
+      if (position.fret == -1) {
+        continue;
+      }
+
+      result[position.stringNumber - 1] = position.fret.toString();
     }
 
+    print(result.join(" "));
     return result.join(" ");
   }
 }

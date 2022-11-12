@@ -20,7 +20,7 @@ class FingerPosition {
     required this.stringNumber,
     required this.fret,
   }) {
-    assert (0 <= fret);
+    assert (-1 <= fret);
     assert (1 <= stringNumber && stringNumber <= 6);
   }
 
