@@ -160,7 +160,7 @@ class ControlBar extends StatelessWidget {
     PlayOption playOption,
   ) {
     return SizedBox(
-      width: 144,
+      width: 164,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -188,8 +188,8 @@ class ControlBar extends StatelessWidget {
                     play();
                   }
                 },
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                   child: playOption.isPlaying
                       ? SvgPicture.asset(
                           "assets/icons/ic_pause.svg",
