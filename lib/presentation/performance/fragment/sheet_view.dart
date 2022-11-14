@@ -197,7 +197,7 @@ class SheetView extends StatelessWidget {
                               children: [
                                 ChordText(
                                   root: beatState.value.chord!.root
-                                      .flatNoteNameWithoutOctaveAndKeySignature,
+                                      .noteNameWithoutOctaveAndKeySignature,
                                   keySignature:
                                       beatState.value.chord!.root.keySignature,
                                   postfix: beatState
@@ -223,7 +223,7 @@ class SheetView extends StatelessWidget {
                                               BorderRadius.circular(3),
                                         ),
                                         child: Text(
-                                          "on ${beatState.value.chord!.bass!.flatNoteNameWithoutOctave}",
+                                          "on ${beatState.value.chord!.bass!.noteNameWithoutOctave}",
                                           style: TextStyle(
                                             fontSize: sheetElementSize
                                                     .chordPostfixTextSize *

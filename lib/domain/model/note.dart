@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class Note {
   static final _pitchNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
   static final _flatPitchNames = ['C', 'D♭', 'D', 'E♭', 'E', 'F', 'G♭', 'G', 'A♭', 'A', 'B♭', 'B'];
-  static const String keySignatureChar = '♭';
+  static const String keySignatureChar = '#';
 
   final int keyNumber;
 
