@@ -7,6 +7,8 @@ class AppColors {
   static const servePointColor2 = Color(0xFF9CA0FF);
   static const blue7F = Color(0xFF7F80B1);
   static const blue71 = Color(0xFF7176FF);
+  static const blueE2 = Color(0xFFE2E3FD);
+  static const blue9D = Color(0xFF9DA0F8);
   static const black04 = Color(0xFF040404);
   static const black00 = Color(0x80000000);
   static const redFF = Color(0xFFFF6767);
@@ -26,6 +28,8 @@ class AppColors {
   static const shadowB5 = Color(0x41B5BF85);
   static const shadowA1 = Color(0x1AA1A1A1);
   static const shadow94 = Color(0x41949494);
+  static const shadow55 = Color(0x41555555);
   static const shadow00 = Color(0x99000000);
+  static const shadow10 = Color(0x10000000);
   static const transparentF4 = Color(0x20CBCBFF);
 }

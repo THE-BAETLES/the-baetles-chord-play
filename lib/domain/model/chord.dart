@@ -64,7 +64,9 @@ class Chord {
 
   @override
   int get hashCode {
-    return root.hashCode ^ triadType.hashCode ^ (bass != null ? bass!.hashCode : 0);
+    return root.hashCode ^
+        triadType.hashCode ^
+        (bass != null ? bass!.hashCode : 0);
   }
 
   List<Note> getNotes() {
@@ -79,5 +81,17 @@ class Chord {
         }
         return [root];
     }
+  }
+
+  Chord copy({
+    Note? root,
+    TriadType? triadType,
+    required Note? bass,
+  }) {
+    return Chord(
+      root ?? this.root,
+      triadType ?? this.triadType,
+      bass,
+    );
   }
 }

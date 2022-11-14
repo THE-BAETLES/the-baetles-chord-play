@@ -1,17 +1,23 @@
+import '../../../domain/model/fingering_feedback.dart';
+
 class FeedbackState {
   late final Set<int> _correctIndexes;
   late final Set<int> _wrongIndexes;
+  late final List<FingeringFeedback> _feedbacks;
 
   FeedbackState({
     Set<int>? correctIndexes,
     Set<int>? wrongIndexes,
+    List<FingeringFeedback>? feedbacks,
   }) {
     _correctIndexes = correctIndexes ?? {};
-    _wrongIndexes = wrongIndexes?? {};
+    _wrongIndexes = wrongIndexes ?? {};
+    _feedbacks = feedbacks ?? [];
   }
 
   Set<int> get correctIndexes => Set.of(_correctIndexes);
   Set<int> get wrongIndexes => Set.of(_wrongIndexes);
+  List<FingeringFeedback> get feedbacks => List.of(_feedbacks);
 
   bool isCorrect(int index) {
     return _correctIndexes.contains(index);
@@ -33,6 +39,10 @@ class FeedbackState {
       _correctIndexes.remove(index);
       return _wrongIndexes.add(index);
     }
+  }
+
+  void addFeedback(FingeringFeedback feedback) {
+    this._feedbacks.add(feedback);
   }
 
   @override

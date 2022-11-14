@@ -12,6 +12,7 @@ class SheetElementSize {
   late final double barHeight;
   late final double chordRootTextSize;
   late final double chordPostfixTextSize;
+  late final double wordPadding;
 
   SheetElementSize({
     required this.sheetHeight,
@@ -44,5 +45,7 @@ class SheetElementSize {
 
     this.chordRootTextSize = tileHeight / 2.5;
     this.chordPostfixTextSize = tileHeight / 3.5;
+
+    this.wordPadding = 4;
   }
 }
