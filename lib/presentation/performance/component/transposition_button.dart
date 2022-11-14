@@ -5,8 +5,24 @@ import 'package:the_baetles_chord_play/widget/atom/app_font_families.dart';
 import '../../../widget/atom/app_colors.dart';
 import '../../../widget/atom/app_text_styles.dart';
 
-class TranspositionButton extends StatelessWidget {
-  const TranspositionButton({Key? key}) : super(key: key);
+class TranspositionButton extends StatefulWidget {
+  final Function(int)? onChangeIntercept;
+  final int minIntercept;
+  final int maxIntercept;
+
+  const TranspositionButton({
+    Key? key,
+    this.onChangeIntercept,
+    this.minIntercept = -11,
+    this.maxIntercept = 11,
+  }) : super(key: key);
+
+  @override
+  State<TranspositionButton> createState() => _TranspositionButtonState();
+}
+
+class _TranspositionButtonState extends State<TranspositionButton> {
+  int _intercept = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -21,40 +37,64 @@ class TranspositionButton extends StatelessWidget {
             color: AppColors.gray3E,
             borderRadius: BorderRadius.circular(3),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Container(
-                width: 79,
-                child: Row(
-                  children: [
-                    SvgPicture.asset(
-                      "assets/icons/ic_minus.svg",
-                      color: AppColors.servePointColor2,
-                    ),
-                    Container(
-                      width: 43,
-                      alignment: Alignment.center,
-                      child: Text(
-                        "0",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    _changeIntercept(_intercept - 1);
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        "assets/icons/ic_minus.svg",
+                        color: AppColors.servePointColor2,
                       ),
-                    ),
-                    SvgPicture.asset(
-                      "assets/icons/ic_plus.svg",
-                      color: AppColors.servePointColor2,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-              Text(
-                "Key",
-                style: AppTextStyles.controlButtonTextStyle.copyWith(
-                  color: AppColors.gray9B,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Container(
+                    width: 43,
+                    alignment: Alignment.center,
+                    child: Text(
+                      _intercept.toString(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    "Key",
+                    style: AppTextStyles.controlButtonTextStyle.copyWith(
+                      color: AppColors.gray9B,
+                    ),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    _changeIntercept(_intercept + 1);
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        "assets/icons/ic_plus.svg",
+                        color: AppColors.servePointColor2,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -62,5 +102,15 @@ class TranspositionButton extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _changeIntercept(int newIntercept) {
+    if (widget.minIntercept <= newIntercept &&
+        newIntercept <= widget.maxIntercept) {
+      setState(() {
+        _intercept = newIntercept;
+      });
+      widget.onChangeIntercept?.call(newIntercept);
+    }
   }
 }

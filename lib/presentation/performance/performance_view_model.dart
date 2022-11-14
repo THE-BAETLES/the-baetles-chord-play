@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:the_baetles_chord_play/controller/chord_checker.dart';
 import 'package:the_baetles_chord_play/controller/chord_picker_view_model.dart';
 import 'package:the_baetles_chord_play/domain/model/chord_block.dart';
+import 'package:the_baetles_chord_play/domain/model/note.dart';
 import 'package:the_baetles_chord_play/domain/model/play_option.dart';
 import 'package:the_baetles_chord_play/domain/use_case/add_conductor_position_listener.dart';
 import 'package:the_baetles_chord_play/domain/use_case/get_user_id.dart';
@@ -177,8 +178,11 @@ class PerformanceViewModel with ChangeNotifier {
       capo: 0,
     );
 
-    _sheetState.addListener(() {
-      _beatStates.value = _sheetStateToBeatStates(sheetState.value!);
+    _sheetState.addListener(() async {
+      print("뭐지?");
+      final newBeatStates = _sheetStateToBeatStates(sheetState.value!);
+      await newBeatStates.setIntercept(_beatStates.value.intercept);
+      _beatStates.value = newBeatStates;
     });
 
     _sheetState.value = SheetState(
@@ -318,7 +322,7 @@ class PerformanceViewModel with ChangeNotifier {
     if (tileIndex < 0 || chords == null || chords.length <= tileIndex) {
       _selectedChord.value = null;
     } else {
-      _selectedChord.value = chords[tileIndex].chord;
+      _selectedChord.value = _beatStates.value.states[tileIndex].value.chord;
     }
 
     notifyListeners();
@@ -391,8 +395,6 @@ class PerformanceViewModel with ChangeNotifier {
 
     _sheetState.value = _sheetState.value!.copy(sheetData: newSheetData);
 
-    _sheetState.notifyListeners();
-
     _editingPosition.value = null;
     _selectedChord.value = null;
   }
@@ -407,11 +409,17 @@ class PerformanceViewModel with ChangeNotifier {
   }
 
   void onApplyEdit() async {
+    final Chord chord = _selectedChord.value!;
+    final Chord newChord = chord.copy(
+      root: Note(chord.root.keyNumber - beatStates.value.intercept),
+      bass: chord.bass,
+    );
+
     SheetData newSheetData = await _editSheet(
       sheetId: _sheetState.value!.sheetInfo.id,
       sheet: _sheetState.value!.sheetData,
       position: _editingPosition.value!,
-      newChord: _selectedChord.value!,
+      newChord: newChord,
     );
 
     _sheetState.value = _sheetState.value!.copy(sheetData: newSheetData);
@@ -459,5 +467,9 @@ class PerformanceViewModel with ChangeNotifier {
     }
 
     return BeatStates(beatStates);
+  }
+
+  void onChangeIntercept(int newIntercept) {
+    _beatStates.value.setIntercept(newIntercept);
   }
 }

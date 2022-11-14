@@ -72,7 +72,11 @@ class ControlBar extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                    child: TranspositionButton(),
+                    child: TranspositionButton(
+                      onChangeIntercept: (int newIntercept) {
+                        viewModel.onChangeIntercept(newIntercept);
+                      },
+                    ),
                   ),
                 ],
               ),
