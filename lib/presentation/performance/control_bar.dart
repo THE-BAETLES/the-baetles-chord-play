@@ -70,9 +70,9 @@ class ControlBar extends StatelessWidget {
                       },
                     ),
                   ),
-                    child: TranspositionButton(
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                    child: TranspositionButton(
                       onChangeIntercept: (int newIntercept) {
                         viewModel.onChangeIntercept(newIntercept);
                       },
@@ -120,20 +120,20 @@ class ControlBar extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                  //   child: ValueListenableBuilder(
-                  //     valueListenable: viewModel.isPitchBeingChecked,
-                  //     builder: (context, value, _) {
-                  //       return SvgToggleButton(
-                  //         isToggled: viewModel.isPitchBeingChecked.value,
-                  //         iconPath: 'assets/icons/ic_check2.svg',
-                  //         text: 'Check On',
-                  //         onClick: viewModel.onCheckButtonClicked,
-                  //       );
-                  //     },
-                  //   ),
-                  // ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                    child: ValueListenableBuilder(
+                      valueListenable: viewModel.isPitchBeingChecked,
+                      builder: (context, value, _) {
+                        return SvgToggleButton(
+                          isToggled: viewModel.isPitchBeingChecked.value,
+                          iconPath: 'assets/icons/ic_check2.svg',
+                          text: 'Check On',
+                          onClick: viewModel.onCheckButtonClicked,
+                        );
+                      },
+                    ),
+                  ),
                   // Padding(
                   //   padding: const EdgeInsets.symmetric(horizontal: 2.0),
                   //   child: SvgToggleButton(
