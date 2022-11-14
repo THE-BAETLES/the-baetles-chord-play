@@ -221,46 +221,48 @@ class PerformanceViewModel with ChangeNotifier {
 
     _chordChecker = ChordChecker();
 
-    beatStates.value.playingPosition.addListener(() {
-      if (!_isPitchBeingChecked.value) {
-        return;
-      }
+    _beatStates.addListener(() {
+      _beatStates.value.playingPosition.addListener(() {
+        if (!_isPitchBeingChecked.value) {
+          return;
+        }
 
-      const int interval = 1500;
-      const int waitTime = 300;
-      const int compensation = 300;
-      final int currentTime = DateTime.now().millisecondsSinceEpoch - compensation;
-      final int endTime = currentTime + interval;
-      final int playingPosition = beatStates.value.playingPosition.value;
-      final Chord? chord = beatStates.value.playingBeatState.chord;
+        const int interval = 1500;
+        const int waitTime = 300;
+        const int compensation = 300;
+        final int currentTime = DateTime.now().millisecondsSinceEpoch - compensation;
+        final int endTime = currentTime + interval;
+        final int playingPosition = beatStates.value.playingPosition.value;
+        final Chord? chord = beatStates.value.playingBeatState.chord;
 
-      if (chord != null && playOption.value.isPlaying) {
-        Timer(const Duration(milliseconds: interval + waitTime), () {
-          Tuple3<bool, Fingering?, List<int>> checkResult =
-              _chordChecker!.isChordExist(currentTime, endTime, chord);
-          final bool isChordDetected = checkResult.item1;
-          final Fingering? answer = checkResult.item2;
-          final List<int> wrongStrings = checkResult.item3;
+        if (chord != null && playOption.value.isPlaying) {
+          Timer(const Duration(milliseconds: interval + waitTime), () {
+            Tuple3<bool, Fingering?, List<int>> checkResult =
+            _chordChecker!.isChordExist(currentTime, endTime, chord);
+            final bool isChordDetected = checkResult.item1;
+            final Fingering? answer = checkResult.item2;
+            final List<int> wrongStrings = checkResult.item3;
 
-          if (answer == null) {
-            return;
-          }
+            if (answer == null) {
+              return;
+            }
 
-          log("${currentTime}~${endTime} ${playingPosition} | ${chord.fullName} ${isChordDetected ? "detected" : "not detected"}");
+            log("${currentTime}~${endTime} ${playingPosition} | ${chord.fullName} ${isChordDetected ? "detected" : "not detected"}");
 
-          _feedbackState.value.addMarkedIndex(playingPosition, isChordDetected);
+            _feedbackState.value.addMarkedIndex(playingPosition, isChordDetected);
 
-          if (!isChordDetected) {
-            _feedbackState.value.addFeedback(FingeringFeedback(
-              beatIndex: playingPosition,
-              answer: answer,
-              wrongStringNumbers: wrongStrings,
-            ));
-          }
+            if (!isChordDetected) {
+              _feedbackState.value.addFeedback(FingeringFeedback(
+                beatIndex: playingPosition,
+                answer: answer,
+                wrongStringNumbers: wrongStrings,
+              ));
+            }
 
-          _feedbackState.notifyListeners();
-        });
-      }
+            _feedbackState.notifyListeners();
+          });
+        }
+      });
     });
 
     _addConductorPositionListener(_conductorPositionCallback);

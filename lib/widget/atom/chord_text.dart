@@ -49,7 +49,7 @@ class ChordText extends StatelessWidget {
               style: TextStyle(
                 color: postfixColor,
                 height: 0.9,
-                fontSize: postfixSize + 4,
+                fontSize: postfixSize,
                 fontWeight: FontWeight.w500,
                 fontFamily: AppFontFamilies.pretendard,
               ),

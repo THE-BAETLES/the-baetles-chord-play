@@ -101,7 +101,7 @@ class BeatStates {
   Chord _applyIntercept(Chord chord, int intercept) {
     return chord.copy(
       root: Note(chord.root.keyNumber + intercept),
-      bass: null,
+      bass: chord.bass,
     );
   }
 }

@@ -52,14 +52,14 @@ class ChordPicker extends StatelessWidget {
                   },
                   scrollController: FixedExtentScrollController(
                       initialItem: Note.pitchNames
-                          .indexOf(initRoot?.flatNoteNameWithoutOctave ?? "C")),
-                  selectionOverlay: CupertinoPickerDefaultSelectionOverlay(
+                          .indexOf(initRoot?.noteNameWithoutOctave ?? "C")),
+                  selectionOverlay: const CupertinoPickerDefaultSelectionOverlay(
                     background: AppColors.transparentF4,
                     capStartEdge: false,
                     capEndEdge: false,
                   ),
-                  children: Note.flatPitchNames
-                      .map((e) => _pickerItem(e, viewModel.selectedNote?.flatNoteNameWithoutOctave == e))
+                  children: Note.pitchNames
+                      .map((e) => _pickerItem(e, viewModel.selectedNote?.noteNameWithoutOctave == e))
                       .toList(),
                 ),
               ),
@@ -83,7 +83,7 @@ class ChordPicker extends StatelessWidget {
                             .toList()
                             .indexOf(initTriadType?.notation ??
                                 TriadType.none.notation)),
-                    selectionOverlay: CupertinoPickerDefaultSelectionOverlay(
+                    selectionOverlay: const CupertinoPickerDefaultSelectionOverlay(
                       background: AppColors.transparentF4,
                       capStartEdge: false,
                       capEndEdge: false,
@@ -107,15 +107,15 @@ class ChordPicker extends StatelessWidget {
                   },
                   scrollController: FixedExtentScrollController(
                     initialItem: Note.pitchNames
-                        .indexOf(initBass?.flatNoteNameWithoutOctave ?? "C"),
+                        .indexOf(initBass?.noteNameWithoutOctave ?? "C"),
                   ),
-                  selectionOverlay: CupertinoPickerDefaultSelectionOverlay(
+                  selectionOverlay: const CupertinoPickerDefaultSelectionOverlay(
                     background: AppColors.transparentF4,
                     capStartEdge: false,
                     capEndEdge: false,
                   ),
-                  children: Note.flatPitchNames
-                      .map((e) => _pickerItem("on ${e}", viewModel.selectedBass?.flatNoteNameWithoutOctave == e))
+                  children: Note.pitchNames
+                      .map((e) => _pickerItem("on ${e}", viewModel.selectedBass?.noteNameWithoutOctave == e))
                       .toList()
                     ..insert(
                         0, _pickerItem("none", viewModel.selectedBass == null)),
@@ -129,24 +129,22 @@ class ChordPicker extends StatelessWidget {
   }
 
   Widget _pickerItem(String item, bool isHighlighted) {
-    return Container(
-      child: Center(
-        child: Text(
-          item,
-          style: isHighlighted
-              ? const TextStyle(
-                  color: AppColors.mainPointColor,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: AppFontFamilies.pretendard,
-                  fontSize: 17,
-                )
-              : const TextStyle(
-                  color: AppColors.gray73,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: AppFontFamilies.pretendard,
-                  fontSize: 16,
-                ),
-        ),
+    return Center(
+      child: Text(
+        item,
+        style: isHighlighted
+            ? const TextStyle(
+                color: AppColors.mainPointColor,
+                fontWeight: FontWeight.w400,
+                fontFamily: AppFontFamilies.pretendard,
+                fontSize: 17,
+              )
+            : const TextStyle(
+                color: AppColors.gray73,
+                fontWeight: FontWeight.w400,
+                fontFamily: AppFontFamilies.pretendard,
+                fontSize: 16,
+              ),
       ),
     );
   }
