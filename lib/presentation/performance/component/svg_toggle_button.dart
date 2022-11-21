@@ -12,12 +12,14 @@ class SvgToggleButton extends StatelessWidget {
   final double iconWidth;
   final double iconHeight;
   final Function()? onClick;
+  final Color? color;
 
   const SvgToggleButton({
     Key? key,
     required this.isToggled,
     required this.text,
     required this.iconPath,
+    this.color,
     this.iconWidth = 20,
     this.iconHeight = 16,
     this.onClick,
@@ -34,7 +36,7 @@ class SvgToggleButton extends StatelessWidget {
         width: iconWidth,
         height: iconHeight,
         fit: BoxFit.cover,
-        color: isToggled ? AppColors.servePointColor2 : null,
+        color: isToggled ? AppColors.servePointColor2 : color,
       ),
     );
   }

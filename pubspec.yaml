@@ -61,6 +61,7 @@ dependencies:
   firebase_messaging: 13.0.4
   csv: 5.0.1
   multi_value_listenable_builder: 0.0.2
+  flutter_midi: 1.1.0
 
   flutter_client_sse:
     git:
@@ -110,6 +111,7 @@ flutter:
     - assets/fonts/
     - assets/images/
     - assets/data/
+    - assets/sf2/
     - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
