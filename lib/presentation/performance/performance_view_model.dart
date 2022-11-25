@@ -4,6 +4,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_midi/flutter_midi.dart';
 import 'package:the_baetles_chord_play/controller/chord_checker.dart';
 import 'package:the_baetles_chord_play/controller/chord_picker_view_model.dart';
 import 'package:the_baetles_chord_play/domain/model/chord_block.dart';
@@ -35,6 +37,7 @@ import '../../service/conductor/performers/call_performer.dart';
 import '../../controller/pitch_checker.dart';
 import 'adapter/measure_scale_adapter.dart';
 import 'adapter/scale_adapter.dart';
+import 'instrument_player.dart';
 import 'state/feedback_state.dart';
 
 class PerformanceViewModel with ChangeNotifier {
@@ -60,6 +63,7 @@ class PerformanceViewModel with ChangeNotifier {
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
   final ValueNotifier<bool> _isTabVisible = ValueNotifier(false);
   final ValueNotifier<BeatStates> _beatStates = ValueNotifier(BeatStates([]));
+  final ValueNotifier<bool> _isInstrumentPlaying = ValueNotifier(false);
 
   late final Function(int) _conductorPositionCallback;
 
@@ -77,6 +81,7 @@ class PerformanceViewModel with ChangeNotifier {
 
   final PlayOptionCallbackPerformer _callbackPerformer =
       PlayOptionCallbackPerformer();
+  final _instrumentPlayer = InstrumentPlayer();
   ChordChecker? _chordChecker;
   Video? _video;
   String? _userId;
@@ -100,6 +105,8 @@ class PerformanceViewModel with ChangeNotifier {
   ValueNotifier<BeatStates> get beatStates => _beatStates;
 
   ValueNotifier<bool> get isTabVisible => _isTabVisible;
+
+  ValueNotifier<bool> get isInstrumentPlaying => _isInstrumentPlaying;
 
   bool get isEditing => _editingPosition.value != null;
 
@@ -179,7 +186,6 @@ class PerformanceViewModel with ChangeNotifier {
     );
 
     _sheetState.addListener(() async {
-      print("뭐지?");
       final newBeatStates = _sheetStateToBeatStates(sheetState.value!);
       await newBeatStates.setIntercept(_beatStates.value.intercept);
       _beatStates.value = newBeatStates;
@@ -265,6 +271,10 @@ class PerformanceViewModel with ChangeNotifier {
       });
     });
 
+    _beatStates.addListener(() {
+      _beatStates.value.playingPosition.addListener(_playInstrument);
+    });
+
     _addConductorPositionListener(_conductorPositionCallback);
 
     _initLoadingNotifier();
@@ -345,6 +355,7 @@ class PerformanceViewModel with ChangeNotifier {
     _isMuted.value = false;
     _editingPosition.value = null;
     _userId == null;
+    _beatStates.value.setIntercept(0);
   }
 
   void onCheckButtonClicked() {
@@ -473,5 +484,25 @@ class PerformanceViewModel with ChangeNotifier {
 
   void onChangeIntercept(int newIntercept) {
     _beatStates.value.setIntercept(newIntercept);
+  }
+
+  void onInstrumentButtonClicked() async {
+    _isInstrumentPlaying.value = !_isInstrumentPlaying.value;
+  }
+
+  void _playInstrument() {
+    if (!_playOption.value.isPlaying || !_isInstrumentPlaying.value) {
+      return;
+    }
+
+    Chord? chord = beatStates.value.playingBeatState.chord;
+
+    if (chord == null) {
+      return;
+    }
+
+    _instrumentPlayer.playMidiNote(chord.root.noteNumber);
+    _instrumentPlayer.playMidiNote(chord.root.noteNumber + 4);
+    _instrumentPlayer.playMidiNote(chord.root.noteNumber + 7);
   }
 }

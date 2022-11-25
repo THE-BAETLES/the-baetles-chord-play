@@ -134,14 +134,21 @@ class ControlBar extends StatelessWidget {
                       },
                     ),
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                  //   child: SvgToggleButton(
-                  //     isToggled: false,
-                  //     iconPath: 'assets/icons/ic_record2.svg',
-                  //     text: 'Rec.',
-                  //   ),
-                  // ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 2.0),
+                    child: ValueListenableBuilder(
+                      valueListenable: viewModel.isInstrumentPlaying,
+                      builder: (context, value, _) {
+                        return SvgToggleButton(
+                          isToggled: viewModel.isInstrumentPlaying.value,
+                          iconPath: 'assets/icons/ic_piano_2.svg',
+                          text: 'instrument',
+                          color: Colors.white,
+                          onClick: viewModel.onInstrumentButtonClicked,
+                        );
+                      }
+                    ),
+                  ),
                 ],
               ),
             ),
