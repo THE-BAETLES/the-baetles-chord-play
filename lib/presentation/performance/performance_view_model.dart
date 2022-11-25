@@ -355,6 +355,7 @@ class PerformanceViewModel with ChangeNotifier {
     _isMuted.value = false;
     _editingPosition.value = null;
     _userId == null;
+    _beatStates.value.setIntercept(0);
   }
 
   void onCheckButtonClicked() {
